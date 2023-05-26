@@ -19,6 +19,11 @@ $(OBJDIR)%.o: $(SRCDIR)%.c
 $(NAME): $(SRCOBJ)
 	$(CC) $(SRCOBJ) $(CFLAGS) -o $(NAME)
 
+libmake:
+	@git submodule update --init --recursive --remote
+	@cd $(MAKE) -c includes/libft
+	@curl https://icanhazdadjoke.com/
+
 check_brew:
     @if [ `which brew` = "$(HOME)/.brew/bin/brew" ]; then \
         echo "Brew is installed"; \
