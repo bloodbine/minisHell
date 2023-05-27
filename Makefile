@@ -6,6 +6,8 @@ INCDIR 	= -I ./include -I ./Users/$(USER)/.brew/opt/readline/include
 LIBFT   = ./includes/libft/libft.a
 
 SRC		=	minishell.c \
+			lexer.c \
+			lexer_utils.c \
 
 SRCOBJ	= $(patsubst %.c, $(OBJDIR)%.o, $(SRC))
 
@@ -24,7 +26,7 @@ $(NAME): $(SRCOBJ)
 
 libmake: check_brew
 	@git submodule update --init --recursive --remote
-	@$(MAKE) -C ./includes/libft
+	@$(MAKE) all bonus -C ./includes/libft
 	@curl https://icanhazdadjoke.com/
 
 check_brew:
