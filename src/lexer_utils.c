@@ -6,19 +6,22 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/05/27 23:36:22 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/05/29 21:50:28 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	check_closing_quote(char *lptr, char quote)
+int	get_closing_quote(char *lptr, char quote)
 {
-	while (*lptr != '\0')
+	int	i;
+
+	i = 1;
+	while (lptr[i] != '\0')
 	{
-		if (*lptr == quote)
-			return (1);
-		lptr++;
+		if (lptr[i] == quote)
+			return (i);
+		i++;
 	}
 	return (0);
 }
@@ -35,11 +38,11 @@ int get_end(char *lptr, int i)
 		if (lptr[i] == '\'' && s_quote)
 			s_quote = 0;
 		else if (lptr[i] == '\'' && !d_quote)
-			s_quote = check_closing_quote(&lptr[i + 1], '\'');
+			s_quote = get_closing_quote(&lptr[i], '\'');
 		if (lptr[i] == '\"' && d_quote)
 			d_quote = 0;
 		else if (lptr[i] == '\"' && !s_quote)
-			d_quote = check_closing_quote(&lptr[i + 1], '\"');
+			d_quote = get_closing_quote(&lptr[i], '\"');
 		if (lptr[i] == ' ' && !s_quote && !d_quote)
 			return (i);
 		i++;

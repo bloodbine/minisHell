@@ -6,12 +6,18 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/05/27 23:40:43 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:05:40 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+void print_content(void *data) 
+{
+    t_content *content = (t_content *)data;
+	printf("next\n");
+    printf("token: %d   word: %s\n", content->token, content->word);
 
+}
 // splits line on whitespaces. Ignore whitespaaces when in between quotes
 t_list *get_substrings(char *lptr)
 {
@@ -38,7 +44,34 @@ t_list *get_substrings(char *lptr)
 	return lexlst;
 }
 
-void	get_tokens(t_list **token, char *str)
+t_content *fill_content(char *str)
+{
+	t_content *content;
+
+	content = malloc(sizeof(t_content));
+	if (!content)
+	{
+		// memory managen free()
+		return (NULL);
+	}
+	content->word = NULL;
+	content->token = WORD;
+	if (!ft_strncmp(str, "|", 1))
+		content->token = PIPE;
+	else if (!ft_strncmp(str, ">>", 2))
+		content->token = APPEND;
+	else if (!ft_strncmp(str, "<<", 2))
+		content->token = HEREDOC;
+	else if (!ft_strncmp(str, ">", 1))
+		content->token = OUT;
+	else if (!ft_strncmp(str, "<", 1))
+		content->token = IN;
+	else
+		content->word = str;
+	return (content);
+}
+
+int	get_tokens(t_list **token, char *str)
 {
 	int	i;
 	int	start;
@@ -49,40 +82,27 @@ void	get_tokens(t_list **token, char *str)
 	
 	start = 0;
 	i = 0;
-	printf("start: %s\n", str);
 	while (str[i] != '\0')
-	{	
+	{	// use enum typedef quote
 		if (str[i] == '\'' && s_quote)
 			s_quote = 0;
-		if(str[i] == '\'' && check_closing_quote(&str[i + 1], '\'') && !d_quote)
+		if(str[i] == '\'' && get_closing_quote(&str[i], '\'') && !d_quote)
 			s_quote = 1;
 		if (str[i] == '\"' && d_quote)
 			d_quote = 0;
-		if(str[i] == '\"' && check_closing_quote(&str[i + 1], '\"') && !s_quote)
+		if(str[i] == '\"' && get_closing_quote(&str[i], '\"') && !s_quote)
 			d_quote = 1;
 		len = is_token(&str[i]);
-		//printf("s_quote %d    d_quote %d\n", s_quote, d_quote);
 		if(len != 0 && !d_quote && !s_quote)
 		{
 			if (len == -1)
-			{
-				printf("Error\n");
-				//free stuff ...
-				return ;
-			}
+				return (-1);
 			s = ft_substr(str, start, i - start);
 			if (s[0] != '\0')
-			{
-				ft_lstadd_back(token, ft_lstnew(ft_substr(str, start, i - start))); 
-				// add token struct as content of list, not only substring as content
-				printf("token: %s\n", ft_substr(str, start, i - start));
-			}
+				ft_lstadd_back(token, ft_lstnew(fill_content(ft_substr(str, start, i - start)))); 
 			s = ft_substr(str, i, len);
 			if (s[0] != '\0')
-			{
-				ft_lstadd_back(token, ft_lstnew(ft_substr(str, i, len)));
-				printf("token: %s\n", ft_substr(str, i, len));
-			}
+				ft_lstadd_back(token, ft_lstnew(fill_content(ft_substr(str, i, len))));
 			i = i + len;
 			start = i;
 		}
@@ -90,10 +110,22 @@ void	get_tokens(t_list **token, char *str)
 	}
 	s = ft_substr(str, start, i - start);
 	if (s[0] != '\0')
-	{
-		ft_lstadd_back(token, ft_lstnew(ft_substr(str, i, i - start)));
-		printf("token: %s\n", ft_substr(str, start, i - start));
-	}
+		ft_lstadd_back(token, ft_lstnew(fill_content(ft_substr(str, start, i - start))));
+	return (0);
+}
+
+void clear_content(void *data)
+{
+	t_content *content = (t_content *)data;
+	if (content->word)
+		free(content->word);
+}
+
+void clear_str(void *data)
+{
+	char *content = (char *)data;
+	if (content)
+		free(content);
 }
 
 t_list *tokenize(t_list *substring)
@@ -103,10 +135,17 @@ t_list *tokenize(t_list *substring)
 	token = NULL;
 	while (substring)
 	{
-		get_tokens(&token, substring->content);
+		if (get_tokens(&token, substring->content) == -1)
+		{
+			printf("Error");
+			ft_lstclear(&token, clear_content);
+			break ;
+		}
 		substring = substring->next;
 	}
-	return NULL;
+	ft_lstiter(token, print_content);
+	ft_lstclear(&substring, clear_str);
+	return token;
 }
 
 t_list *lex(char *lptr)

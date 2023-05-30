@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:17:16 by ffederol          #+#    #+#             */
-/*   Updated: 2023/05/27 20:30:37 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:03:40 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 typedef struct s_data
 {
 	t_cmd	*cmd;
-	
 }			t_data;
 
 #endif

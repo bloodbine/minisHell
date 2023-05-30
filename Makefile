@@ -8,6 +8,8 @@ LIBFT   = ./includes/libft/libft.a
 SRC		=	minishell.c \
 			lexer.c \
 			lexer_utils.c \
+			parser.c \
+			
 
 SRCOBJ	= $(patsubst %.c, $(OBJDIR)%.o, $(SRC))
 
