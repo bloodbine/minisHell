@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/05/29 23:41:52 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/05/31 04:43:20 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ typedef struct s_cmd
 	char	*cmd;		
 	char	*opt;
 	char	*arg;
-	char	*in;		// STD:IN; pipe; filename;
-	char	*out;		// STD:OUT; pipe; filename;
-	char	*builtin;	// NULL if cmd != builtin; cases: "echo", "cd", "pwd", "export", "unset", "env", "exit", NULL; if(builtin) then {use builtin} else {execve cmd};
+	t_list	*in;		
+	t_list	*out;
+	char	*builtin;
 	int		idx;
-	struct	t_cmd	*next;
-	struct	t_cmd	*prev;
+	struct	s_cmd	*next;
+	struct	s_cmd	*prev;
 }			t_cmd;
 
 int		get_closing_quote(char *lptr, char quote);
@@ -49,11 +49,12 @@ t_list	*get_substrings(char *lptr);
 t_list	*lex(char *lptr);
 int		allowed_sign(char c);
 int		is_token(char *str);
-int		get_tokens(t_list **token, char *str);
+int		get_tokens(t_list **token, char *str, int *redir);
 t_list 	*tokenize(t_list *substring);
 char	get_outer_quotes(char *str);
 char	*remove_outer_quotes(char *str, char quotes);
 void	rm_quotes(void *data);
 t_cmd 	*parse(t_list *lex);
-
+t_content *fill_content(char *str);
+char	*my_strcpy(char *str);
 #endif

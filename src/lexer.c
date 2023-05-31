@@ -6,18 +6,26 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/05/29 23:05:40 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/05/31 04:48:23 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-void print_content(void *data) 
-{
-    t_content *content = (t_content *)data;
-	printf("next\n");
-    printf("token: %d   word: %s\n", content->token, content->word);
 
-}
+// void print_content(void *data) 
+// {
+//     t_content *content = (t_content *)data;
+// 	printf("next\n");
+//     printf("token: %d   word: %s\n", content->token, content->word);
+
+// }
+// void print_content1(void *data) 
+// {
+//    	char	*content = (char *)data;
+// 	printf("next\n");
+//     printf("substr: %s\n", content);
+
+// }
 // splits line on whitespaces. Ignore whitespaaces when in between quotes
 t_list *get_substrings(char *lptr)
 {
@@ -71,7 +79,7 @@ t_content *fill_content(char *str)
 	return (content);
 }
 
-int	get_tokens(t_list **token, char *str)
+int	get_tokens(t_list **token, char *str, int *redir)
 {
 	int	i;
 	int	start;
@@ -98,19 +106,35 @@ int	get_tokens(t_list **token, char *str)
 			if (len == -1)
 				return (-1);
 			s = ft_substr(str, start, i - start);
-			if (s[0] != '\0')
-				ft_lstadd_back(token, ft_lstnew(fill_content(ft_substr(str, start, i - start)))); 
+			//printf("str: %s   *redir: %d \n", s, *redir);
+			if (s[0] != '\0' && !*redir)
+				ft_lstadd_back(token, ft_lstnew(fill_content(ft_substr(str, start, i - start))));
+			else if (s[0] != '\0' && *redir)
+			{
+				((t_content *)(ft_lstlast(*token)->content))->word = ft_substr(str, start, i - start); //errorhandling
+				*redir = 0;
+			}
 			s = ft_substr(str, i, len);
-			if (s[0] != '\0')
-				ft_lstadd_back(token, ft_lstnew(fill_content(ft_substr(str, i, len))));
+			if (s[0] != '\0' && !*redir)
+			{
+				ft_lstadd_back(token, ft_lstnew(fill_content(s)));
+				if (s[0] != '|')
+					*redir = 1;
+			}
 			i = i + len;
 			start = i;
+			continue ;
 		}
 		i++;
 	}
 	s = ft_substr(str, start, i - start);
-	if (s[0] != '\0')
+	if (s[0] != '\0' && !*redir)
 		ft_lstadd_back(token, ft_lstnew(fill_content(ft_substr(str, start, i - start))));
+	else if (s[0] != '\0' && *redir)
+	{
+		((t_content *)(ft_lstlast(*token)->content))->word = ft_substr(str, start, i - start);
+		*redir = 0;
+	}
 	return (0);
 }
 
@@ -131,11 +155,12 @@ void clear_str(void *data)
 t_list *tokenize(t_list *substring)
 {
 	t_list	*token;
-	
+	int		redir = 0;
 	token = NULL;
+	//ft_lstiter(substring, print_content1);
 	while (substring)
 	{
-		if (get_tokens(&token, substring->content) == -1)
+		if (get_tokens(&token, substring->content, &redir) == -1)
 		{
 			printf("Error");
 			ft_lstclear(&token, clear_content);
@@ -143,7 +168,7 @@ t_list *tokenize(t_list *substring)
 		}
 		substring = substring->next;
 	}
-	ft_lstiter(token, print_content);
+	//ft_lstiter(token, print_content);
 	ft_lstclear(&substring, clear_str);
 	return token;
 }
