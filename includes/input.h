@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/05/31 04:43:20 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/01 01:33:26 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,28 @@ typedef enum e_token
 	WORD = 6
 }			t_tok;
 
+typedef enum e_quote
+{
+	NO_QUOTE = 0,
+	S_QUOTE = 1,
+	D_QUOTE = 2
+}			t_quote;
+
 typedef struct s_content 
 {
 	char	*word;
 	t_tok	token;
 }			t_content;
 
+typedef struct s_lexdata
+{
+	int		i;
+	int		len;
+	int		start;
+	int		redir;
+	char	*str;
+	t_quote	quote;
+}			t_lexdata;
 
 typedef struct s_cmd
 {
@@ -43,18 +59,32 @@ typedef struct s_cmd
 	struct	s_cmd	*prev;
 }			t_cmd;
 
-int		get_closing_quote(char *lptr, char quote);
-int		get_end(char *lptr, int i);
-t_list	*get_substrings(char *lptr);
-t_list	*lex(char *lptr);
-int		allowed_sign(char c);
-int		is_token(char *str);
-int		get_tokens(t_list **token, char *str, int *redir);
-t_list 	*tokenize(t_list *substring);
-char	get_outer_quotes(char *str);
-char	*remove_outer_quotes(char *str, char quotes);
-void	rm_quotes(void *data);
-t_cmd 	*parse(t_list *lex);
-t_content *fill_content(char *str);
-char	*my_strcpy(char *str);
+int			get_closing_quote(char *lptr, char quote);
+int			get_len(char *lptr, int i);
+t_list		*get_substrings(char *lptr);
+t_list		*lex(char *lptr);
+int			is_token(char *str);
+int			get_tokens(t_list **token, t_lexdata *l_data);
+t_list 		*tokenize(t_list *substring, t_lexdata *l_data);
+char		get_outer_quotes(char *str);
+char		*remove_outer_quotes(char *str, char quotes);
+void		rm_quotes(void *data);
+t_cmd 		*parse(t_list *lex);
+t_content 	*init_content(char *str);
+char		*my_strcpy(char *str);
+void		add_newnode_back(t_cmd **cmd);
+void		init_newnode(t_cmd *new);
+char		*my_strcpy(char *str);
+char		*expand_env_var(char *str);
+char		*expand(char *str, char quotes);
+int			dollar_pos(char *str);
+int			my_strlen(char *str);
+char		*my_strjoin(char *s1, char *s2);
+int			get_seq(char *str, char **seq);
+t_quote		toggle_quote(char *str, t_quote quote);
+void		clear_str(void *data);
+void		clear_content(void *data);
+void		add_token(t_lexdata *l_data, t_list **token);
+void		add_word(t_lexdata *l_data, t_list **token);
+
 #endif

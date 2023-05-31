@@ -1,202 +1,96 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/29 21:09:53 by ffederol          #+#    #+#             */
-/*   Updated: 2023/05/30 03:40:34 by ffederol         ###   ########.fr       */
+/*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
+/*   Updated: 2023/05/31 16:45:28 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	get_outer_quotes(char *str)
+// void print_content(void *data) 
+// {
+//     t_content *content = (t_content *)data;
+// 	printf("next\n");
+//     printf("token: %d   word: %s\n", content->token, content->word);
+
+// }
+
+void	fill_cmd(t_list *lex, t_cmd *cmd)
 {
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] == '\'' && get_closing_quote(&str[i] , '\''))
-			return ('\'');
-		if (str[i] == '\"' && get_closing_quote(&str[i] , '\"'))
-			return ('\"');
-		i++;
-	}
-	return (0);
-}
-
-int	dollar_pos(char *str)
-{
-	int	i;
-
-	i = 0;
-	while(str[i] != '\0')
-	{
-		if (str[i] == '$')
-			return (i);
-		i++;
-	}
-	return (INT32_MIN);
-}
-
-int	get_seq(char *str, char **seq, char quotes)
-{
-	int		i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if(str[i] == '$' || str[i] == ' ' || str[i] == quotes)
-			break ;
-		i++;
-	}
-	*seq = ft_substr(str, 0, i);
-	return (i);
-}
-
-char	*expand_env_var(char *str, char quotes)
-{
-	char	*temp;
-	char	*temp1;
-	char	*expanded;
-	char	*seq;
-	int		pos;
-	int		i;
-	int 	hh;
+	char	*temp = NULL;
 	
-	i = 0;
-	expanded = ft_substr("\0", 0, 0);
-	pos = dollar_pos(str);
-	if (pos < 0)
-		return (str);
-	printf("pos: %d\n", pos);
-	while (pos >= 0)
+	if (!cmd->cmd && ((t_content *)(lex->content))->token == WORD)
 	{
-		temp = ft_substr(str, i, pos - i);
-		temp1 = expanded;
-		expanded = ft_strjoin(temp1, temp);
-		free(temp1);
-		hh = get_seq(&str[pos + 1], &seq, quotes);
-		pos += hh + 1;
-		printf("seq: %s\n", seq);
-		printf("temp %s\n", temp);
-		temp1 = expanded;
-		expanded = ft_strjoin(expanded, getenv(seq));
-		printf("hh: %d\n", hh);
-		if (str[hh + 2] == '\"')
-			expanded = ft_strjoin(expanded, "\"");
-		free(temp1);
-		printf("expanded %s\n", expanded);
-		free(temp);
-		free(seq);
-		temp = expanded;
-		pos += dollar_pos(&str[pos]);
-		i = pos;
-		printf("pos: %d\n", pos);
+		cmd->cmd = my_strcpy(((t_content *)(lex->content))->word);
 	}
-	free(str);
-	return (expanded);
+		
+	else if (cmd->cmd && cmd->arg[0] == '\0' && ((t_content *)(lex->content))->token == WORD && ((t_content *)(lex->content))->word[0] == '-')
+	{
+			if (!cmd->opt)
+				cmd->opt = my_strcpy(((t_content *)(lex->content))->word);
+			else
+			{
+				temp = cmd->opt;
+				cmd->opt = ft_strjoin(temp, &((t_content *)(lex->content))->word[1]);
+				//free(temp);	
+			}
+			
+	}
+	else if (cmd->cmd && ((t_content *)(lex->content))->token == WORD)
+	{
+		temp = cmd->arg;
+		if (temp[0] != '\0')
+			temp = ft_strjoin(temp, " "); //for spacec between single args
+		cmd->arg = ft_strjoin(temp, ((t_content *)(lex->content))->word);
+		//free(temp);	
+	}
+	if (((t_content *)(lex->content))->token == OUT)
+	{
+		ft_lstadd_back(&(cmd->out), ft_lstnew(init_content(((t_content *)(lex->content))->word)));
+		((t_content *)(cmd->out->content))->token = OUT;
+	}
+	if (((t_content *)(lex->content))->token == IN)
+	{
+		ft_lstadd_back(&(cmd->in), ft_lstnew(init_content(((t_content *)(lex->content))->word)));
+		((t_content *)(cmd->in->content))->token = IN;
+	}
+	if (((t_content *)(lex->content))->token == APPEND)
+	{
+		ft_lstadd_back(&(cmd->out), ft_lstnew(init_content(((t_content *)(lex->content))->word)));
+		((t_content *)(cmd->out->content))->token = APPEND;
+	}
 }
 
-char	*expand(char *str, char quotes)
-{
-	int i = 0;
-	int j = 0;
-	int count = 0;
-	char *sub = ft_substr("\0",0,0);
-	char *temp;
-	
-	while(str[i] != '\0')
-	{
-		if (quotes == 0)
-		{
-			temp = sub;
-			sub = ft_strjoin(temp, expand_env_var(ft_substr(str, j, ft_strlen(str) - j + 1), quotes));
-			printf("%s\n", sub);
-			free(temp);
-			break ;
-		}
-		if (str[i] == quotes)
-			count++;
-		if (count == 2 && quotes == '\"')
-		{
-			temp = sub;
-			sub = ft_strjoin(temp, expand_env_var(ft_substr(str, j, i - j + 1), quotes));
-			printf("%s\n", sub);
-			free(temp);
-			count = 0;
-			j = i + 1;
-			quotes = get_outer_quotes(&str[j]);
-		}
-		if (count == 2)
-		{
-			temp = sub;
-			sub = ft_strjoin(temp,ft_substr(str, j, i - j + 1));
-			printf("%s\n", sub);
-			free(temp);
-			j = i + 1;
-			quotes = get_outer_quotes(&str[j]);
-			count = 0;
-		}
-		i++;
-	}
-	printf("%s\n", sub);
-	return (sub);
-}
-
-char	*remove_outer_quotes(char *str, char quotes)
-{
-	int		i;
-	int		j;
-	char	*new;
-	int		count;
-	
-	i = 0;
-	j = 0;
-	count = 0;
-	new = malloc(sizeof(char) * (ft_strlen(str) - 1));
-	if (!new)
-	{
-		printf("Error!");
-	}
-	while(str[i] != '\0')
-	{
-		if (str[i] != quotes)
-			new[j++] = str[i];
-		if (str[i] == quotes)
-		{
-			count++;
-			if (count == 2)
-				quotes = get_outer_quotes(&str[i + 1]);
-			if (count > 2 && get_closing_quote(&str[i], quotes))
-				count = 1;//quotewechsel einbinden
-			else if (count > 2)
-				new[j++] = str[i];
-		}
-		i++;
-	}
-	new[i] = '\0';
-	free(str);
-	return (new);
-}
-
-
-
-void rm_quotes(void *data)
-{
-	char	quotes;
-	t_content *content = (t_content *)data;
-	
-	if (!content->word)
+void	build_cmds(t_list *lex, t_cmd **cmd)
+{	
+	if (!lex)
 		return ;
-	quotes = get_outer_quotes(content->word);
-	content->word = expand(content->word, quotes); //change because of memory handling
-	if (quotes == '\"' || quotes == '\'')
-		content->word = remove_outer_quotes(content->word, quotes);
-	printf("content: %s\n", content->word);
+	add_newnode_back(cmd);
+	while (lex)
+	{
+		if (((t_content *)(lex->content))->token == PIPE)
+		{
+			fill_cmd(lex, *cmd);
+			add_newnode_back(cmd);
+		}
+		fill_cmd(lex, *cmd);
+		lex = lex->next;
+	}
+	printf("cmd:	%s\n", (*cmd)->cmd);
+	printf("opt:	%s\n", (*cmd)->opt);
+	printf("arg:	%s\n", (*cmd)->arg);
+	if((*cmd)->in)
+		printf("%d:	%s\n", ((t_content *)((*cmd)->in->content))->token, ((t_content *)((*cmd)->in->content))->word);
+	if((*cmd)->out)
+		printf("%d:	%s\n", ((t_content *)((*cmd)->out->content))->token, ((t_content *)((*cmd)->out->content))->word);
+
+		
 }
 
 t_cmd *parse(t_list *lex)
@@ -205,5 +99,7 @@ t_cmd *parse(t_list *lex)
 
 	cmd = NULL;
 	ft_lstiter(lex, rm_quotes);
+	//ft_lstiter(lex, print_content);
+	//build_cmds(lex, &cmd);
 	return (cmd);
 }
