@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/05/30 23:31:12 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/01 01:53:24 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,65 +26,47 @@ int	get_closing_quote(char *lptr, char quote)
 	return (0);
 }
 
-int get_end(char *lptr, int i)
+t_quote	toggle_quote(char *str, t_quote quote)
 {
-	int s_quote;
-	int d_quote;
+	if (str[0] == '\'' && quote == S_QUOTE)
+		quote = NO_QUOTE;
+	if (str[0] == '\'' && get_closing_quote(&str[0], '\'') && !quote)
+		quote = S_QUOTE;
+	if (str[0] == '\"' && quote == D_QUOTE)
+		quote = NO_QUOTE;
+	if (str[0] == '\"' && get_closing_quote(&str[0], '\"') && !quote)
+		quote = D_QUOTE;
+	return (quote);
+}
 
-	s_quote = 0;
-	d_quote = 0;
+int	get_len(char *lptr, int i)
+{
+	t_quote	quote;
+
+	quote = NO_QUOTE;
 	while (lptr[i] != '\0')
 	{
-		if (lptr[i] == '\'' && s_quote)
-			s_quote = 0;
-		else if (lptr[i] == '\'' && !d_quote)
-			s_quote = get_closing_quote(&lptr[i], '\'');
-		if (lptr[i] == '\"' && d_quote)
-			d_quote = 0;
-		else if (lptr[i] == '\"' && !s_quote)
-			d_quote = get_closing_quote(&lptr[i], '\"');
-		if (lptr[i] == ' ' && !s_quote && !d_quote)
+		quote = toggle_quote(&lptr[i], quote);
+		if (lptr[i] == ' ' && !quote)
 			return (i);
 		i++;
 	}
 	return (i);
 }
 
-int	allowed_sign(char c)
-{
-	if(c == '>' || c == '<' || c == '|')
-		return (0);
-	return (1);
-}
-
 int	is_token(char *str)
 {
-	int	i;
-
-	i = 0;
-	if (str[i] == '<')
+	if (!(ft_strchr("|><", str[0])))
+		return (0);
+	if (str[0] == '|')
 	{
-		if (str[i + 1] == '<' && allowed_sign(str[i + 2]))
-			return (2);
-		else if ((str[i + 1] == '<' && !allowed_sign(str[i + 2])) || str[i + 1] == '>' || str[i + 1] == '|')
-			return (-1);
-		else 
-			return (1);
-	}
-	if (str[i] == '>')
-	{
-		if (str[i + 1] == '>' && allowed_sign(str[i + 2]))
-			return (2);
-		else if ((str[i + 1] == '>' && !allowed_sign(str[i + 2])) || str[i + 1] == '<' || str[i + 1] == '|')
-			return (-1);
-		else 
-			return (1);
-	}
-	if (str[i] == '|')
-	{
-		if (str[i + 1] == '|' || str[i - 1] == '|')
+		if (str[1] == '|' || str[-1] == '|')
 			return (0);
 		return (1);
 	}
-	return (0);
+	if ((str[1] == str[0] && !(ft_strchr("|><", str[2]))) || str[2] == '\0')
+		return (2);
+	else if (str[1] == str[0])
+		return (-1);
+	return (1);
 }
