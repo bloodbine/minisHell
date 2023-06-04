@@ -6,25 +6,25 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/01 01:42:01 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/04 23:26:54 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	print_content(void *data)
-{
-	t_content	*content = (t_content *)data;
-	printf("next\n");
-	printf("token: %d   word: %s\n", content->token, content->word);
-}
+// void	print_content(void *data)
+// {
+// 	t_content	*content = (t_content *)data;
+// 	printf("next\n");
+// 	printf("token: %d   word: %s\n", content->token, content->word);
+// }
 
-void	print_content1(void *data)
-{
-   	char	*content = (char *)data;
-	printf("next\n");
-    printf("substr: %s\n", content);
-}
+// void	print_content1(void *data)
+// {
+//    	char	*content = (char *)data;
+// 	printf("next\n");
+//     printf("substr: %s\n", content);
+// }
 
 // splits line on whitespaces. Ignore whitespaaces when in between quotes
 t_list	*get_substrings(char *lptr)
@@ -40,6 +40,7 @@ t_list	*get_substrings(char *lptr)
 		if (lptr[i] != ' ')
 		{
 			end = get_len(lptr, i);
+			printf("end: %d\n", end);
 			ft_lstadd_back(&lexlst, ft_lstnew(ft_substr(lptr, i, end - i)));
 			i = end;
 		}
@@ -59,7 +60,6 @@ int	get_tokens(t_list **token, t_lexdata *l_data)
 	{
 		quote = toggle_quote(&(l_data->str[l_data->i]), quote);
 		l_data->len = is_token(&(l_data->str[l_data->i]));
-		printf("len: %d\n", l_data->len);
 		if (l_data->len != 0 && !quote)
 		{
 			if (l_data->len == -1)
@@ -81,7 +81,7 @@ t_list	*tokenize(t_list *substring, t_lexdata *l_data)
 	t_list	*token;
 
 	token = NULL;
-	ft_lstiter(substring, print_content1);
+	// ft_lstiter(substring, print_content1);
 	while (substring)
 	{
 		l_data->str = substring->content;
@@ -93,7 +93,7 @@ t_list	*tokenize(t_list *substring, t_lexdata *l_data)
 		}
 		substring = substring->next;
 	}
-	ft_lstiter(token, print_content);
+	//ft_lstiter(token, print_content);
 	ft_lstclear(&substring, clear_str);
 	return (token);
 }

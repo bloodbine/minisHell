@@ -13,6 +13,7 @@ SRC		=	minishell.c \
 			parser_utils.c \
 			expander.c \
 			expander_utils.c \
+			string_func.c
 			
 
 SRCOBJ	= $(patsubst %.c, $(OBJDIR)%.o, $(SRC))

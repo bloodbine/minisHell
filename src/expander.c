@@ -6,119 +6,106 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/05/31 17:16:02 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/04 23:24:30 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*expand_env_var(char *str)
+char	*exp_env_var(char *str)
 {
 	char	*expanded;
-	char	*temp;
 	char	*seq;
 	int		pos;
 	int		i;
-	
+
 	i = 0;
 	expanded = NULL;
 	pos = dollar_pos(str);
-	//printf("str: %s \n", str);
 	if (pos < 0)
 		return (str);
-	while (pos >= 0) //aendern wegen folgenden zeichen nache env var bsp. $USER"test 
+	while (pos >= 0)
 	{
-		expanded = my_strjoin(expanded, ft_substr(str, i, pos - i));
+		expanded = my_strjoin(expanded, ft_substr(str, i, pos - i), 2);
 		pos += get_seq(&str[pos + 1], &seq);
-		temp = ft_substr(getenv(seq), 0, my_strlen(getenv(seq)));
+		my_strcpy(getenv(seq));
 		i = pos + 1;
 		free(seq);
-		expanded = my_strjoin(expanded, temp);
-		//printf("exp: %s  i: %d\n", expanded, i);
+		expanded = my_strjoin(expanded, my_strcpy(getenv(seq)), 3);
 		pos += dollar_pos(&str[i]);
 	}
-	temp = ft_substr(&str[i], 0, my_strlen(&str[i]));
-	expanded = my_strjoin(expanded, temp);
+	expanded = my_strjoin(expanded, my_strcpy(&str[i]), 3);
 	free(str);
 	return (expanded);
 }
 
-char	*remove_outer_quotes(char *str, char quotes)
+char	*get_sub(char *str, t_expdata *exp)
 {
-	int		i;
-	int		j;
-	char	*new;
-	int		count;
-	
-	i = 0;
-	j = 0;
-	count = 0;
-	new = malloc(sizeof(char) * (ft_strlen(str) - 1));
-	if (!new)
+	if (!exp->count)
 	{
-		printf("Error!");
+		exp->sub = my_strjoin(exp->sub, exp_env_var(str), 3);
+		exp->start = exp->i;
 	}
-	while(str[i] != '\0')
+	if (exp->count == 1)
 	{
-		if (str[i] != quotes)
-			new[j++] = str[i];
-		i++;
+		if (exp->quotes == '\"')
+			exp->sub = my_strjoin(exp->sub, \
+				exp_env_var(rm_quotes(str, exp->quotes)), 3);
+		else
+			exp->sub = my_strjoin(exp->sub, rm_quotes(str, exp->quotes), 3);
+		exp->start = exp->i + 1;
+		exp->count = -1;
 	}
-	new[i] = '\0';
-	free(str);
-	return (new);
+	return (exp->sub);
 }
 
-char	*expand(char *str, char quotes)
+char	*expand(char *str, t_expdata *exp)
 {
-	int i = 0;
-	int j = 0;
-	int count = 0;
-	char *sub = NULL;
-	
-	while(str[i] != '\0')
+	int	s;
+	int	len;
+
+	len = ft_strlen(str);
+	s = exp->start;
+	while (str[exp->i] != '\0')
 	{
-		if (quotes == 0)
+		if (exp->quotes == 0)
+			return (free(str), my_strjoin(exp->sub, \
+				exp_env_var(ft_substr(str, exp->i, len - exp->i)), 3));
+		if (str[exp->i] == exp->quotes)
 		{
-			sub = my_strjoin(sub, expand_env_var(ft_substr(str, i, ft_strlen(str) - i)));
-			break ;
+			if (!exp->count)
+				exp->sub = get_sub(ft_substr(str, s, exp->i - s), exp);
+			else if (exp->count == 1)
+				exp->sub = get_sub(ft_substr(str, s, exp->i - s + 1), exp);
+			s = exp->start;
+			exp->count++;
+			if (!exp->count)
+				exp->quotes = get_outer_quotes(&str[s]);
 		}
-		if (str[i] == quotes)
-		{
-			if (!count)
-			{
-				sub = my_strjoin(sub, expand_env_var(ft_substr(str, j, i - j)));
-				j = i;
-			}
-			count++;
-		}
-		if (count == 2 && quotes == '\"')
-		{
-			sub = my_strjoin(sub, expand_env_var(remove_outer_quotes(ft_substr(str, j, i - j + 1), quotes)));
-			count = 0;
-			j = i + 1;
-			quotes = get_outer_quotes(&str[j]);
-		}
-		if (count == 2)
-		{
-			sub = my_strjoin(sub,remove_outer_quotes(ft_substr(str, j, i - j + 1), quotes));
-			j = i + 1;
-			quotes = get_outer_quotes(&str[j]);
-			count = 0;
-		}
-		i++;
+		exp->i++;
 	}
 	free(str);
-	return (sub);
+	return (exp->sub);
 }
 
-void rm_quotes(void *data)
+void	init_expdata(t_expdata *data)
 {
-	char	quotes;
-	t_content *content = (t_content *)data;
+	data->count = 0;
+	data->i = 0;
+	data->start = 0;
+	data->quotes = 0;
+	data->sub = NULL;
+}
 
+void	expander(void *data)
+{
+	t_content	*content;
+	t_expdata	exp;
+
+	init_expdata(&exp);
+	content = (t_content *)data;
 	if (!content->word)
 		return ;
-	quotes = get_outer_quotes(content->word);
-	content->word = expand(content->word, quotes); //change because of memory handling
+	exp.quotes = get_outer_quotes(content->word);
+	content->word = expand(content->word, &exp);
 }

@@ -1,19 +1,18 @@
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_utils.c                                   :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/05/31 16:45:28 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/04 23:25:34 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// void print_content(void *data) 
+// void	print_content(void *data) 
 // {
 //     t_content *content = (t_content *)data;
 // 	printf("next\n");
@@ -21,85 +20,84 @@
 
 // }
 
-void	fill_cmd(t_list *lex, t_cmd *cmd)
+void	fill_redir(t_cmd *cmd, t_content *l)
 {
-	char	*temp = NULL;
-	
-	if (!cmd->cmd && ((t_content *)(lex->content))->token == WORD)
+	if (l->token == OUT)
 	{
-		cmd->cmd = my_strcpy(((t_content *)(lex->content))->word);
-	}
-		
-	else if (cmd->cmd && cmd->arg[0] == '\0' && ((t_content *)(lex->content))->token == WORD && ((t_content *)(lex->content))->word[0] == '-')
-	{
-			if (!cmd->opt)
-				cmd->opt = my_strcpy(((t_content *)(lex->content))->word);
-			else
-			{
-				temp = cmd->opt;
-				cmd->opt = ft_strjoin(temp, &((t_content *)(lex->content))->word[1]);
-				//free(temp);	
-			}
-			
-	}
-	else if (cmd->cmd && ((t_content *)(lex->content))->token == WORD)
-	{
-		temp = cmd->arg;
-		if (temp[0] != '\0')
-			temp = ft_strjoin(temp, " "); //for spacec between single args
-		cmd->arg = ft_strjoin(temp, ((t_content *)(lex->content))->word);
-		//free(temp);	
-	}
-	if (((t_content *)(lex->content))->token == OUT)
-	{
-		ft_lstadd_back(&(cmd->out), ft_lstnew(init_content(((t_content *)(lex->content))->word)));
+		ft_lstadd_back(&(cmd->out), ft_lstnew(init_content(l->word)));
 		((t_content *)(cmd->out->content))->token = OUT;
 	}
-	if (((t_content *)(lex->content))->token == IN)
+	if (l->token == IN)
 	{
-		ft_lstadd_back(&(cmd->in), ft_lstnew(init_content(((t_content *)(lex->content))->word)));
+		ft_lstadd_back(&(cmd->in), ft_lstnew(init_content(l->word)));
 		((t_content *)(cmd->in->content))->token = IN;
 	}
-	if (((t_content *)(lex->content))->token == APPEND)
+	if (l->token == APPEND)
 	{
-		ft_lstadd_back(&(cmd->out), ft_lstnew(init_content(((t_content *)(lex->content))->word)));
+		ft_lstadd_back(&(cmd->out), ft_lstnew(init_content(l->word)));
 		((t_content *)(cmd->out->content))->token = APPEND;
 	}
 }
 
+void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i)
+{
+	t_content	*l;
+
+	l = ((t_content *)(lex->content));
+	if (l->token == WORD)
+	{
+		if (!(cmd->args[0]))
+			cmd->args[0] = my_strcpy(l->word);
+		else if (!cmd->args[2] && l->word[0] == '-')
+		{
+			cmd->args[1] = my_strjoin(cmd->args[1], &(l->word[*i - 1]), 1);
+			*i = 1;
+		}
+		else
+			cmd->args[*i] = my_strcpy(l->word);
+		(*i)++;
+	}
+	fill_redir(cmd, l);
+}
+
 void	build_cmds(t_list *lex, t_cmd **cmd)
 {	
+	int	i;
+
+	i = 0;
 	if (!lex)
 		return ;
-	add_newnode_back(cmd);
+	add_newnode_back(cmd, ft_lstsize(lex));
 	while (lex)
 	{
 		if (((t_content *)(lex->content))->token == PIPE)
 		{
-			fill_cmd(lex, *cmd);
-			add_newnode_back(cmd);
+			fill_cmd_struct(lex, *cmd, &i);
+			add_newnode_back(cmd, ft_lstsize(lex));
 		}
-		fill_cmd(lex, *cmd);
+		fill_cmd_struct(lex, *cmd, &i);
 		lex = lex->next;
 	}
-	printf("cmd:	%s\n", (*cmd)->cmd);
-	printf("opt:	%s\n", (*cmd)->opt);
-	printf("arg:	%s\n", (*cmd)->arg);
-	if((*cmd)->in)
-		printf("%d:	%s\n", ((t_content *)((*cmd)->in->content))->token, ((t_content *)((*cmd)->in->content))->word);
-	if((*cmd)->out)
-		printf("%d:	%s\n", ((t_content *)((*cmd)->out->content))->token, ((t_content *)((*cmd)->out->content))->word);
-
-		
+	// printf("char *args[]:");
+	// while (*((*cmd)->args))
+	// {
+	// 	printf("	\"%s\"", *((*cmd)->args));
+	// 	((*cmd)->args)++;
+	// }
+	// printf("\n");
+	// if((*cmd)->in)
+	// 	printf("token:%d	%s\n", ((t_content *)((*cmd)->in->content))->token, ((t_content *)((*cmd)->in->content))->word);
+	// if((*cmd)->out)
+	// 	printf("token:%d	%s\n", ((t_content *)((*cmd)->out->content))->token, ((t_content *)((*cmd)->out->content))->word);	
 }
 
-t_cmd *parse(t_list *lex)
+t_cmd	*parse(t_list *lex)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
 
 	cmd = NULL;
-	ft_lstiter(lex, rm_quotes);
+	ft_lstiter(lex, expander);
 	//ft_lstiter(lex, print_content);
-	//build_cmds(lex, &cmd);
+	build_cmds(lex, &cmd);
 	return (cmd);
 }

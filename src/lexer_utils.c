@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/01 01:53:24 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/04 22:14:34 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ int	get_closing_quote(char *lptr, char quote)
 t_quote	toggle_quote(char *str, t_quote quote)
 {
 	if (str[0] == '\'' && quote == S_QUOTE)
-		quote = NO_QUOTE;
+		return (NO_QUOTE);
 	if (str[0] == '\'' && get_closing_quote(&str[0], '\'') && !quote)
-		quote = S_QUOTE;
+		return (S_QUOTE);
 	if (str[0] == '\"' && quote == D_QUOTE)
-		quote = NO_QUOTE;
+		return (NO_QUOTE);
 	if (str[0] == '\"' && get_closing_quote(&str[0], '\"') && !quote)
-		quote = D_QUOTE;
+		return (D_QUOTE);
 	return (quote);
 }
 
@@ -47,6 +47,7 @@ int	get_len(char *lptr, int i)
 	while (lptr[i] != '\0')
 	{
 		quote = toggle_quote(&lptr[i], quote);
+		printf("quote: %d, char: %c\n", quote, lptr[i]);
 		if (lptr[i] == ' ' && !quote)
 			return (i);
 		i++;

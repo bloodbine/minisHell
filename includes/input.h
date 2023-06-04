@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/01 01:33:26 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/04 23:21:46 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,18 @@ typedef struct s_lexdata
 	t_quote	quote;
 }			t_lexdata;
 
+typedef struct s_expdata
+{
+	int		i;
+	int		start;
+	int		count;
+	char	*sub;
+	char	quotes;
+}			t_expdata;
+
 typedef struct s_cmd
 {
-	char	*cmd;		
-	char	*opt;
-	char	*arg;
+	char	**args;
 	t_list	*in;		
 	t_list	*out;
 	char	*builtin;
@@ -67,19 +74,18 @@ int			is_token(char *str);
 int			get_tokens(t_list **token, t_lexdata *l_data);
 t_list 		*tokenize(t_list *substring, t_lexdata *l_data);
 char		get_outer_quotes(char *str);
-char		*remove_outer_quotes(char *str, char quotes);
-void		rm_quotes(void *data);
+char		*rm_quotes(char *str, char quotes);
+void		expander(void *data);
 t_cmd 		*parse(t_list *lex);
 t_content 	*init_content(char *str);
 char		*my_strcpy(char *str);
-void		add_newnode_back(t_cmd **cmd);
-void		init_newnode(t_cmd *new);
-char		*my_strcpy(char *str);
-char		*expand_env_var(char *str);
-char		*expand(char *str, char quotes);
+void		add_newnode_back(t_cmd **cmd, int lstsize);
+void		init_newnode(t_cmd *new, int lstsize);
+char		*exp_env_var(char *str);
+char		*expand(char *str, t_expdata *exp_data);
 int			dollar_pos(char *str);
 int			my_strlen(char *str);
-char		*my_strjoin(char *s1, char *s2);
+char		*my_strjoin(char *s1, char *s2, int id);
 int			get_seq(char *str, char **seq);
 t_quote		toggle_quote(char *str, t_quote quote);
 void		clear_str(void *data);
