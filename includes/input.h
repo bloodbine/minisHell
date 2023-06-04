@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/04 23:21:46 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/04 23:55:33 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct s_expdata
 
 typedef struct s_cmd
 {
-	char	**args;
+	char	**args;  //for execve
 	t_list	*in;		
 	t_list	*out;
 	char	*builtin;

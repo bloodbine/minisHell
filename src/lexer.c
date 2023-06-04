@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/04 23:26:54 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/05 00:03:50 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ t_list	*get_substrings(char *lptr)
 		if (lptr[i] != ' ')
 		{
 			end = get_len(lptr, i);
-			printf("end: %d\n", end);
 			ft_lstadd_back(&lexlst, ft_lstnew(ft_substr(lptr, i, end - i)));
 			i = end;
 		}

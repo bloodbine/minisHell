@@ -6,19 +6,17 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/04 23:25:34 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/05 00:15:54 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// void	print_content(void *data) 
-// {
-//     t_content *content = (t_content *)data;
-// 	printf("next\n");
-//     printf("token: %d   word: %s\n", content->token, content->word);
-
-// }
+void	print_content(void *data) 
+{
+    t_content *content = (t_content *)data;
+    printf("	%s", content->word);
+}
 
 void	fill_redir(t_cmd *cmd, t_content *l)
 {
@@ -91,6 +89,30 @@ void	build_cmds(t_list *lex, t_cmd **cmd)
 	// 	printf("token:%d	%s\n", ((t_content *)((*cmd)->out->content))->token, ((t_content *)((*cmd)->out->content))->word);	
 }
 
+void print_cmds(t_cmd *cmd)
+{
+
+	while (cmd && cmd->prev)
+		cmd = cmd->prev;
+	while (cmd)
+	{
+		printf("char **args:");
+		while(*cmd->args)
+		{
+			printf("	%s", *(cmd->args));
+			(cmd->args)++;
+		}
+		printf("\n");
+		printf("in:");
+		ft_lstiter(cmd->in, print_content);
+		printf("\n");
+		printf("out:");
+		ft_lstiter(cmd->out, print_content);
+		printf("\n");
+		cmd = cmd->next;
+	}
+}
+
 t_cmd	*parse(t_list *lex)
 {
 	t_cmd	*cmd;
@@ -99,5 +121,6 @@ t_cmd	*parse(t_list *lex)
 	ft_lstiter(lex, expander);
 	//ft_lstiter(lex, print_content);
 	build_cmds(lex, &cmd);
+	print_cmds(cmd);
 	return (cmd);
 }
