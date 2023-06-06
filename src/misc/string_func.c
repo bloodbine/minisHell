@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   string_func.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@42heilbronn.student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:28:25 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/04 23:25:00 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/06 11:00:21 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int	my_strlen(char *str)
 {

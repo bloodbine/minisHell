@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   miniexec.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@42heilbronn.student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/05/27 16:13:14 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/06 11:01:24 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int	execpipeline(t_cmd *cmds)
 {

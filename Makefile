@@ -5,36 +5,43 @@ SRCDIR	= src/
 INCDIR 	= -I ./include -I ./Users/$(USER)/.brew/opt/readline/include
 LIBFT   = ./includes/libft/libft.a
 
-SRC		=	minishell.c \
-			lexer.c \
-			lexer_utils.c \
-			lexer_utils2.c \
-			parser.c \
-			parser_utils.c \
-			expander.c \
-			expander_utils.c \
-			string_func.c
-			
+MAIN	=	minishell
 
-SRCOBJ	= $(patsubst %.c, $(OBJDIR)%.o, $(SRC))
+LEXER		=	lexer/lexer \
+				lexer/lexer_utils \
+				lexer/lexer_utils2
+
+PARSER		=	parser/parser \
+				parser/parser_utils
+
+EXPANDER	=	expander/expander \
+				expander/expander_utils
+
+MISC		=	misc/string_func
+
+SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(MISC)
+
+SRC	= $(addprefix $(SRCDIR), $(addsuffix .c, $(SOURCE)))
+OBJ	= $(addprefix $(OBJDIR), $(addsuffix .o, $(SOURCE)))
 
 CC		= cc
-RMF		= rm -f
+RMF	= rm -f
+RMRF	= rm -rf
 RMDIR	= rmdir
 CFLAGS	= -Wall -Wextra -Werror 
 FFLAGS	= -lreadline -L /usr/local/Cellar/readline/8.2.1/lib
 
-$(OBJDIR)%.o: $(SRCDIR)%.c libmake 
-	mkdir -p $(OBJDIR)
-	@$(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
+$(OBJDIR)%.o: $(SRCDIR)%.c
+	mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
 
-$(NAME): $(SRCOBJ)
-	@$(CC) $(SRCOBJ) $(CFLAGS) $(LIBFT) -o $(NAME) $(FFLAGS)
+$(NAME): libmake $(OBJ)
+	$(CC) $(OBJ) $(CFLAGS) $(LIBFT) -o $(NAME) $(FFLAGS)
 
 libmake:
-	@git submodule update --init --recursive --remote
-	@$(MAKE) all bonus -C ./includes/libft
-	@curl https://icanhazdadjoke.com/
+	git submodule update --init --recursive --remote
+	$(MAKE) all bonus -C ./includes/libft
+	# curl https://icanhazdadjoke.com/
 
 # check_brew:
 # 	@if [ `which brew` = "$(HOME)/.brew/bin/brew" ]; then \
@@ -52,8 +59,7 @@ libmake:
 # 	fi
 
 clean:
-	$(RMF) $(SRCOBJ)
-	if [ -d "obj" ]; then $(RMDIR) $(OBJDIR); fi
+	$(RMRF) $(OBJ)
 
 fclean: clean
 	$(RMF) $(NAME)
