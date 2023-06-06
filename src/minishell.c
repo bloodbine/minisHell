@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/26 17:17:16 by ffederol          #+#    #+#             */
-/*   Updated: 2023/05/29 23:03:40 by ffederol         ###   ########.fr       */
+/*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
+/*   Updated: 2023/06/04 23:26:34 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "../includes/minishell.h"
 
-# include <stdio.h>
-#  include <readline/readline.h>
-#  include <readline/history.h>
-#  include "libft/libft.h"
-#  include "input.h"
-
-typedef struct s_data
+int	main(void)
 {
-	t_cmd	*cmd;
-}			t_data;
+	char	*lptr;
+	t_data	data;
 
-#endif
+	while (1)
+	{
+		lptr = readline("$ >");
+		data.cmd = parse(lex(lptr));
+		free(lptr);
+	}
+	return (0);
+}
