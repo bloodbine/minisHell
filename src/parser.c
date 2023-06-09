@@ -6,35 +6,45 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/05 00:15:54 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/09 05:43:08 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	print_content(void *data) 
+void	print_content(void *data)
 {
     t_content *content = (t_content *)data;
-    printf("	%s", content->word);
+    printf("	%s(%d)", content->word, content->token);
 }
 
 void	fill_redir(t_cmd *cmd, t_content *l)
 {
+	char	*word;
+
+	word = my_strcpy(l->word);
 	if (l->token == OUT)
 	{
-		ft_lstadd_back(&(cmd->out), ft_lstnew(init_content(l->word)));
-		((t_content *)(cmd->out->content))->token = OUT;
+		ft_lstadd_back(&(cmd->out), ft_lstnew(init_content(word)));
+		((t_content *)(ft_lstlast(cmd->out)->content))->token = OUT;
 	}
-	if (l->token == IN)
+	else if (l->token == IN)
 	{
-		ft_lstadd_back(&(cmd->in), ft_lstnew(init_content(l->word)));
-		((t_content *)(cmd->in->content))->token = IN;
+		ft_lstadd_back(&(cmd->in), ft_lstnew(init_content(word)));
+		((t_content *)(ft_lstlast(cmd->in)->content))->token = IN;
 	}
-	if (l->token == APPEND)
+	else if (l->token == APPEND)
 	{
-		ft_lstadd_back(&(cmd->out), ft_lstnew(init_content(l->word)));
-		((t_content *)(cmd->out->content))->token = APPEND;
+		ft_lstadd_back(&(cmd->out), ft_lstnew(init_content(word)));
+		((t_content *)(ft_lstlast(cmd->out)->content))->token = APPEND;
 	}
+	else if (l->token == HEREDOC)
+	{
+		ft_lstadd_back(&(cmd->in), ft_lstnew(init_content(word)));
+		((t_content *)(ft_lstlast(cmd->in)->content))->token = HEREDOC;
+	}
+	else
+		free (word);
 }
 
 void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i)
@@ -56,6 +66,7 @@ void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i)
 		(*i)++;
 	}
 	fill_redir(cmd, l);
+	set_builtin(cmd);
 }
 
 void	build_cmds(t_list *lex, t_cmd **cmd)
@@ -121,6 +132,7 @@ t_cmd	*parse(t_list *lex)
 	ft_lstiter(lex, expander);
 	//ft_lstiter(lex, print_content);
 	build_cmds(lex, &cmd);
+	ft_lstclear(&lex, clear_content);
 	print_cmds(cmd);
 	return (cmd);
 }

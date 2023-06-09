@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:28:25 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/04 23:25:00 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/07 20:00:47 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,26 @@ void	str_free(char *s1, char *s2, int id)
 		free(s1);
 	if ((id == 2 || id == 3) && s2)
 		free(s2);
+}
+
+char	*my_strcpy(char *str)
+{
+	size_t	i;
+	char	*new;
+
+	i = 0;
+	if (!str)
+		return (NULL);
+	new = malloc(sizeof(char) * ft_strlen(str) + 1);
+	if (!new)
+		return (NULL);
+	while (str[i] != '\0')
+	{
+		new[i] = str[i];
+		i++;
+	}
+	new[i] = '\0';
+	return (new);
 }
 
 char	*my_strjoin(char *s1, char *s2, int id)

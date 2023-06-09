@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/04 23:55:33 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/09 04:21:24 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct s_cmd
 	char	**args;  //for execve
 	t_list	*in;		
 	t_list	*out;
-	char	*builtin;
+	int		builtin;
 	int		idx;
 	struct	s_cmd	*next;
 	struct	s_cmd	*prev;
@@ -79,12 +79,13 @@ void		expander(void *data);
 t_cmd 		*parse(t_list *lex);
 t_content 	*init_content(char *str);
 char		*my_strcpy(char *str);
-void		add_newnode_back(t_cmd **cmd, int lstsize);
+int			add_newnode_back(t_cmd **cmd, int lstsize);
 void		init_newnode(t_cmd *new, int lstsize);
 char		*exp_env_var(char *str);
 char		*expand(char *str, t_expdata *exp_data);
 int			dollar_pos(char *str);
 int			my_strlen(char *str);
+char		*my_strcpy(char *str);
 char		*my_strjoin(char *s1, char *s2, int id);
 int			get_seq(char *str, char **seq);
 t_quote		toggle_quote(char *str, t_quote quote);
@@ -92,5 +93,7 @@ void		clear_str(void *data);
 void		clear_content(void *data);
 void		add_token(t_lexdata *l_data, t_list **token);
 void		add_word(t_lexdata *l_data, t_list **token);
+void		set_builtin(t_cmd *cmd);
+int			heredoc(char *delim);
 
 #endif

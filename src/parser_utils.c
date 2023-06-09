@@ -6,30 +6,30 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:09:53 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/04 20:23:59 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/09 04:20:09 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*my_strcpy(char *str)
+void	set_builtin(t_cmd *cmd)
 {
-	size_t	i;
-	char	*new;
-
-	i = 0;
-	if (!str)
-		return (NULL);
-	new = malloc(sizeof(char) * ft_strlen(str) + 1);
-	if (!new)
-		return (NULL);
-	while (str[i] != '\0')
-	{
-		new[i] = str[i];
-		i++;
-	}
-	new[i] = '\0';
-	return (new);
+	if (!cmd->args[0])
+		return ;
+	if (!ft_strncmp(cmd->args[0], "echo", 4))
+		cmd->builtin = 1;
+	else if (!ft_strncmp(cmd->args[0], "cd", 2))
+		cmd->builtin = 1;
+	else if (!ft_strncmp(cmd->args[0], "pwd", 3))
+		cmd->builtin = 1;
+	else if (!ft_strncmp(cmd->args[0], "export", 6))
+		cmd->builtin = 1;
+	else if (!ft_strncmp(cmd->args[0], "unset", 5))
+		cmd->builtin = 1;
+	else if (!ft_strncmp(cmd->args[0], "env", 3))
+		cmd->builtin = 1;
+	else if (!ft_strncmp(cmd->args[0], "exit", 4))
+		cmd->builtin = 1;
 }
 
 char	**init_args(int lstsize)
@@ -40,7 +40,7 @@ char	**init_args(int lstsize)
 	i = 0;
 	new = malloc(sizeof(char *) * (lstsize + 1));
 	if (!new)
-		return (NULL); //check for memoryhandling!!
+		return (NULL);
 	while (i < lstsize)
 	{
 		new[i] = NULL;
@@ -55,12 +55,12 @@ void	init_newnode(t_cmd *new, int lstsize)
 	new->args = init_args(lstsize);
 	new->in = NULL;
 	new->out = NULL;
-	new->builtin = NULL;
+	new->builtin = 0;
 	new->next = NULL;
 	new->idx = 0;
 }
 
-void	add_newnode_back(t_cmd **cmd, int lstsize)
+int	add_newnode_back(t_cmd **cmd, int lstsize)
 {
 	t_cmd	*new;
 
@@ -68,8 +68,16 @@ void	add_newnode_back(t_cmd **cmd, int lstsize)
 		*cmd = (*cmd)->next;
 	new = malloc(sizeof(t_cmd));
 	if (!new)
-		return ;
+	{
+		write(2, "allocation failed \n", 19);
+		return (-1);	
+	}
 	init_newnode(new, lstsize);
+	if (!new->args)
+	{
+		write(2, "allocation failed \n", 19);
+		return (-1);	
+	}
 	new->prev = *cmd;
 	if (*cmd)
 	{
@@ -77,4 +85,5 @@ void	add_newnode_back(t_cmd **cmd, int lstsize)
 		new->idx = (*cmd)->idx + 1;
 	}
 	*cmd = new;
+	return (0);
 }

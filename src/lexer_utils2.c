@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/01 01:38:21 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/09 05:35:57 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ t_content	*init_content(char *str)
 	else if (!ft_strncmp(str, "<", 1))
 		content->token = IN;
 	else
-		content->word = str;
+		content->word = my_strcpy(str);
+	free (str);
 	return (content);
 }
 
@@ -43,20 +44,15 @@ void	add_token(t_lexdata *l_data, t_list **token)
 {
 	char	*s;
 
-	printf("test1\n");
-	if (l_data->redir)
-	{
-		printf("test\n");
-		printf("ERROR!\n"); // ERRORHANDLING
-		exit (1);
-	}	
 	s = ft_substr(l_data->str, l_data->i, l_data->len);
 	if (s[0] != '\0' && !(l_data->redir))
 	{
-		ft_lstadd_back(token, ft_lstnew(init_content(s)));
 		if (s[0] != '|')
 			l_data->redir = 1;
+		ft_lstadd_back(token, ft_lstnew(init_content(s)));
 	}
+	else
+		free (s);
 }
 
 void	add_word(t_lexdata *l_data, t_list **token)
@@ -66,11 +62,13 @@ void	add_word(t_lexdata *l_data, t_list **token)
 	s = ft_substr(l_data->str, l_data->start, l_data->i - l_data->start);
 	if (s[0] != '\0' && !(l_data->redir))
 		ft_lstadd_back(token, ft_lstnew(init_content(s)));
-	else if (s[0] != '\0' && l_data->redir) //check first char "<>|"
+	else if (s[0] != '\0' && l_data->redir)
 	{
 		((t_content *)(ft_lstlast(*token)->content))->word = s;
 		l_data->redir = 0;
 	}
+	else
+		free (s);
 }
 
 void	clear_content(void *data)
@@ -80,6 +78,7 @@ void	clear_content(void *data)
 	content = (t_content *)data;
 	if (content->word)
 		free(content->word);
+	free (content);
 }
 
 void	clear_str(void *data)

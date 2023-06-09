@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:17:16 by ffederol          #+#    #+#             */
-/*   Updated: 2023/05/29 23:03:40 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/08 23:36:57 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #  include <readline/history.h>
 #  include "libft/libft.h"
 #  include "input.h"
+#  include <fcntl.h>
 
 typedef struct s_data
 {
