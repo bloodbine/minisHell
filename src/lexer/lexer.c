@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@42heilbronn.student.    +#+  +:+       +#+        */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/06 11:00:06 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/09 05:10:39 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
 
 // void	print_content(void *data)
 // {
@@ -41,7 +41,7 @@ t_list	*get_substrings(char *lptr)
 		{
 			end = get_len(lptr, i);
 			ft_lstadd_back(&lexlst, ft_lstnew(ft_substr(lptr, i, end - i)));
-			i = end;
+			i = end - 1;
 		}
 		i++;
 	}
@@ -61,7 +61,7 @@ int	get_tokens(t_list **token, t_lexdata *l_data)
 		l_data->len = is_token(&(l_data->str[l_data->i]));
 		if (l_data->len != 0 && !quote)
 		{
-			if (l_data->len == -1)
+			if (l_data->len == -1 || l_data->redir)
 				return (-1);
 			add_word(l_data, token);
 			add_token(l_data, token);
@@ -78,19 +78,24 @@ int	get_tokens(t_list **token, t_lexdata *l_data)
 t_list	*tokenize(t_list *substring, t_lexdata *l_data)
 {
 	t_list	*token;
+	t_list	*temp;
 
+	temp = substring;
 	token = NULL;
 	// ft_lstiter(substring, print_content1);
-	while (substring)
+	while (temp)
 	{
-		l_data->str = substring->content;
+		l_data->str = temp->content;
 		if (get_tokens(&token, l_data) == -1)
 		{
-			printf("Error!\n");
+			write(2, "minishell: parse error near unexpected token ", 45);
+			write(2, &l_data->str[l_data->i], 1); // ERRORHANDLING
+			write(2, "\n", 1);
 			ft_lstclear(&token, clear_content);
-			break ;
-		}
-		substring = substring->next;
+			ft_lstclear(&substring, clear_str);
+			exit (1);
+		}	
+		temp = temp->next;
 	}
 	//ft_lstiter(token, print_content);
 	ft_lstclear(&substring, clear_str);
@@ -101,7 +106,10 @@ void	init_lex_data(t_lexdata **l_data)
 {
 	*l_data = malloc(sizeof(t_lexdata));
 	if (!l_data)
-		exit (1); //ERRORHANDLING!!!
+	{
+		write(2, "allocation failed", 17);
+		exit (1);
+	}
 	(*l_data)->i = 0;
 	(*l_data)->len = 0;
 	(*l_data)->redir = 0;
@@ -120,5 +128,6 @@ t_list	*lex(char *lptr)
 	init_lex_data(&l_data);
 	substring = get_substrings(lptr);
 	lex = tokenize(substring, l_data);
+	free (l_data);
 	return (lex);
 }

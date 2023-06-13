@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@42heilbronn.student.    +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:17:16 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/09 19:21:10 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/13 16:39:16 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 # define MINISHELL_H
 
 # include <stdio.h>
-# include <fcntl.h>
-# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
 # include "input.h"
+# include <fcntl.h>
 
 typedef struct s_data
 {
