@@ -29,7 +29,7 @@ RMF	= rm -f
 RMRF	= rm -rf
 RMDIR	= rmdir
 CFLAGS	= -Wall -Wextra -Werror 
-FFLAGS	= -lreadline -L /usr/local/Cellar/readline/8.2.1/lib
+FFLAGS	= -lreadline -L /Users/$(USER)/.brew/opt/readline/lib
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	mkdir -p $(@D)
@@ -60,6 +60,7 @@ libmake:
 
 clean:
 	$(RMRF) $(OBJ)
+	$(RMRF) $(OBJDIR)
 
 fclean: clean
 	$(RMF) $(NAME)

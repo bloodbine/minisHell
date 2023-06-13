@@ -3,42 +3,62 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@42heilbronn.student.    +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/09 20:12:45 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/13 16:22:29 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	open_infile(char *file, int *infd)
+int	open_infile(t_cmd *cmd)
 {
-	if (file != NULL)
-		*infd = open(file, O_RDONLY, 0644);
-	else
-		return (0);
-	if (*infd == -1)
-	{
-		perror("minishell");
-		*infd = open("/dev/null", O_RDONLY, 0644);
-		if (*infd == -1)
-			return (1);
-	}
-	dup2(*infd, STDIN_FILENO);
-	return (1);
+	int	fd;
+
+	if (cmd->prev == NULL && cmd->in != NULL)
+		fd = open(cmd->in, );
 }
 
-int	open_outfile(char *file, int *outfd)
+int	open_outfile(t_cmd *cmd)
 {
-	if (file != NULL)
-		*outfd = open(file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-	else
+	
+}
+
+int	check_builtins(char *cmd)
+{
+	if (ft_strncmp(cmd, "./", 2) == 0)
 		return (0);
-	if (*outfd == -1)
+	if (ft_strncmp(cmd, "echo", 4) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "cd", 2) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "pwd", 3) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "export", 6) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "unset", 5) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "env", 3) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "exit", 4) == 0)
+		return (1);
+	return (0);
+}
+
+int	check_exist_access(char *cmd)
+{
+	if (access(cmd, F_OK) == -1)
 	{
-		perror("minishell");
+		write(2, &cmd, ft_strlen(cmd));
+		write(2, " :command not found\n", 20);
 		return (1);
 	}
-	return (1);
+	if (access(cmd, X_OK) == -1)
+	{
+		write(2, &cmd, ft_strlen(cmd));
+		write(2, " :bad permissions\n", 18);
+		return (1);
+	}
+	return (0);
 }
