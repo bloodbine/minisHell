@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/09 05:43:08 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/14 12:05:57 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,25 @@ void	fill_redir(t_cmd *cmd, t_content *l)
 		free (word);
 }
 
-void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i)
+void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i, int *argument)
 {
 	t_content	*l;
-
+	
 	l = ((t_content *)(lex->content));
 	if (l->token == WORD)
 	{
 		if (!(cmd->args[0]))
 			cmd->args[0] = my_strcpy(l->word);
-		else if (!cmd->args[2] && l->word[0] == '-')
+		else if (!(*argument) && l->word[0] == '-')
 		{
 			cmd->args[1] = my_strjoin(cmd->args[1], &(l->word[*i - 1]), 1);
 			*i = 1;
 		}
 		else
+		{
 			cmd->args[*i] = my_strcpy(l->word);
+			*argument = 1;
+		}
 		(*i)++;
 	}
 	fill_redir(cmd, l);
@@ -72,7 +75,9 @@ void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i)
 void	build_cmds(t_list *lex, t_cmd **cmd)
 {	
 	int	i;
-
+	int	argument;
+	
+	argument = 0;
 	i = 0;
 	if (!lex)
 		return ;
@@ -81,10 +86,12 @@ void	build_cmds(t_list *lex, t_cmd **cmd)
 	{
 		if (((t_content *)(lex->content))->token == PIPE)
 		{
-			fill_cmd_struct(lex, *cmd, &i);
+			fill_cmd_struct(lex, *cmd, &i, &argument);
 			add_newnode_back(cmd, ft_lstsize(lex));
+			argument = 0;
+			i = 0;
 		}
-		fill_cmd_struct(lex, *cmd, &i);
+		fill_cmd_struct(lex, *cmd, &i, &argument);
 		lex = lex->next;
 	}
 	// printf("char *args[]:");
