@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/09 06:51:02 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/14 12:14:18 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 char	get_outer_quotes(char *str)
 {

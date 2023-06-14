@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/13 15:22:42 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/14 13:03:03 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,15 @@
 
 int	input(t_cmd *cmd)
 {
-	if (cmd->prev != NULL && cmd->in != NULL)
+	t_list	*in;
+	int		fd;
+
+	fd = -2;
+	in = cmd->in;
+	while (in != NULL)
 	{
-		
+		if (fd == -2)
+		in = in->next;
 	}
 }
 

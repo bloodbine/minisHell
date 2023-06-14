@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:09:53 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/09 04:20:09 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/14 12:14:52 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 void	set_builtin(t_cmd *cmd)
 {

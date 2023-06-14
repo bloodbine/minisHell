@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/13 16:22:29 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/13 16:49:41 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ int	open_infile(t_cmd *cmd)
 {
 	int	fd;
 
-	if (cmd->prev == NULL && cmd->in != NULL)
-		fd = open(cmd->in, );
+
 }
 
 int	open_outfile(t_cmd *cmd)
