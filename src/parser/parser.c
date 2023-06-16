@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/16 11:20:05 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/16 15:53:52 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,9 +129,12 @@ t_cmd	*parse(t_list *lex)
 
 	cmd = NULL;
 	ft_lstiter(lex, expander);
-	//ft_lstiter(lex, print_content);
+	// ft_lstiter(lex, print_content);
 	build_cmds(lex, &cmd);
 	ft_lstclear(&lex, clear_content);
-	print_cmds(cmd);
+	// print_cmds(cmd);
+	cmd->next = NULL;
+	while (cmd && cmd->prev)
+		cmd = cmd->prev;
 	return (cmd);
 }
