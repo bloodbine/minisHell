@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/05 00:03:59 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/16 17:12:59 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ int	is_token(char *str)
 			return (0);
 		return (1);
 	}
-	if ((str[1] == str[0] && !(ft_strchr("|><", str[2]))) || str[2] == '\0')
+	if (str[1] == str[0] && (!(ft_strchr("|><", str[2])) || str[2] == '\0'))
 		return (2);
 	else if (str[1] == str[0])
-		return (-1);
+		return (3);
 	return (1);
 }

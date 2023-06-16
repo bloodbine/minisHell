@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/14 12:05:57 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/16 17:17:56 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,16 @@ void	build_cmds(t_list *lex, t_cmd **cmd)
 	// 	printf("token:%d	%s\n", ((t_content *)((*cmd)->out->content))->token, ((t_content *)((*cmd)->out->content))->word);	
 }
 
-void print_cmds(t_cmd *cmd)
+t_cmd	*get_first_node(t_cmd *cmd)
 {
-
 	while (cmd && cmd->prev)
 		cmd = cmd->prev;
+	return (cmd);
+}
+
+void print_cmds(t_cmd *cmd)
+{
+		cmd = get_first_node(cmd);
 	while (cmd)
 	{
 		printf("char **args:");
@@ -136,10 +141,11 @@ t_cmd	*parse(t_list *lex)
 	t_cmd	*cmd;
 
 	cmd = NULL;
+	
 	ft_lstiter(lex, expander);
 	//ft_lstiter(lex, print_content);
 	build_cmds(lex, &cmd);
 	ft_lstclear(&lex, clear_content);
 	print_cmds(cmd);
-	return (cmd);
+	return (get_first_node(cmd));
 }

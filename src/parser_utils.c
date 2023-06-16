@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:09:53 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/09 04:20:09 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/14 15:25:57 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,13 @@ int	add_newnode_back(t_cmd **cmd, int lstsize)
 	if (!new)
 	{
 		write(2, "allocation failed \n", 19);
-		return (-1);	
+		return (-1);
 	}
 	init_newnode(new, lstsize);
 	if (!new->args)
 	{
 		write(2, "allocation failed \n", 19);
-		return (-1);	
+		return (-1);
 	}
 	new->prev = *cmd;
 	if (*cmd)
