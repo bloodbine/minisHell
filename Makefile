@@ -17,9 +17,12 @@ PARSER		=	parser/parser \
 EXPANDER	=	expander/expander \
 				expander/expander_utils
 
+EXECUTION	=	execution/exec	\
+				execution/exec_utils
+
 MISC		=	misc/string_func
 
-SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(MISC)
+SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(MISC)
 
 SRC	= $(addprefix $(SRCDIR), $(addsuffix .c, $(SOURCE)))
 OBJ	= $(addprefix $(OBJDIR), $(addsuffix .o, $(SOURCE)))

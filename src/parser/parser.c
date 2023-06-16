@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/14 12:14:56 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/16 11:20:05 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,8 @@ void	build_cmds(t_list *lex, t_cmd **cmd)
 	// 	printf("token:%d	%s\n", ((t_content *)((*cmd)->out->content))->token, ((t_content *)((*cmd)->out->content))->word);	
 }
 
-void print_cmds(t_cmd *cmd)
+void	print_cmds(t_cmd *cmd)
 {
-
 	while (cmd && cmd->prev)
 		cmd = cmd->prev;
 	while (cmd)

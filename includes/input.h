@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/13 16:46:23 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/16 11:23:30 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ typedef struct s_expdata
 typedef struct s_cmd
 {
 	char	**args;  //for execve
-	t_list	*in;		
+	char	**envp;
+	t_list	*in;
 	t_list	*out;
 	int		builtin;
 	int		idx;
