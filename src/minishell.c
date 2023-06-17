@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/16 17:03:04 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/17 12:18:06 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	main(int argc, char **argv, char **envp)
 	{
 		lptr = readline("$ >");
 		data.cmd = parse(lex(lptr));
-		printf("DEBUG: ARGS: %s\n", data.cmd->args[0]);
 		data.cmd->envp = envp;
 		execute(data.cmd);
 		free(lptr);

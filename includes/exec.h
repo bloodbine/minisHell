@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 12:27:55 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/16 18:30:15 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:48:55 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 int		check_file(char *file, int check);
 int		check_exist_access(char *cmd);
 char	*check_paths(char *cmd);
+int		exec_command(t_cmd *cmd);
 int		execute(t_cmd *cmds);
+
 
 #endif
