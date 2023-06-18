@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:09:53 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/14 12:14:52 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/18 13:05:50 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,13 @@ int	add_newnode_back(t_cmd **cmd, int lstsize)
 	if (!new)
 	{
 		write(2, "allocation failed \n", 19);
-		return (-1);	
+		return (-1);
 	}
 	init_newnode(new, lstsize);
 	if (!new->args)
 	{
 		write(2, "allocation failed \n", 19);
-		return (-1);	
+		return (-1);
 	}
 	new->prev = *cmd;
 	if (*cmd)

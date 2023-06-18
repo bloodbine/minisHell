@@ -6,36 +6,26 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/18 12:39:23 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/18 13:04:31 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+int	main(void)
 {
 	char	*lptr;
 	t_data	data;
 
-	if (argc != 1)
-		return (1);
-	argv = NULL;
-	envp = NULL;
 	while (1)
 	{
 		lptr = readline("$ >");
-		printf("line test: %s\n", lptr);
-		if (lptr != NULL)
-		{
-			data.cmd = parse(lex(lptr));
-			if (data.cmd != NULL)
-			{
-				data.cmd->envp = envp;
-				execute(data.cmd);
-			}
-		}
+		if(lptr[0] != '\0')
+			add_history(lptr);
+		data.cmd = parse(lex(lptr));
 		free(lptr);
-		lptr = NULL;
+		
 	}
+	rl_clear_history();
 	return (0);
 }

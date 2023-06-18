@@ -6,13 +6,13 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/14 12:14:40 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/18 13:05:41 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// void	print_content(void *data)
+// void	print_content2(void *data)
 // {
 // 	t_content	*content = (t_content *)data;
 // 	printf("next\n");
@@ -61,7 +61,7 @@ int	get_tokens(t_list **token, t_lexdata *l_data)
 		l_data->len = is_token(&(l_data->str[l_data->i]));
 		if (l_data->len != 0 && !quote)
 		{
-			if (l_data->len == -1 || l_data->redir)
+			if (l_data->len == 3 || (l_data->redir && l_data->i < 2))
 				return (-1);
 			add_word(l_data, token);
 			add_token(l_data, token);
@@ -82,22 +82,23 @@ t_list	*tokenize(t_list *substring, t_lexdata *l_data)
 
 	temp = substring;
 	token = NULL;
-	// ft_lstiter(substring, print_content1);
+	// ft_lstiter(substring, print_content1);<
 	while (temp)
 	{
 		l_data->str = temp->content;
 		if (get_tokens(&token, l_data) == -1)
 		{
 			write(2, "minishell: parse error near unexpected token ", 45);
-			write(2, &l_data->str[l_data->i], 1); // ERRORHANDLING
+			write(2, &l_data->str[l_data->i + l_data->len - 1], 1);
 			write(2, "\n", 1);
 			ft_lstclear(&token, clear_content);
 			ft_lstclear(&substring, clear_str);
+			rl_clear_history();
 			exit (1);
 		}	
 		temp = temp->next;
 	}
-	//ft_lstiter(token, print_content);
+	// ft_lstiter(token, print_content2);
 	ft_lstclear(&substring, clear_str);
 	return (token);
 }
@@ -108,6 +109,7 @@ void	init_lex_data(t_lexdata **l_data)
 	if (!l_data)
 	{
 		write(2, "allocation failed", 17);
+		rl_clear_history();
 		exit (1);
 	}
 	(*l_data)->i = 0;

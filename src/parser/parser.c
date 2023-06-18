@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/18 10:40:09 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/18 13:05:55 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,25 @@ void	fill_redir(t_cmd *cmd, t_content *l)
 		free (word);
 }
 
-void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i)
+void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i, int *argument)
 {
 	t_content	*l;
-
+	
 	l = ((t_content *)(lex->content));
 	if (l->token == WORD)
 	{
 		if (!(cmd->args[0]))
 			cmd->args[0] = my_strcpy(l->word);
-		else if (!cmd->args[2] && l->word[0] == '-')
+		else if (!(*argument) && l->word[0] == '-')
 		{
 			cmd->args[1] = my_strjoin(cmd->args[1], &(l->word[*i - 1]), 1);
 			*i = 1;
 		}
 		else
+		{
 			cmd->args[*i] = my_strcpy(l->word);
+			*argument = 1;
+		}
 		(*i)++;
 	}
 	fill_redir(cmd, l);
@@ -72,7 +75,9 @@ void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i)
 void	build_cmds(t_list *lex, t_cmd **cmd)
 {	
 	int	i;
-
+	int	argument;
+	
+	argument = 0;
 	i = 0;
 	if (!lex)
 		return ;
@@ -81,10 +86,12 @@ void	build_cmds(t_list *lex, t_cmd **cmd)
 	{
 		if (((t_content *)(lex->content))->token == PIPE)
 		{
-			fill_cmd_struct(lex, *cmd, &i);
+			fill_cmd_struct(lex, *cmd, &i, &argument);
 			add_newnode_back(cmd, ft_lstsize(lex));
+			argument = 0;
+			i = 0;
 		}
-		fill_cmd_struct(lex, *cmd, &i);
+		fill_cmd_struct(lex, *cmd, &i, &argument);
 		lex = lex->next;
 	}
 	// printf("char *args[]:");
@@ -100,10 +107,16 @@ void	build_cmds(t_list *lex, t_cmd **cmd)
 	// 	printf("token:%d	%s\n", ((t_content *)((*cmd)->out->content))->token, ((t_content *)((*cmd)->out->content))->word);	
 }
 
-void	print_cmds(t_cmd *cmd)
+t_cmd	*get_first_node(t_cmd *cmd)
 {
 	while (cmd && cmd->prev)
 		cmd = cmd->prev;
+	return (cmd);
+}
+
+void print_cmds(t_cmd *cmd)
+{
+		cmd = get_first_node(cmd);
 	while (cmd)
 	{
 		printf("char **args:");
@@ -128,14 +141,11 @@ t_cmd	*parse(t_list *lex)
 	t_cmd	*cmd;
 
 	cmd = NULL;
+	
 	ft_lstiter(lex, expander);
-	// ft_lstiter(lex, print_content);
+	//ft_lstiter(lex, print_content);
 	build_cmds(lex, &cmd);
 	ft_lstclear(&lex, clear_content);
-	// print_cmds(cmd);
-	if (cmd != NULL)
-		cmd->next = NULL;
-	while (cmd && cmd->prev)
-		cmd = cmd->prev;
-	return (cmd);
+	print_cmds(cmd);
+	return (get_first_node(cmd));
 }

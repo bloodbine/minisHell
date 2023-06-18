@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/16 11:23:30 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/14 11:22:31 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef enum e_quote
 	D_QUOTE = 2
 }			t_quote;
 
-typedef struct s_content
+typedef struct s_content 
 {
 	char	*word;
 	t_tok	token;
@@ -58,8 +58,7 @@ typedef struct s_expdata
 typedef struct s_cmd
 {
 	char	**args;  //for execve
-	char	**envp;
-	t_list	*in;
+	t_list	*in;		
 	t_list	*out;
 	int		builtin;
 	int		idx;
