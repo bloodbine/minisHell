@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/16 17:17:56 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/18 15:53:09 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ t_cmd	*parse(t_list *lex)
 	t_cmd	*cmd;
 
 	cmd = NULL;
-	
+
 	ft_lstiter(lex, expander);
 	//ft_lstiter(lex, print_content);
 	build_cmds(lex, &cmd);

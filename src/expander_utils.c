@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/09 06:51:02 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/18 17:35:15 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,9 @@ char	*rm_quotes(char *str, char quotes)
 	int		i;
 	int		j;
 	char	*new;
-	int		count;
 
 	i = 0;
 	j = 0;
-	count = 0;
 	new = malloc(sizeof(char) * (ft_strlen(str) + 1));
 	if (!new)
 	{

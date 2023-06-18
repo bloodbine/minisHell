@@ -13,7 +13,8 @@ SRC		=	minishell.c \
 			parser_utils.c \
 			expander.c \
 			expander_utils.c \
-			string_func.c
+			string_func.c \
+			environment.c
 			
 
 SRCOBJ	= $(patsubst %.c, $(OBJDIR)%.o, $(SRC))
@@ -34,22 +35,22 @@ $(NAME): $(SRCOBJ)
 libmake: check_brew
 	@git submodule update --init --recursive --remote
 	@$(MAKE) all bonus -C ./includes/libft
-	@curl https://icanhazdadjoke.com/
+# 	@curl https://icanhazdadjoke.com/
 
-check_brew:
-	@if [ `which brew` = "$(HOME)/.brew/bin/brew" ]; then \
-		echo "Brew is installed"; \
-		if [ `find $(HOME)/.brew/Cellar -name "libreadline.dylib" | wc -l` -gt 0 ]; then \
-    		echo "readline is installed"; \
-		else \
-			echo "No readline found"; \
-			brew install readline; \
-		fi; \
-	else \
-		echo "No Brew found"; \
-		curl -fsSL https://rawgit.com/kube/42homebrew/master/install.sh | zsh; \
-		brew install readline; \
-	fi
+# check_brew:
+# 	@if [ `which brew` = "$(HOME)/.brew/bin/brew" ]; then \
+# 		echo "Brew is installed"; \
+# 		if [ `find $(HOME)/.brew/Cellar -name "libreadline.dylib" | wc -l` -gt 0 ]; then \
+#     		echo "readline is installed"; \
+# 		else \
+# 			echo "No readline found"; \
+# 			brew install readline; \
+# 		fi; \
+# 	else \
+# 		echo "No Brew found"; \
+# 		curl -fsSL https://rawgit.com/kube/42homebrew/master/install.sh | zsh; \
+# 		brew install readline; \
+# 	fi
 
 clean:
 	$(RMF) $(SRCOBJ)

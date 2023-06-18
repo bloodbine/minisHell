@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/09 06:49:39 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/18 16:05:46 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*exp_env_var(char *str)
 		expanded = my_strjoin(expanded, ft_substr(str, i, pos - i), 3);
 		pos += get_seq(&str[pos + 1], &seq);
 		i = pos + 1;
-		expanded = my_strjoin(expanded, my_strcpy(getenv(seq)), 3);
+		expanded = my_strjoin(expanded, my_strcpy(my_getenv(seq)), 3);
 		free(seq);
 		pos += dollar_pos(&str[pos]);
 	}

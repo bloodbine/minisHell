@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/16 17:14:34 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/18 16:36:41 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ t_list	*tokenize(t_list *substring, t_lexdata *l_data)
 			write(2, "\n", 1);
 			ft_lstclear(&token, clear_content);
 			ft_lstclear(&substring, clear_str);
+			ft_lstclear(&g_envp, clear_str);
 			rl_clear_history();
 			exit (1);
 		}	
@@ -110,6 +111,7 @@ void	init_lex_data(t_lexdata **l_data)
 	{
 		write(2, "allocation failed", 17);
 		rl_clear_history();
+		ft_lstclear(&g_envp, clear_str);
 		exit (1);
 	}
 	(*l_data)->i = 0;

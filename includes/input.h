@@ -6,12 +6,17 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/14 11:22:31 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/18 17:36:07 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INPUT_H
 # define INPUT_H
+
+# ifndef INT32_MIN
+#  define INT32_MIN -2147483647-1
+# endif
+
 
 typedef enum e_token
 {
@@ -95,5 +100,5 @@ void		add_token(t_lexdata *l_data, t_list **token);
 void		add_word(t_lexdata *l_data, t_list **token);
 void		set_builtin(t_cmd *cmd);
 int			heredoc(char *delim);
-
+char 		*my_getenv(char *var);
 #endif
