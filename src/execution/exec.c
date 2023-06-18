@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/17 15:20:11 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/18 12:38:13 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int	input(t_cmd *cmd)
 			fd = open(content->word, O_RDONLY, 0644);
 		in = in->next;
 	}
+	if (fd != STDIN_FILENO)
+		dup2(STDIN_FILENO, fd);
 	return (fd);
 }
 
@@ -56,6 +58,8 @@ int	output(t_cmd *cmd)
 		}
 		out = out->next;
 	}
+	if (fd != STDOUT_FILENO)
+		dup2(STDOUT_FILENO, fd);
 	return (fd);
 }
 
@@ -77,13 +81,13 @@ int	exec_pipeline(t_cmd	*cmd)
 	if (process == 0)
 	{
 		close(fd[0]);
-		dup2(fd[1], out);
+		dup2(fd[1], STDOUT_FILENO);
 		exec_command(cmd);
 	}
 	else
 	{
 		close(fd[1]);
-		dup2(fd[0], in);
+		dup2(fd[0], STDIN_FILENO);
 		if (cmd->next == NULL)
 			waitpid(process, NULL, 0);
 		while (1)
@@ -94,6 +98,7 @@ int	exec_pipeline(t_cmd	*cmd)
 			write(out, outcont, ft_strlen(outcont));
 			free(outcont);
 		}
+		close(fd[0]);
 	}
 	return (0);
 }
@@ -108,6 +113,12 @@ int	execute(t_cmd *cmds)
 		exec_pipeline(command);
 		command = command->next;
 	}
-	rl_on_new_line();
+	command = cmds;
+	while (command != NULL)
+	{
+		ft_lstclear(&command->in, &free);
+		ft_lstclear(&command->out, &free);
+		command = command->next;
+	}
 	return (0);
 }

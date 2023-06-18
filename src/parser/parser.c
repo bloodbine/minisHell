@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/17 15:09:17 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/18 10:40:09 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,8 @@ t_cmd	*parse(t_list *lex)
 	build_cmds(lex, &cmd);
 	ft_lstclear(&lex, clear_content);
 	// print_cmds(cmd);
-	cmd->next = NULL;
+	if (cmd != NULL)
+		cmd->next = NULL;
 	while (cmd && cmd->prev)
 		cmd = cmd->prev;
 	return (cmd);
