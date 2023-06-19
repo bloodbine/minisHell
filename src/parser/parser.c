@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/18 13:05:55 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/18 13:15:11 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	fill_redir(t_cmd *cmd, t_content *l)
 void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i, int *argument)
 {
 	t_content	*l;
-	
+
 	l = ((t_content *)(lex->content));
 	if (l->token == WORD)
 	{
@@ -70,13 +70,15 @@ void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i, int *argument)
 	}
 	fill_redir(cmd, l);
 	set_builtin(cmd);
+	if (cmd != NULL)
+		cmd->next = NULL;
 }
 
 void	build_cmds(t_list *lex, t_cmd **cmd)
 {	
 	int	i;
 	int	argument;
-	
+
 	argument = 0;
 	i = 0;
 	if (!lex)
@@ -146,6 +148,6 @@ t_cmd	*parse(t_list *lex)
 	//ft_lstiter(lex, print_content);
 	build_cmds(lex, &cmd);
 	ft_lstclear(&lex, clear_content);
-	print_cmds(cmd);
+	// print_cmds(cmd);
 	return (get_first_node(cmd));
 }
