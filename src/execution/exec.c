@@ -6,103 +6,112 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/19 11:09:39 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/19 15:13:32 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	input(t_cmd *cmd)
+void	input(t_cmd *cmd)
 {
-	t_list	*in;
-	int		fd;
+	t_content	*content;
+	t_list		*in_list;
+	int			fd;
 
-	in = cmd->in;
+	in_list = cmd->in;
+	content = NULL;
 	fd = STDIN_FILENO;
-	if (in == NULL)
-		return (fd);
-	while (in != NULL)
+	while (in_list != NULL)
 	{
-		if (fd != STDIN_FILENO && in->next != NULL)
+		content = ((t_content *)(in_list->content));
+		if (content->token == IN && check_file(content->word, R_OK) == 0)
+			fd = open(content->word, O_RDONLY, 0644);
+		if (content->token == HEREDOC && check_file(content->word, R_OK) == 0)
+		{
+			fd = open(content->word, O_RDONLY, 0644);
+			unlink(content->word);
+		}
+		if (in_list->next == NULL)
+		{
+			if (fd == -1)
+				break ;
+			dup2(fd, STDIN_FILENO);
 			close(fd);
-		if (check_file(((t_content *)(in->content))->word, R_OK) == 0)
-			fd = open(((t_content *)(in->content))->word, O_RDONLY, 0644);
-		else if (in->next == NULL)
-			fd = -1;
-		in = in->next;
+		}
+		else if (fd != -1)
+			close(fd);
+		in_list = in_list->next;
 	}
-	if (fd != -1 && fd != STDIN_FILENO)
-		dup2(STDIN_FILENO, fd);
-	return (fd);
 }
 
-int	output(t_cmd *cmd)
+void	output(t_cmd *cmd)
 {
-	t_list	*out;
-	int		fd;
+	t_content	*content;
+	t_list		*out_list;
+	int			fd;
 
-	out = cmd->out;
+	out_list = cmd->out;
+	content = NULL;
 	fd = STDOUT_FILENO;
-	if (out == NULL)
-		return (fd);
-	while (out != NULL)
+	while (out_list != NULL)
 	{
-		if (fd != STDOUT_FILENO && out->next != NULL)
-			close(fd);
-		if (check_file(((t_content *)(out->content))->word, W_OK) != 2)
+		content = ((t_content *)(out_list->content));
+		if (content->token == OUT && check_file(content->word, W_OK) != 2)
+			fd = open(content->word, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (content->token == APPEND && check_file(content->word, W_OK) != 2)
+			fd = open(content->word, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (out_list->next == NULL)
 		{
-			if (((t_content *)(out->content))->token == APPEND)
-				fd = open(((t_content *)(out->content))->word, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			else if (((t_content *)(out->content))->token == OUT)
-				fd = open(((t_content *)(out->content))->word, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			else if (out->next == NULL)
-				fd = -1;
+			if (fd == -1)
+				break ;
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
 		}
-		out = out->next;
+		else if (fd != -1)
+			close(fd);
+		out_list = out_list->next;
 	}
-	if (fd != -1 && fd != STDOUT_FILENO)
-		dup2(STDOUT_FILENO, fd);
-	return (fd);
+}
+
+void	write_output(void)
+{
+	char	*line;
+
+	while (1)
+	{
+		line = get_next_line(STDIN_FILENO);
+		if (line == NULL)
+			break ;
+		write(STDOUT_FILENO, line, ft_strlen(line));
+		free(line);
+	}
 }
 
 void	exec(t_cmd	*cmd)
 {
 	pid_t	pid;
-	int		fdpipe[2];
-	int		in_fd;
-	int		out_fd;
-	char	*line;
+	int		fd[2];
 
-	if (pipe(fdpipe) != 0)
+	if (pipe(fd) != 0)
 		return ;
+	input(cmd);
+	output(cmd);
 	pid = fork();
 	if (pid == -1)
 		return ;
 	if (pid == 0)
 	{
-		close(fdpipe[0]);
-		out_fd = output(cmd);
-		dup2(fdpipe[1], STDOUT_FILENO);
-		if (out_fd == -1)
-			exit (1);
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
 		exec_command(cmd);
 	}
 	else
 	{
-		close(fdpipe[1]);
-		in_fd = input(cmd);
-		dup2(fdpipe[0], STDIN_FILENO);
-		if (in_fd == -1)
-			return ;
-		if (cmd->next != NULL)
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		if (cmd->next == NULL)
 			waitpid(pid, NULL, 0);
-		while (1)
-		{
-			line = get_next_line(fdpipe[0]);
-			if (line == NULL)
-				break ;
-			write(STDOUT_FILENO, line, ft_strlen(line));
-		}
+		write_output();
 	}
 }
 
@@ -117,6 +126,7 @@ int	execute(t_cmd *cmds)
 	cmd = cmds;
 	while (cmd != NULL)
 	{
+		ft_fprintf(2, "DEBUG: Exec loop\n");
 		exec(cmd);
 		cmd = cmd->next;
 	}

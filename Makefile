@@ -31,7 +31,7 @@ CC		= cc
 RMF	= rm -f
 RMRF	= rm -rf
 RMDIR	= rmdir
-CFLAGS	= -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS	= -Wall -Wextra -Werror
 FFLAGS	= -lreadline -L /Users/$(USER)/.brew/opt/readline/lib
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
