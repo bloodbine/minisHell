@@ -6,11 +6,11 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:28:25 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/07 20:00:47 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/21 23:34:30 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../include/minishell.h"
 
 int	my_strlen(char *str)
 {

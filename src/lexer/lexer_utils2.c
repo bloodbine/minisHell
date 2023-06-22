@@ -6,11 +6,11 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/16 16:17:38 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/21 23:34:27 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../include/minishell.h"
 
 t_content	*init_content(char *str)
 {

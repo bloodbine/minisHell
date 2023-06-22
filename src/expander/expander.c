@@ -6,11 +6,11 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/18 16:05:46 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/21 23:34:52 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../include/minishell.h"
 
 char	*exp_env_var(char *str)
 {

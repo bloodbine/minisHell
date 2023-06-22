@@ -6,11 +6,11 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/18 17:35:15 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/22 22:32:06 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../include/minishell.h"
 
 char	get_outer_quotes(char *str)
 {
@@ -92,7 +92,17 @@ int	heredoc(char *delim)
 		return (-1);
 	while (1)
 	{
-		lptr = readline(">");
+		lptr = readline("> ");
+		if (!lptr)
+		{
+			printf("\x1b[A> ");
+			break ;
+		}
+		if (!ft_strncmp("1", g_envp->content, 1))
+		{
+			free (lptr);
+			break ;
+		}
 		if (!ft_strncmp(lptr, delim, ft_strlen(lptr) + ft_strlen(delim)))
 		{
 			free (lptr);

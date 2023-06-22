@@ -2,59 +2,53 @@ NAME	= minishell
 
 OBJDIR	= obj/
 SRCDIR	= src/
-INCDIR 	= -I ./include -I ./Users/$(USER)/.brew/opt/readline/include
+INCDIR 	= -I ./include -I/Users/$(USER)/.brew/opt/readline/include
 LIBFT   = ./includes/libft/libft.a
 
-SRC		=	minishell.c \
-			lexer.c \
-			lexer_utils.c \
-			lexer_utils2.c \
-			parser.c \
-			parser_utils.c \
-			expander.c \
-			expander_utils.c \
-			string_func.c \
-			environment.c
-			
+MAIN	=	minishell \
+			environment \
+			signals \
 
-SRCOBJ	= $(patsubst %.c, $(OBJDIR)%.o, $(SRC))
+
+LEXER		=	lexer/lexer \
+				lexer/lexer_utils \
+				lexer/lexer_utils2
+
+PARSER		=	parser/parser \
+				parser/parser_utils
+
+EXPANDER	=	expander/expander \
+				expander/expander_utils
+
+MISC		=	misc/string_func
+
+SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(MISC)
+
+SRC	= $(addprefix $(SRCDIR), $(addsuffix .c, $(SOURCE)))
+OBJ	= $(addprefix $(OBJDIR), $(addsuffix .o, $(SOURCE)))
 
 CC		= cc
-RMF		= rm -f
+RMF	= rm -f
+RMRF	= rm -rf
 RMDIR	= rmdir
-CFLAGS	= -Wall -Wextra -Werror 
-FFLAGS	= -lreadline -L /Users/$(USER)/.brew/opt/readline/lib
+CFLAGS	= -Wall -Wextra -Werror
+FFLAGS	= -L/Users/$(USER)/.brew/opt/readline/lib -lreadline 
 
-$(OBJDIR)%.o: $(SRCDIR)%.c libmake 
-	mkdir -p $(OBJDIR)
-	@$(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
+$(OBJDIR)%.o: $(SRCDIR)%.c
+	mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
 
-$(NAME): $(SRCOBJ)
-	@$(CC) $(SRCOBJ) $(CFLAGS) $(LIBFT) -o $(NAME) $(FFLAGS)
+$(NAME): libmake $(OBJ)
+	$(CC) $(OBJ) $(CFLAGS) $(LIBFT) -o $(NAME) $(FFLAGS)
 
-libmake: check_brew
-	@git submodule update --init --recursive --remote
-	@$(MAKE) all bonus -C ./includes/libft
-# 	@curl https://icanhazdadjoke.com/
-
-# check_brew:
-# 	@if [ `which brew` = "$(HOME)/.brew/bin/brew" ]; then \
-# 		echo "Brew is installed"; \
-# 		if [ `find $(HOME)/.brew/Cellar -name "libreadline.dylib" | wc -l` -gt 0 ]; then \
-#     		echo "readline is installed"; \
-# 		else \
-# 			echo "No readline found"; \
-# 			brew install readline; \
-# 		fi; \
-# 	else \
-# 		echo "No Brew found"; \
-# 		curl -fsSL https://rawgit.com/kube/42homebrew/master/install.sh | zsh; \
-# 		brew install readline; \
-# 	fi
+libmake:
+	git submodule update --init --recursive --remote
+	$(MAKE) all bonus -C ./includes/libft
+	# curl https://icanhazdadjoke.com/
 
 clean:
-	$(RMF) $(SRCOBJ)
-	if [ -d "obj" ]; then $(RMDIR) $(OBJDIR); fi
+	$(RMRF) $(OBJ)
+	$(RMRF) $(OBJDIR)
 
 fclean: clean
 	$(RMF) $(NAME)

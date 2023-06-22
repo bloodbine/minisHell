@@ -6,11 +6,11 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/18 15:53:09 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/22 22:41:07 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../include/minishell.h"
 
 void	print_content(void *data)
 {
@@ -143,6 +143,11 @@ t_cmd	*parse(t_list *lex)
 	cmd = NULL;
 
 	ft_lstiter(lex, expander);
+	if (!strncmp(g_envp->content, "1", 2))
+	{
+		ft_lstclear(&lex, clear_content);
+		return (NULL);
+	}
 	//ft_lstiter(lex, print_content);
 	build_cmds(lex, &cmd);
 	ft_lstclear(&lex, clear_content);

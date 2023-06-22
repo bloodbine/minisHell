@@ -6,11 +6,11 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:53:32 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/18 17:51:47 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/22 19:31:29 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../include/minishell.h"
 
 void	print_env(void *data)
 {
@@ -48,4 +48,5 @@ void cpy_envp(char **envp)
 		ft_lstadd_back(&g_envp, ft_lstnew(my_strcpy(*envp)));
 		envp++;
 	}
+	ft_lstadd_front(&g_envp, ft_lstnew("0"));
 }
