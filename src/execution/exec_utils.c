@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/21 16:41:10 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/23 16:32:57 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,18 @@ int	exec_command(t_cmd *cmd)
 	else if (check_exist_access(cmd->args[0]) == 0)
 		execve(cmd->args[0], cmd->args, cmd->envp);
 	exit(EXIT_FAILURE);
+}
+
+void	write_output(void)
+{
+	char	*line;
+
+	while (1)
+	{
+		line = get_next_line(STDIN_FILENO);
+		if (line == NULL)
+			break ;
+		write(STDOUT_FILENO, line, ft_strlen(line));
+		free(line);
+	}
 }
