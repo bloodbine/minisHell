@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/18 17:36:07 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 15:22:15 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_lexdata
 
 typedef struct s_expdata
 {
+	t_list	*l_envp;
 	int		i;
 	int		start;
 	int		count;
@@ -74,19 +75,19 @@ typedef struct s_cmd
 int			get_closing_quote(char *lptr, char quote);
 int			get_len(char *lptr, int i);
 t_list		*get_substrings(char *lptr);
-t_list		*lex(char *lptr);
+t_list		*lex(char *lptr, t_list *l_envp);
 int			is_token(char *str);
 int			get_tokens(t_list **token, t_lexdata *l_data);
-t_list 		*tokenize(t_list *substring, t_lexdata *l_data);
+t_list 		*tokenize(t_list *substring, t_lexdata *l_data, t_list *l_envp);
 char		get_outer_quotes(char *str);
 char		*rm_quotes(char *str, char quotes);
-void		expander(void *data);
-t_cmd 		*parse(t_list *lex);
+void		expander(t_list *lex, t_list *l_envp);
+t_cmd 		*parse(t_list *lex, t_list *l_envp);
 t_content 	*init_content(char *str);
 char		*my_strcpy(char *str);
 int			add_newnode_back(t_cmd **cmd, int lstsize);
 void		init_newnode(t_cmd *new, int lstsize);
-char		*exp_env_var(char *str);
+char		*exp_env_var(char *str, t_list *l_envp);
 char		*expand(char *str, t_expdata *exp_data);
 int			dollar_pos(char *str);
 int			my_strlen(char *str);
@@ -99,6 +100,6 @@ void		clear_content(void *data);
 void		add_token(t_lexdata *l_data, t_list **token);
 void		add_word(t_lexdata *l_data, t_list **token);
 void		set_builtin(t_cmd *cmd);
-int			heredoc(char *delim);
-char 		*my_getenv(char *var);
+int			heredoc(char *delim, t_list *l_envp);
+char 		*my_getenv(char *var, t_list *l_envp);
 #endif

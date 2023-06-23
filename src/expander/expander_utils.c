@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/22 22:32:06 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 15:13:51 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	get_seq(char *str, char **seq)
 	return (i);
 }
 
-int	heredoc(char *delim)
+int	heredoc(char *delim, t_list *l_envp)
 {
 	char	*lptr;
 	int		fd;
@@ -98,7 +98,7 @@ int	heredoc(char *delim)
 			printf("\x1b[A> ");
 			break ;
 		}
-		if (!ft_strncmp("1", g_envp->content, 1))
+		if (!ft_strncmp("1", l_envp->content, 1))
 		{
 			free (lptr);
 			break ;
@@ -108,7 +108,7 @@ int	heredoc(char *delim)
 			free (lptr);
 			break ;
 		}
-		lptr = exp_env_var(lptr);
+		lptr = exp_env_var(lptr, l_envp);
 		write(fd, lptr, ft_strlen(lptr));
 		write(fd, "\n", 1);
 		free(lptr);

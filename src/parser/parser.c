@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/22 22:41:07 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 15:12:08 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,14 +136,15 @@ void print_cmds(t_cmd *cmd)
 	}
 }
 
-t_cmd	*parse(t_list *lex)
+t_cmd	*parse(t_list *lex, t_list *l_envp)
 {
 	t_cmd	*cmd;
 
 	cmd = NULL;
 
-	ft_lstiter(lex, expander);
-	if (!strncmp(g_envp->content, "1", 2))
+	expander(lex, l_envp);
+	//ft_lstiter(lex, expander);
+	if (!strncmp(l_envp->content, "1", 2))
 	{
 		ft_lstclear(&lex, clear_content);
 		return (NULL);

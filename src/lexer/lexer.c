@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/22 00:13:43 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 15:22:34 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	get_tokens(t_list **token, t_lexdata *l_data)
 	return (0);
 }
 
-t_list	*tokenize(t_list *substring, t_lexdata *l_data)
+t_list	*tokenize(t_list *substring, t_lexdata *l_data, t_list *l_envp)
 {
 	t_list	*token;
 	t_list	*temp;
@@ -93,7 +93,7 @@ t_list	*tokenize(t_list *substring, t_lexdata *l_data)
 			write(2, "\n", 1);
 			ft_lstclear(&token, clear_content);
 			ft_lstclear(&substring, clear_str);
-			ft_lstclear(&g_envp, clear_str);
+			ft_lstclear(&l_envp, clear_str);
 			rl_clear_history();
 			exit (1);
 		}	
@@ -104,14 +104,14 @@ t_list	*tokenize(t_list *substring, t_lexdata *l_data)
 	return (token);
 }
 
-void	init_lex_data(t_lexdata **l_data)
+void	init_lex_data(t_lexdata **l_data, t_list *l_envp)
 {
 	*l_data = malloc(sizeof(t_lexdata));
 	if (!l_data)
 	{
 		write(2, "allocation failed", 17);
 		rl_clear_history();
-		ft_lstclear(&g_envp, clear_str);
+		ft_lstclear(&l_envp, clear_str);
 		exit (1);
 	}
 	(*l_data)->i = 0;
@@ -122,16 +122,16 @@ void	init_lex_data(t_lexdata **l_data)
 	(*l_data)->quote = NO_QUOTE;
 }
 
-t_list	*lex(char *lptr)
+t_list	*lex(char *lptr, t_list *l_envp)
 {
 	t_list		*substring;
 	t_list		*lex;
 	t_lexdata	*l_data;
 
 	l_data = NULL;
-	init_lex_data(&l_data);
+	init_lex_data(&l_data, l_envp);
 	substring = get_substrings(lptr);
-	lex = tokenize(substring, l_data);
+	lex = tokenize(substring, l_data, l_envp);
 	free (l_data);
 	return (lex);
 }

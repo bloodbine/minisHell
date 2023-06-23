@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:17:16 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/22 00:57:11 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 15:29:03 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,16 @@
 #  include "input.h"
 #  include "signals.h"
 
-
-t_list *g_envp;
+int g_signal;
 
 typedef struct s_data
 {
 	t_cmd	*cmd;
-	//t_list	*l_envp; //only needed if not global
+	t_list	*l_envp;
 }			t_data;
 
-void	cpy_envp(char **envp);
-void	env(void);
+void	cpy_envp(t_list **l_envp, char **envp);
+void	env(t_list *envp);
 void	print_env(void *data);
 
 #endif

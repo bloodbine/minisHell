@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:53:32 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/22 19:31:29 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 15:05:35 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,39 +14,33 @@
 
 void	print_env(void *data)
 {
-   	char	*content = (char *)data;
-    printf("%s\n", content);
+    printf("%s\n", (char *)data);
 }
 
-void env()
+void env(t_list *l_envp)
 {
-	ft_lstiter(g_envp, print_env); //builtin
+	ft_lstiter(l_envp, print_env); //builtin
 }
 
-char *my_getenv(char *var)
+char *my_getenv(char *var, t_list *l_envp)
 {
-	t_list	*l_temp;
-	
-	l_temp = g_envp;
-	while (l_temp)
+	while (l_envp)
 	{
-		if (!ft_strncmp(var, (char *)(l_temp->content), ft_strlen(var)))
+		if (!ft_strncmp(var, (char *)(l_envp->content), ft_strlen(var)))
 		{
-			if(((char *)(l_temp->content))[ft_strlen(var)] == '=')
-				return ((char *)(l_temp->content) + ft_strlen(var) + 1);
+			if(((char *)(l_envp->content))[ft_strlen(var)] == '=')
+				return ((char *)(l_envp->content) + ft_strlen(var) + 1);
 		}
-		l_temp = l_temp->next;
+		l_envp = l_envp->next;
 	}
 	return (NULL);
 }
 
-void cpy_envp(char **envp)
+void cpy_envp(t_list **l_envp, char **envp)
 {
-	g_envp = NULL;
 	while (*envp)
 	{
-		ft_lstadd_back(&g_envp, ft_lstnew(my_strcpy(*envp)));
+		ft_lstadd_back(l_envp, ft_lstnew(my_strcpy(*envp)));
 		envp++;
 	}
-	ft_lstadd_front(&g_envp, ft_lstnew("0"));
 }

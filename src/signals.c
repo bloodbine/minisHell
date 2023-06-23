@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 19:25:30 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/22 19:20:35 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 15:16:30 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void handle_signal(int signal)
 	if (signal == SIGINT)
 	{
 		rl_done = 1;
-		g_envp->content = "1";
+		g_signal = 1;
 		//rl_on_new_line();
 		rl_replace_line("", 0);
 		//rl_redisplay();

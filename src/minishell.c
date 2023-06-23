@@ -6,12 +6,11 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/22 22:40:34 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 15:34:26 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <termios.h>
 
 void init_data(t_data *data)
 {
@@ -24,7 +23,7 @@ void init(t_data *data, char **envp)
 {
 	init_signals();
 	init_data(data);
-	cpy_envp(envp);
+	cpy_envp(&(data->l_envp), envp);
 	rl_catch_signals = 0;
 	rl_event_hook = (rl_hook_func_t *)my_event_hook;
 }
@@ -34,10 +33,11 @@ int	main(int argc, char *argv[], char *envp[])
 	char	*lptr;
 	t_data	data;
 	
+	g_signal = 0;
 	if (argc != 1 || argv[1] != NULL)
 		return (write(2, "No Arguments allowed\n", 21), 0);
 	init(&data, envp);
-	//env();
+	env(data.l_envp);
 	while (1)
 	{
 		lptr = readline("$ > ");
@@ -46,13 +46,13 @@ int	main(int argc, char *argv[], char *envp[])
 			printf("\x1b[A$ > exit\n");
 			exit (1);
 		}
-		g_envp->content = "0";
 		if(lptr[0] != '\0')
 			add_history(lptr);
-		data.cmd = parse(lex(lptr));
+		data.cmd = parse(lex(lptr, data.l_envp), data.l_envp);
+		g_signal = 0;
 		free(lptr);
 	}
 	rl_clear_history();
-	ft_lstclear(&g_envp, clear_str);
+	ft_lstclear(&data.l_envp, clear_str);
 	return (0);
 }
