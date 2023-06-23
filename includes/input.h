@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/18 13:09:02 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/20 18:22:51 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,11 @@ typedef struct s_cmd
 {
 	char	**args;  //for execve
 	char	**envp;
-	t_list	*in;		
+	t_list	*in;
 	t_list	*out;
 	int		builtin;
 	int		idx;
+	int		fd[2];
 	struct	s_cmd	*next;
 	struct	s_cmd	*prev;
 }			t_cmd;

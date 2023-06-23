@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/19 11:41:36 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/21 16:41:10 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,21 @@ char	*check_paths(char *cmd)
 	if (ncmd == NULL)
 		ft_fprintf(2, "minishell: %s: Command not found\n", cmd);
 	return (free(cmd), ncmd);
+}
+
+int	count_cmds(t_cmd *cmdlst)
+{
+	t_cmd	*cmd;
+	int		cnt;
+
+	cmd = cmdlst;
+	cnt = 0;
+	while (cmd != NULL)
+	{
+		cnt += 1;
+		cmd = cmd->next;
+	}
+	return (cnt);
 }
 
 int	exec_command(t_cmd *cmd)
