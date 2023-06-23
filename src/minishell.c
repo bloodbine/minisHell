@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/23 16:01:23 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 22:37:33 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,14 @@ int	main(int argc, char *argv[], char *envp[])
 		if (!lptr)
 		{
 			printf("\x1b[A$ > exit\n");
-			exit (1);
+			break ;
 		}
 		if (lptr[0] != '\0')
 			add_history(lptr);
 		data.cmd = parse(lex(lptr, data.l_envp), data.l_envp);
-		g_signal = 0;
 		free(lptr);
 	}
+	clear_cmdlst(&(data.cmd));
 	rl_clear_history();
 	ft_lstclear(&data.l_envp, clear_str);
 	return (0);

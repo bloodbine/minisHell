@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/23 16:47:25 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 22:34:02 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ void	expander(t_list *lex, t_list *l_envp)
 			if (heredoc(content->word, l_envp) == -1)
 			{
 				write(2, "heredoc failed", 14);
+				g_signal = errno;
 				return ;
 			}
 			free(content->word);
@@ -129,4 +130,5 @@ void	expander(t_list *lex, t_list *l_envp)
 		}
 		lex = lex->next;
 	}
+	g_signal = 0;
 }

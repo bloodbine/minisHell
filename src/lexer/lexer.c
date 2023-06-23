@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/23 15:22:34 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 20:41:17 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,27 +75,25 @@ int	get_tokens(t_list **token, t_lexdata *l_data)
 	return (0);
 }
 
-t_list	*tokenize(t_list *substring, t_lexdata *l_data, t_list *l_envp)
+t_list	*tokenize(t_list *substring, t_lexdata *l_data)
 {
 	t_list	*token;
 	t_list	*temp;
 
 	temp = substring;
 	token = NULL;
-	// ft_lstiter(substring, print_content1);<
+	// ft_lstiter(substring, print_content1);
 	while (temp)
 	{
 		l_data->str = temp->content;
 		if (get_tokens(&token, l_data) == -1)
 		{
-			write(2, "minishell: parse error near unexpected token ", 45);
+			write(2, "minishell: parse error near unexpected token `", 46);
 			write(2, &l_data->str[l_data->i + l_data->len - 1], 1);
-			write(2, "\n", 1);
+			write(2, "'\n", 2);
 			ft_lstclear(&token, clear_content);
 			ft_lstclear(&substring, clear_str);
-			ft_lstclear(&l_envp, clear_str);
-			rl_clear_history();
-			exit (1);
+			return (NULL);
 		}	
 		temp = temp->next;
 	}
@@ -131,7 +129,7 @@ t_list	*lex(char *lptr, t_list *l_envp)
 	l_data = NULL;
 	init_lex_data(&l_data, l_envp);
 	substring = get_substrings(lptr);
-	lex = tokenize(substring, l_data, l_envp);
+	lex = tokenize(substring, l_data);
 	free (l_data);
 	return (lex);
 }

@@ -23,7 +23,9 @@ ENVP		=	envp/environment
 
 SIGNALS		=	signals/signals
 
-SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(MISC) $(ENVP) $(SIGNALS)
+LISTFUNC	=	listfunc/double_linked_list
+
+SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(MISC) $(ENVP) $(SIGNALS) $(LISTFUNC)
 
 SRC	= $(addprefix $(SRCDIR), $(addsuffix .c, $(SOURCE)))
 OBJ	= $(addprefix $(OBJDIR), $(addsuffix .o, $(SOURCE)))

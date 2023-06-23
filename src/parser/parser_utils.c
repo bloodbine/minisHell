@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:09:53 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/21 23:34:32 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 20:17:09 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,40 +50,15 @@ char	**init_args(int lstsize)
 	return (new);
 }
 
-void	init_newnode(t_cmd *new, int lstsize)
+void	clear_args(char **args)
 {
-	new->args = init_args(lstsize);
-	new->in = NULL;
-	new->out = NULL;
-	new->builtin = 0;
-	new->next = NULL;
-	new->idx = 0;
-}
+	char	**temp;
 
-int	add_newnode_back(t_cmd **cmd, int lstsize)
-{
-	t_cmd	*new;
-
-	while ((*cmd) && (*cmd)->next)
-		*cmd = (*cmd)->next;
-	new = malloc(sizeof(t_cmd));
-	if (!new)
+	temp = args;
+	while (*temp)
 	{
-		write(2, "allocation failed \n", 19);
-		return (-1);
+		free(*temp);
+		temp++;
 	}
-	init_newnode(new, lstsize);
-	if (!new->args)
-	{
-		write(2, "allocation failed \n", 19);
-		return (-1);
-	}
-	new->prev = *cmd;
-	if (*cmd)
-	{
-		(*cmd)->next = new;
-		new->idx = (*cmd)->idx + 1;
-	}
-	*cmd = new;
-	return (0);
+	free(args);
 }
