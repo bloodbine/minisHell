@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/23 15:28:00 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/23 16:23:34 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ int	input(t_cmd *cmd)
 		if (in != NULL && in_fd != -1)
 			close(in_fd);
 	}
+	ft_fprintf(2, "DEBUG: infd: %d\n", in_fd);
 	dup2(in_fd, STDIN_FILENO);
+	if (in_fd != STDIN_FILENO)
+		close(in_fd);
 	return (in_fd);
 }
 
@@ -46,15 +49,18 @@ int	output(t_cmd *cmd)
 	while (out != NULL)
 	{
 		content = ((t_content *)(out->content));
-		if (check_file(content->word, W_OK) && content->token == OUT)
+		if (check_file(content->word, W_OK) == 0 && content->token == OUT)
 			out_fd = open(content->word, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (check_file(content->word, W_OK) && content->token == APPEND)
+		else if (check_file(content->word, W_OK) != 2 && content->token == APPEND)
 			out_fd = open(content->word, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else
 			out_fd = -1;
 		out = out->next;
 	}
+	ft_fprintf(2, "DEBUG: outfd: %d\n", out_fd);
 	dup2(out_fd, STDOUT_FILENO);
+	if (out_fd != STDOUT_FILENO)
+		close(out_fd);
 	return (out_fd);
 }
 
@@ -86,7 +92,7 @@ void	pipeline(t_cmd	*cmd)
 	}
 }
 
-void	last_cmd(t_cmd	*cmd, int stdoutfd, int stdinfd)
+void	last_cmd(t_cmd	*cmd)
 {
 	pid_t	proc;
 	int		out_fd;
@@ -98,11 +104,7 @@ void	last_cmd(t_cmd	*cmd, int stdoutfd, int stdinfd)
 	if (proc == -1)
 		return (((void)(ft_fprintf(2, "DEBUG: Failed to fork\n"))));
 	else if (proc == 0)
-	{
-		dup2(stdoutfd, STDOUT_FILENO);
-		dup2(stdinfd, STDIN_FILENO);
 		exec_command(cmd);
-	}
 	else
 		waitpid(proc, NULL, 0);
 }
@@ -123,7 +125,7 @@ int	execute(t_cmd *cmdlst)
 			pipeline(cmd);
 			cmd = cmd->next;
 		}
-		last_cmd(cmd, stdoutfd, stdinfd);
+		last_cmd(cmd);
 		close(STDIN_FILENO);
 		close(STDOUT_FILENO);
 		dup2(stdinfd, STDIN_FILENO);
