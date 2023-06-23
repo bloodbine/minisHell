@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/23 15:12:08 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 16:41:42 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	fill_redir(t_cmd *cmd, t_content *l)
 void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i, int *argument)
 {
 	t_content	*l;
-	
+
 	l = ((t_content *)(lex->content));
 	if (l->token == WORD)
 	{
@@ -76,7 +76,7 @@ void	build_cmds(t_list *lex, t_cmd **cmd)
 {	
 	int	i;
 	int	argument;
-	
+
 	argument = 0;
 	i = 0;
 	if (!lex)
@@ -94,17 +94,6 @@ void	build_cmds(t_list *lex, t_cmd **cmd)
 		fill_cmd_struct(lex, *cmd, &i, &argument);
 		lex = lex->next;
 	}
-	// printf("char *args[]:");
-	// while (*((*cmd)->args))
-	// {
-	// 	printf("	\"%s\"", *((*cmd)->args));
-	// 	((*cmd)->args)++;
-	// }
-	// printf("\n");
-	// if((*cmd)->in)
-	// 	printf("token:%d	%s\n", ((t_content *)((*cmd)->in->content))->token, ((t_content *)((*cmd)->in->content))->word);
-	// if((*cmd)->out)
-	// 	printf("token:%d	%s\n", ((t_content *)((*cmd)->out->content))->token, ((t_content *)((*cmd)->out->content))->word);	
 }
 
 t_cmd	*get_first_node(t_cmd *cmd)
@@ -114,7 +103,7 @@ t_cmd	*get_first_node(t_cmd *cmd)
 	return (cmd);
 }
 
-void print_cmds(t_cmd *cmd)
+void	print_cmds(t_cmd *cmd)
 {
 		cmd = get_first_node(cmd);
 	while (cmd)
@@ -141,7 +130,6 @@ t_cmd	*parse(t_list *lex, t_list *l_envp)
 	t_cmd	*cmd;
 
 	cmd = NULL;
-
 	expander(lex, l_envp);
 	//ft_lstiter(lex, expander);
 	if (!strncmp(l_envp->content, "1", 2))

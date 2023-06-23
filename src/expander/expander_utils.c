@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/23 15:13:51 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 16:23:03 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,7 @@ int	heredoc(char *delim, t_list *l_envp)
 			printf("\x1b[A> ");
 			break ;
 		}
-		if (!ft_strncmp("1", l_envp->content, 1))
-		{
-			free (lptr);
-			break ;
-		}
-		if (!ft_strncmp(lptr, delim, ft_strlen(lptr) + ft_strlen(delim)))
+		if (g_signal == 1 || !ft_strncmp(lptr, delim, ft_strlen(delim) + 1))
 		{
 			free (lptr);
 			break ;

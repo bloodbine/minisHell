@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/23 15:36:24 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/23 16:47:25 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*get_sub(char *str, t_expdata *exp)
 		exp->start = exp->i + 1;
 		exp->count = -1;
 	}
-	else 
+	else
 		free (str);
 	return (exp->sub);
 }
@@ -72,8 +72,8 @@ char	*expand(char *str, t_expdata *exp)
 	{
 		if (exp->quotes == 0)
 		{
-			exp->sub = my_strjoin(exp->sub, \
-				exp_env_var(ft_substr(str, exp->i, len - exp->i), exp->l_envp), 3);
+			exp->sub = my_strjoin(exp->sub, exp_env_var \
+				(ft_substr(str, exp->i, len - exp->i), exp->l_envp), 3);
 			break ;
 		}
 		if (str[exp->i] == exp->quotes)
@@ -82,7 +82,7 @@ char	*expand(char *str, t_expdata *exp)
 				exp->sub = get_sub(ft_substr(str, s, exp->i - s), exp);
 			else if (exp->count == 1)
 				exp->sub = get_sub(ft_substr(str, s, exp->i - s + 1), exp);
-			s = exp->start;
+			// s = exp->start;
 			exp->count++;
 			if (!exp->count)
 				exp->quotes = get_outer_quotes(&str[s]);
@@ -106,27 +106,9 @@ void	expander(t_list *lex, t_list *l_envp)
 {
 	t_content	*content;
 	t_expdata	exp;
-	
-	exp.l_envp = l_envp;
-	// init_expdata(&exp);
-	// content = (t_content *)lex->content;
-	// if (!content->word)
-	// 	return ;
-	// exp.quotes = get_outer_quotes(content->word);
-	// if (content->token != HEREDOC)
-	// 	content->word = expand(content->word, &exp);
-	// else if (content->token == HEREDOC)
-	// {
-	// 	if (heredoc(content->word) == -1)
-	// 	{
-	// 		write(2, "heredoc failed", 14);
-	// 		return ;
-	// 	}
-	// 	free(content->word);
-	// 	content->word = my_strcpy("heredoc");
-	// }
 
-	while(lex)
+	exp.l_envp = l_envp;
+	while (lex)
 	{
 		init_expdata(&exp);
 		content = (t_content *)lex->content;
@@ -134,18 +116,17 @@ void	expander(t_list *lex, t_list *l_envp)
 			break ;
 		exp.quotes = get_outer_quotes(content->word);
 		if (content->token != HEREDOC)
-		content->word = expand(content->word, &exp);
-	else if (content->token == HEREDOC)
-	{
-		if (heredoc(content->word, l_envp) == -1)
+			content->word = expand(content->word, &exp);
+		else if (content->token == HEREDOC)
 		{
-			write(2, "heredoc failed", 14);
-			return ;
+			if (heredoc(content->word, l_envp) == -1)
+			{
+				write(2, "heredoc failed", 14);
+				return ;
+			}
+			free(content->word);
+			content->word = my_strcpy("heredoc");
 		}
-		free(content->word);
-		content->word = my_strcpy("heredoc");
-	}
-
 		lex = lex->next;
 	}
 }
