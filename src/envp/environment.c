@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:53:32 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/23 22:11:27 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/26 20:55:34 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ char	*my_getenv(char *var, t_list *l_envp)
 {
 	if (!ft_strncmp(var, "?", 2))
 		return (ft_itoa(g_signal));
+	else if (var[0] == ' ' || var[0] == '\0')
+		return ("$");
 	while (l_envp)
 	{
 		if (!ft_strncmp(var, (char *)(l_envp->content), ft_strlen(var)))

@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/23 22:20:10 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/26 22:46:49 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,15 @@ typedef struct s_expdata
 
 typedef struct s_cmd
 {
-	char			**args;
-	t_list			*in;		
-	t_list			*out;
-	int				builtin;
-	int				idx;
-	struct s_cmd	*next;
-	struct s_cmd	*prev;
+	char	**args;  //for execve
+	char	**envp;
+	t_list	*in;
+	t_list	*out;
+	int		builtin;
+	int		idx;
+	int		fd[2];
+	struct	s_cmd	*next;
+	struct	s_cmd	*prev;
 }			t_cmd;
 
 void		init_signals(void);

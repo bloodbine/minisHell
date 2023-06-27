@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/23 22:34:02 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/26 22:58:03 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*exp_env_var(char *str, t_list *l_envp)
 	{
 		expanded = my_strjoin(expanded, ft_substr(str, i, pos - i), 3);
 		pos += get_seq(&str[pos + 1], &seq);
-		i = pos + 1;
+		i = ++pos;
 		expanded = my_strjoin(expanded, my_strcpy(my_getenv(seq, l_envp)), 3);
 		free(seq);
 		pos += dollar_pos(&str[pos]);
@@ -82,7 +82,7 @@ char	*expand(char *str, t_expdata *exp)
 				exp->sub = get_sub(ft_substr(str, s, exp->i - s), exp);
 			else if (exp->count == 1)
 				exp->sub = get_sub(ft_substr(str, s, exp->i - s + 1), exp);
-			// s = exp->start;
+			s = exp->start;
 			exp->count++;
 			if (!exp->count)
 				exp->quotes = get_outer_quotes(&str[s]);
@@ -130,5 +130,4 @@ void	expander(t_list *lex, t_list *l_envp)
 		}
 		lex = lex->next;
 	}
-	g_signal = 0;
 }

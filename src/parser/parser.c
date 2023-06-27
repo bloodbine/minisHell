@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/23 22:32:50 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/27 02:46:47 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	print_content(void *data)
 	t_content	*content;
 	
 	content = (t_content *)data;
-	printf("	%s(%d)", content->word, content->token);
+	printf("	%s(%d)\n", content->word, content->token);
 }
 
 void	fill_redir(t_cmd *cmd, t_content *l)
@@ -82,13 +82,16 @@ int	build_cmds(t_list *lex, t_cmd **cmd)
 	argument = 0;
 	i = 0;
 	if (((t_content *)(lex->content))->token == PIPE)
-		return (write(2, "Minishell: syntax error near \
-			unexpected token `|'\n", 50), 0);
+		return (write(2, "Minishell: syntax error near unexpected token `|'\n", 50), 0);
 	add_newnode_back(cmd, ft_lstsize(lex));
 	while (lex)
 	{
 		if (((t_content *)(lex->content))->token == PIPE)
 		{
+			if (!lex->next || ((t_content *)(lex->next->content))->token == PIPE)
+				return (write(2, "Minishell: syntax error near unexpected token `|'\n", 50), 0);
+			if (!((t_content *)(lex->next->content))->word)
+				return (-1);
 			fill_cmd_struct(lex, *cmd, &i, &argument);
 			add_newnode_back(cmd, ft_lstsize(lex));
 			argument = 0;
@@ -99,19 +102,22 @@ int	build_cmds(t_list *lex, t_cmd **cmd)
 		fill_cmd_struct(lex, *cmd, &i, &argument);
 		lex = lex->next;
 	}
-	return (0);
+	return (1);
 }
 
 void	print_cmds(t_cmd *cmd)
 {
 	cmd = get_first_node(cmd);
+	char **temp;
+
 	while (cmd)
 	{
 		printf("char **args:");
-		while (*cmd->args)
+		temp = cmd->args;
+		while (*temp)
 		{
-			printf("	%s", *(cmd->args));
-			(cmd->args)++;
+			printf("	%s", *temp);
+			temp++;
 		}
 		printf("\n");
 		printf("in:");
@@ -127,25 +133,27 @@ void	print_cmds(t_cmd *cmd)
 t_cmd	*parse(t_list *lex, t_list *l_envp)
 {
 	t_cmd	*cmd;
-
+	int		test;
+	
 	cmd = NULL;
 	if (!lex)
 		return (NULL);
 	expander(lex, l_envp);
-	//ft_lstiter(lex, expander);
 	if (g_signal == 1)
 	{
 		ft_lstclear(&lex, clear_content);
 		return (NULL);
 	}
-	//ft_lstiter(lex, print_content);
-	if (build_cmds(lex, &cmd) == -1)
+	// ft_lstiter(lex, print_content);
+	test = build_cmds(lex, &cmd);
+	if(test <= 0)
 	{
 		clear_cmdlst(&cmd);
-		write(2, "Minishell: syntax error near \
-			unexpected token `newline'\n", 56);
+		if (test == - 1)
+			write(2, "Minishell: syntax error near unexpected token `newline'\n", 56);
+		g_signal = 2;
 	}
 	ft_lstclear(&lex, clear_content);
-	print_cmds(cmd);
+	//print_cmds(cmd);
 	return (get_first_node(cmd));
 }

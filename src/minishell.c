@@ -6,14 +6,15 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/23 22:37:33 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/27 02:16:15 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	my_event_hook(void)
+int	my_event_hook(void)
 {
+	return 0;
 }
 
 void	init(t_data *data, char **envp)
@@ -22,22 +23,25 @@ void	init(t_data *data, char **envp)
 	data->cmd = NULL;
 	cpy_envp(&(data->l_envp), envp);
 	rl_catch_signals = 0;
-	rl_event_hook = (rl_hook_func_t *)my_event_hook;
+	//rl_event_hook = (rl_hook_func_t *)my_event_hook;
 }
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	char	*lptr;
 	t_data	data;
-
+	
 	g_signal = 0;
-	if (argc != 1 || argv[1] != NULL)
-		return (write(2, "No Arguments allowed\n", 21), 0);
+	if (argc != 1 && argv[1] == NULL && envp)
+		return (write(2, "No Arguments allowed\n", 21), 1);
 	init(&data, envp);
 	//env(data.l_envp);
 	while (1)
 	{
+		//write(2, *(data.envp), ft_strlen(*(data.envp)));
 		lptr = readline("$ > ");
+		if (lptr && !ft_strncmp(lptr, "exit", 5))
+			break ;
 		if (!lptr)
 		{
 			printf("\x1b[A$ > exit\n");
@@ -47,9 +51,15 @@ int	main(int argc, char *argv[], char *envp[])
 			add_history(lptr);
 		data.cmd = parse(lex(lptr, data.l_envp), data.l_envp);
 		free(lptr);
+		if (data.cmd != NULL)
+		{
+			data.cmd->envp = envp;
+			execute(data.cmd);
+			//clear_cmdlst(&(data.cmd));
+		}
 	}
 	clear_cmdlst(&(data.cmd));
 	rl_clear_history();
 	ft_lstclear(&data.l_envp, clear_str);
-	return (0);
+	return (g_signal);
 }

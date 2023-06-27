@@ -1,0 +1,118 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
+/*   Updated: 2023/06/27 02:13:01 by ffederol         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../include/minishell.h"
+
+int	check_file(char *file, int check)
+{
+	if (access(file, F_OK) != 0)
+	{
+		ft_fprintf(2, "minishell: %s: No such file or directory\n", file);
+		return (1);
+	}
+	if (access(file, check) != 0)
+	{
+		ft_fprintf(2, "minishell: %s: Permission denied\n", file);
+		return (2);
+	}
+	return (0);
+}
+
+int	check_exist_access(char *cmd)
+{
+	if (access(cmd, F_OK) == -1)
+	{
+		ft_fprintf(2, "minishell: %s: command not found\n", cmd + 2);
+		return (1);
+	}
+	if (access(cmd, X_OK) == -1)
+	{
+		ft_fprintf(2, "minishell: %s: Permission denied\n", cmd + 2);
+		return (2);
+	}
+	return (0);
+}
+
+char	*check_paths(char *cmd)
+{
+	char	**path_list;
+	char	*ncmd;
+	int		i;
+
+	path_list = ft_split(getenv("PATH"), ':');
+	i = -1;
+	ncmd = NULL;
+	while (path_list[++i] != NULL)
+	{
+		ncmd = ft_strjoin(path_list[i], cmd);
+		if (access(ncmd, F_OK) == 0)
+		{
+			if (access(ncmd, X_OK) == 0)
+				break ;
+		}
+		free(ncmd);
+		ncmd = NULL;
+	}
+	if (ncmd == NULL)
+		ft_fprintf(2, "minishell: %s: command not found\n", cmd);
+	return (free(cmd), ncmd);
+}
+
+int	count_cmds(t_cmd *cmdlst)
+{
+	t_cmd	*cmd;
+	int		cnt;
+
+	cmd = cmdlst;
+	cnt = 0;
+	while (cmd != NULL)
+	{
+		cnt += 1;
+		cmd = cmd->next;
+	}
+	return (cnt);
+}
+
+int	exec_command(t_cmd *cmd)
+{
+	char	*ncmd;
+
+	if (!ft_strchr(cmd->args[0], '/'))
+	{
+		ncmd = check_paths(ft_strjoin("/", cmd->args[0]));
+		if (ncmd != NULL)
+		{
+			if (execve(ncmd, cmd->args, cmd->envp) == -1)
+			{
+				printf("2\n");
+				printf("exec failed %s %s %s\n", ncmd, *(cmd->args), *(cmd->envp));
+			}
+		}
+	}
+	else if (check_exist_access(cmd->args[0]) == 0)
+		execve(cmd->args[0], cmd->args, cmd->envp);
+	exit(EXIT_FAILURE);
+}
+
+void	write_output(void)
+{
+	char	*line;
+
+	while (1)
+	{
+		line = get_next_line(STDIN_FILENO);
+		if (line == NULL)
+			break ;
+		write(STDOUT_FILENO, line, ft_strlen(line));
+		free(line);
+	}
+}

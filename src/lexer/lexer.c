@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/23 20:41:17 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/27 02:34:57 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	get_tokens(t_list **token, t_lexdata *l_data)
 		l_data->len = is_token(&(l_data->str[l_data->i]));
 		if (l_data->len != 0 && !quote)
 		{
-			if (l_data->len == 3 || (l_data->redir && l_data->i < 2))
+			if (l_data->len == 3 || (l_data->redir && l_data->i <= 2))
 				return (-1);
 			add_word(l_data, token);
 			add_token(l_data, token);
@@ -88,11 +88,12 @@ t_list	*tokenize(t_list *substring, t_lexdata *l_data)
 		l_data->str = temp->content;
 		if (get_tokens(&token, l_data) == -1)
 		{
-			write(2, "minishell: parse error near unexpected token `", 46);
-			write(2, &l_data->str[l_data->i + l_data->len - 1], 1);
+			write(2, "minishell: syntax error near unexpected token `", 47);
+			write(2, &l_data->str[l_data->i], l_data->len);
 			write(2, "'\n", 2);
 			ft_lstclear(&token, clear_content);
 			ft_lstclear(&substring, clear_str);
+			g_signal = 2;
 			return (NULL);
 		}	
 		temp = temp->next;

@@ -25,6 +25,9 @@ SIGNALS		=	signals/signals
 
 LISTFUNC	=	listfunc/double_linked_list
 
+EXECUTION	= execution/exec \
+				execution/exec_utils
+
 SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(MISC) $(ENVP) $(SIGNALS) $(LISTFUNC)
 
 SRC	= $(addprefix $(SRCDIR), $(addsuffix .c, $(SOURCE)))
