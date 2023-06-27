@@ -6,13 +6,13 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/18 13:05:30 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/27 15:40:54 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*exp_env_var(char *str)
+char	*exp_env_var(char *str, t_list *l_envp)
 {
 	char	*expanded;
 	char	*seq;
@@ -29,8 +29,8 @@ char	*exp_env_var(char *str)
 	{
 		expanded = my_strjoin(expanded, ft_substr(str, i, pos - i), 3);
 		pos += get_seq(&str[pos + 1], &seq);
-		i = pos + 1;
-		expanded = my_strjoin(expanded, my_strcpy(getenv(seq)), 3);
+		i = ++pos;
+		expanded = my_strjoin(expanded, my_strcpy(my_getenv(seq, l_envp)), 3);
 		free(seq);
 		pos += dollar_pos(&str[pos]);
 	}
@@ -43,20 +43,20 @@ char	*get_sub(char *str, t_expdata *exp)
 {
 	if (!exp->count)
 	{
-		exp->sub = my_strjoin(exp->sub, exp_env_var(str), 3);
+		exp->sub = my_strjoin(exp->sub, exp_env_var(str, exp->l_envp), 3);
 		exp->start = exp->i;
 	}
 	else if (exp->count == 1)
 	{
 		if (exp->quotes == '\"')
 			exp->sub = my_strjoin(exp->sub, \
-				exp_env_var(rm_quotes(str, exp->quotes)), 3);
+				exp_env_var(rm_quotes(str, exp->quotes), exp->l_envp), 3);
 		else
 			exp->sub = my_strjoin(exp->sub, rm_quotes(str, exp->quotes), 3);
 		exp->start = exp->i + 1;
 		exp->count = -1;
 	}
-	else 
+	else
 		free (str);
 	return (exp->sub);
 }
@@ -72,8 +72,8 @@ char	*expand(char *str, t_expdata *exp)
 	{
 		if (exp->quotes == 0)
 		{
-			exp->sub = my_strjoin(exp->sub, \
-				exp_env_var(ft_substr(str, exp->i, len - exp->i)), 3);
+			exp->sub = my_strjoin(exp->sub, exp_env_var \
+				(ft_substr(str, exp->i, len - exp->i), exp->l_envp), 3);
 			break ;
 		}
 		if (str[exp->i] == exp->quotes)
@@ -102,26 +102,32 @@ void	init_expdata(t_expdata *data)
 	data->sub = NULL;
 }
 
-void	expander(void *data)
+void	expander(t_list *lex, t_list *l_envp)
 {
 	t_content	*content;
 	t_expdata	exp;
-	
-	init_expdata(&exp);
-	content = (t_content *)data;
-	if (!content->word)
-		return ;
-	exp.quotes = get_outer_quotes(content->word);
-	if (content->token != HEREDOC)
-		content->word = expand(content->word, &exp);
-	else if (content->token == HEREDOC)
+
+	exp.l_envp = l_envp;
+	while (lex)
 	{
-		if (heredoc(content->word) == -1)
+		init_expdata(&exp);
+		content = (t_content *)lex->content;
+		if (!content->word)
+			break ;
+		exp.quotes = get_outer_quotes(content->word);
+		if (content->token != HEREDOC)
+			content->word = expand(content->word, &exp);
+		else if (content->token == HEREDOC)
 		{
-			write(2, "heredoc failed", 14);
-			return ;
+			if (heredoc(content->word, l_envp) == -1)
+			{
+				write(2, "heredoc failed", 14);
+				g_signal = errno;
+				return ;
+			}
+			free(content->word);
+			content->word = my_strcpy("heredoc");
 		}
-		free(content->word);
-		content->word = my_strcpy("heredoc");
+		lex = lex->next;
 	}
 }

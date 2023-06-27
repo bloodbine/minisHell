@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/27 15:05:34 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/27 19:00:38 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	count_cmds(t_cmd *cmdlst)
 	return (cnt);
 }
 
-int	exec_command(t_cmd *cmd)
+int	exec_command(t_cmd *cmd, char **envp)
 {
 	char	*ncmd;
 
@@ -91,13 +91,16 @@ int	exec_command(t_cmd *cmd)
 		ncmd = check_paths(ft_strjoin("/", cmd->args[0]));
 		if (ncmd != NULL)
 		{
-			if (execve(ncmd, cmd->args, cmd->envp) == -1)
-				ft_fprintf(2, "DEBUG: Failed to execute command: %s\n", ncmd);
+			if (execve(ncmd, cmd->args, envp) == -1)
+			{
+				ft_fprintf(2, "DEBUG: Failed to execute command: %s | %s | %d\n", ncmd, cmd->args[0], errno);
+				ft_fprintf(2, "DEBUG: env test after exec: %s\n", envp[1]);
+			}
 		}
 	}
 	else if (check_exist_access(cmd->args[0]) == 0)
 	{
-		if (execve(cmd->args[0], cmd->args, cmd->envp) == -1)
+		if (execve(cmd->args[0], cmd->args, envp) == -1)
 			ft_fprintf(2, "DEBUG: Failed to execute command\n");
 	}
 	exit(EXIT_FAILURE);

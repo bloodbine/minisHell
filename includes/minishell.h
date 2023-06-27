@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:17:16 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/21 12:52:56 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/27 19:16:07 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,26 @@
 # define MINISHELL_H
 
 # include <stdio.h>
-#  include <readline/readline.h>
-#  include <readline/history.h>
-#  include "libft/libft.h"
-#  include "input.h"
-#  include "exec.h"
-#  include <fcntl.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <fcntl.h>
+# include <errno.h>
+# include "../includes/libft/libft.h"
+# include "input.h"
+# include "exec.h"
+
+int	g_signal;
 
 typedef struct s_data
 {
 	t_cmd	*cmd;
+	t_list	*l_envp;
+	char 	**envp;
 }			t_data;
 
-void rl_clear_history(void);
+void	cpy_envp(t_list **l_envp, char **envp);
+void	env(t_list *envp);
+void	print_env(void *data);
+int		execute(t_data *data);
 
 #endif

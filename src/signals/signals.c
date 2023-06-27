@@ -1,25 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.h                                             :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/16 12:27:55 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/27 18:05:05 by gpasztor         ###   ########.fr       */
+/*   Created: 2023/06/21 19:25:30 by ffederol          #+#    #+#             */
+/*   Updated: 2023/06/27 19:09:02 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXEC_H
-# define EXEC_H
+#include "../../includes/minishell.h"
 
-int		check_file(char *file, int check);
-int		check_exist_access(char *cmd);
-char	*check_paths(char *cmd);
-int		exec_command(t_cmd *cmd, char **envp);
-int		count_cmds(t_cmd *cmdlst);
-void	write_output(int infd, int outfd);
-void	reset_std_fds(int stdinfd, int stdoutfd);
-char	**convert_env(t_list *envp);
+void	handle_signal_interactive(int signal)
+{
+	if (signal == SIGINT)
+	{
+		rl_done = 1;
+		g_signal = 1;
+		//rl_on_new_line();
+		rl_replace_line("", 0);
+		//rl_redisplay();
+	}
+}
 
-#endif
+void	init_signals(void)
+{
+	signal(SIGINT, handle_signal_interactive);
+}

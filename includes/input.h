@@ -6,12 +6,19 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/20 18:22:51 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/27 19:20:17 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INPUT_H
 # define INPUT_H
+
+# ifndef INT32_MIN
+#  define INT32_MIN -2147483648
+# endif
+
+# include <signal.h>
+# include <errno.h>
 
 typedef enum e_token
 {
@@ -30,7 +37,7 @@ typedef enum e_quote
 	D_QUOTE = 2
 }			t_quote;
 
-typedef struct s_content 
+typedef struct s_content
 {
 	char	*word;
 	t_tok	token;
@@ -48,6 +55,7 @@ typedef struct s_lexdata
 
 typedef struct s_expdata
 {
+	t_list	*l_envp;
 	int		i;
 	int		start;
 	int		count;
@@ -58,7 +66,6 @@ typedef struct s_expdata
 typedef struct s_cmd
 {
 	char	**args;  //for execve
-	char	**envp;
 	t_list	*in;
 	t_list	*out;
 	int		builtin;
@@ -68,22 +75,24 @@ typedef struct s_cmd
 	struct	s_cmd	*prev;
 }			t_cmd;
 
+void		init_signals(void);
+void		handle_interrupt(int signal);
 int			get_closing_quote(char *lptr, char quote);
 int			get_len(char *lptr, int i);
 t_list		*get_substrings(char *lptr);
-t_list		*lex(char *lptr);
+t_list		*lex(char *lptr, t_list *l_envp);
 int			is_token(char *str);
 int			get_tokens(t_list **token, t_lexdata *l_data);
-t_list 		*tokenize(t_list *substring, t_lexdata *l_data);
+t_list		*tokenize(t_list *substring, t_lexdata *l_data);
 char		get_outer_quotes(char *str);
 char		*rm_quotes(char *str, char quotes);
-void		expander(void *data);
-t_cmd 		*parse(t_list *lex);
-t_content 	*init_content(char *str);
+void		expander(t_list *lex, t_list *l_envp);
+t_cmd		*parse(t_list *lex, t_list *l_envp);
+t_content	*init_content(char *str);
 char		*my_strcpy(char *str);
 int			add_newnode_back(t_cmd **cmd, int lstsize);
 void		init_newnode(t_cmd *new, int lstsize);
-char		*exp_env_var(char *str);
+char		*exp_env_var(char *str, t_list *l_envp);
 char		*expand(char *str, t_expdata *exp_data);
 int			dollar_pos(char *str);
 int			my_strlen(char *str);
@@ -96,6 +105,13 @@ void		clear_content(void *data);
 void		add_token(t_lexdata *l_data, t_list **token);
 void		add_word(t_lexdata *l_data, t_list **token);
 void		set_builtin(t_cmd *cmd);
-int			heredoc(char *delim);
+int			heredoc(char *delim, t_list *l_envp);
+char		*my_getenv(char *var, t_list *l_envp);
+void 		clear_cmdlst(t_cmd **cmd);
+char		**init_args(int lstsize);
+void		clear_args(char **args);
+t_cmd		*get_last_node(t_cmd *cmd);
+t_cmd		*get_first_node(t_cmd *cmd);
+void		init_newnode(t_cmd *new, int lstsize);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/18 13:05:41 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/27 15:52:07 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	get_tokens(t_list **token, t_lexdata *l_data)
 		l_data->len = is_token(&(l_data->str[l_data->i]));
 		if (l_data->len != 0 && !quote)
 		{
-			if (l_data->len == 3 || (l_data->redir && l_data->i < 2))
+			if (l_data->len == 3 || (l_data->redir && l_data->i <= 2))
 				return (-1);
 			add_word(l_data, token);
 			add_token(l_data, token);
@@ -82,19 +82,19 @@ t_list	*tokenize(t_list *substring, t_lexdata *l_data)
 
 	temp = substring;
 	token = NULL;
-	// ft_lstiter(substring, print_content1);<
+	// ft_lstiter(substring, print_content1);
 	while (temp)
 	{
 		l_data->str = temp->content;
 		if (get_tokens(&token, l_data) == -1)
 		{
-			write(2, "minishell: parse error near unexpected token ", 45);
-			write(2, &l_data->str[l_data->i + l_data->len - 1], 1);
-			write(2, "\n", 1);
+			write(2, "minishell: syntax error near unexpected token `", 47);
+			write(2, &l_data->str[l_data->i], l_data->len);
+			write(2, "'\n", 2);
 			ft_lstclear(&token, clear_content);
 			ft_lstclear(&substring, clear_str);
-			rl_clear_history();
-			exit (1);
+			g_signal = 2;
+			return (NULL);
 		}	
 		temp = temp->next;
 	}
@@ -103,13 +103,14 @@ t_list	*tokenize(t_list *substring, t_lexdata *l_data)
 	return (token);
 }
 
-void	init_lex_data(t_lexdata **l_data)
+void	init_lex_data(t_lexdata **l_data, t_list *l_envp)
 {
 	*l_data = malloc(sizeof(t_lexdata));
 	if (!l_data)
 	{
 		write(2, "allocation failed", 17);
-		rl_clear_history();
+		clear_history();
+		ft_lstclear(&l_envp, clear_str);
 		exit (1);
 	}
 	(*l_data)->i = 0;
@@ -120,14 +121,14 @@ void	init_lex_data(t_lexdata **l_data)
 	(*l_data)->quote = NO_QUOTE;
 }
 
-t_list	*lex(char *lptr)
+t_list	*lex(char *lptr, t_list *l_envp)
 {
 	t_list		*substring;
 	t_list		*lex;
 	t_lexdata	*l_data;
 
 	l_data = NULL;
-	init_lex_data(&l_data);
+	init_lex_data(&l_data, l_envp);
 	substring = get_substrings(lptr);
 	lex = tokenize(substring, l_data);
 	free (l_data);

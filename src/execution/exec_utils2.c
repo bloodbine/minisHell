@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 12:03:39 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/25 10:56:17 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/27 19:06:13 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,32 @@ void	reset_std_fds(int stdinfd, int stdoutfd)
 	dup2(stdoutfd, STDOUT_FILENO);
 	close(stdinfd);
 	close(stdoutfd);
+}
+
+char	**convert_env(t_list *envp)
+{
+	char	**list;
+	t_list	*temp;
+	int		i;
+
+	temp = envp;
+	i = 0;
+	while (temp != NULL)
+	{
+		i += 1;
+		temp = temp->next;
+	}
+	list = malloc((i + 1) * sizeof(char *));
+	if (list == NULL)
+		ft_fprintf(2, "DEBUG: failed to malloc for envp list");
+	temp = envp;
+	i = 0;
+	while (temp != NULL)
+	{
+		list[i] = (((char *)(temp->content)));
+		i += 1;
+		temp = temp->next;
+	}
+	list[i] = NULL;
+	return (list);
 }

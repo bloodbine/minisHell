@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/18 13:05:26 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/27 15:40:52 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,9 @@ char	*rm_quotes(char *str, char quotes)
 	int		i;
 	int		j;
 	char	*new;
-	int		count;
 
 	i = 0;
 	j = 0;
-	count = 0;
 	new = malloc(sizeof(char) * (ft_strlen(str) + 1));
 	if (!new)
 	{
@@ -84,7 +82,7 @@ int	get_seq(char *str, char **seq)
 	return (i);
 }
 
-int	heredoc(char *delim)
+int	heredoc(char *delim, t_list *l_envp)
 {
 	char	*lptr;
 	int		fd;
@@ -94,13 +92,18 @@ int	heredoc(char *delim)
 		return (-1);
 	while (1)
 	{
-		lptr = readline(">");
-		if (!ft_strncmp(lptr, delim, ft_strlen(lptr) + ft_strlen(delim)))
+		lptr = readline("> ");
+		if (!lptr)
+		{
+			printf("\x1b[A> ");
+			break ;
+		}
+		if (g_signal == 1 || !ft_strncmp(lptr, delim, ft_strlen(delim) + 1))
 		{
 			free (lptr);
 			break ;
 		}
-		lptr = exp_env_var(lptr);
+		lptr = exp_env_var(lptr, l_envp);
 		write(fd, lptr, ft_strlen(lptr));
 		write(fd, "\n", 1);
 		free(lptr);

@@ -6,12 +6,11 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/27 15:14:58 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/27 19:19:19 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <sys/stat.h>
 
 int	input(t_cmd *cmd)
 {
@@ -59,7 +58,7 @@ int	output(t_cmd *cmd)
 			out_fd = -1;
 		out = out->next;
 	}
-	ft_fprintf(2, "DEBUG: outfile: %s %d\n", content->word, out_fd);
+	// ft_fprintf(2, "DEBUG: outfile: %s %d\n", content->word, out_fd);
 	if (dup2(out_fd, STDOUT_FILENO) == -1)
 		ft_fprintf(2, "DEBUG: failed to dup outfd: %d\n", out_fd);
 	if (out_fd != STDOUT_FILENO)
@@ -67,7 +66,7 @@ int	output(t_cmd *cmd)
 	return (out_fd);
 }
 
-void	pipeline(t_cmd	*cmd)
+void	pipeline(t_cmd	*cmd, char **envp)
 {
 	pid_t	proc;
 	int		in_fd;
@@ -86,7 +85,7 @@ void	pipeline(t_cmd	*cmd)
 		if (cmd->out == NULL)
 			dup2(cmd->fd[1], STDOUT_FILENO);
 		close(cmd->fd[1]);
-		exec_command(cmd);
+		exec_command(cmd, envp);
 	}
 	else
 	{
@@ -94,11 +93,11 @@ void	pipeline(t_cmd	*cmd)
 		close(cmd->fd[1]);
 		close(cmd->fd[0]);
 		if (cmd->out != NULL)
-			waitpid(proc, NULL, 0);
+			write()
 	}
 }
 
-void	last_cmd(t_cmd	*cmd)
+void	last_cmd(t_cmd	*cmd, char **envp)
 {
 	pid_t		proc;
 	int			out_fd;
@@ -110,32 +109,33 @@ void	last_cmd(t_cmd	*cmd)
 	if (proc == -1)
 		return (((void)(ft_fprintf(2, "DEBUG: Failed to fork\n"))));
 	else if (proc == 0)
-		exec_command(cmd);
+		exec_command(cmd, envp);
 	else
 		waitpid(proc, NULL, 0);
 }
 
-int	execute(t_cmd *cmdlst)
+int	execute(t_data *data)
 {
 	t_cmd	*cmd;
+	char	**envlist;
 	int		stdinfd;
 	int		stdoutfd;
 
-	if (cmdlst != NULL)
+	if (data->cmd != NULL)
 	{
-		cmd = cmdlst;
+		cmd = data->cmd;
 		stdinfd = dup(STDIN_FILENO);
 		stdoutfd = dup(STDOUT_FILENO);
 		while (cmd->next != NULL)
 		{
-			ft_fprintf(2, "---------------------\n");
-			ft_fprintf(2, "DEBUG: %s\n", cmd->envp[0]);
-			pipeline(cmd);
+			envlist = convert_env(data->l_envp);
+			pipeline(cmd, envlist);
 			cmd = cmd->next;
 			dup2(stdinfd, STDIN_FILENO);
 			dup2(stdoutfd, STDOUT_FILENO);
+			free(envlist);
 		}
-		last_cmd(cmd);
+		last_cmd(cmd, envlist);
 		reset_std_fds(stdinfd, stdoutfd);
 	}
 	return (0);

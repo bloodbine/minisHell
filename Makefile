@@ -2,7 +2,7 @@ NAME	= minishell
 
 OBJDIR	= obj/
 SRCDIR	= src/
-INCDIR 	= -I ./include -I ./Users/$(USER)/.brew/opt/readline/include
+INCDIR 	= -I ./include -I /Users/$(USER)/.brew/opt/readline/include
 LIBFT   = ./includes/libft/libft.a
 
 MAIN	=	minishell
@@ -21,9 +21,15 @@ EXECUTION	=	execution/exec	\
 				execution/exec_utils \
 				execution/exec_utils2
 
+ENVP		=	envp/environment
+
+SIGNALS		=	signals/signals
+
+LISTFUNC	=	listfunc/double_linked_list
+
 MISC		=	misc/string_func
 
-SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(MISC)
+SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(ENVP) $(SIGNALS) $(LISTFUNC) $(MISC)
 
 SRC	= $(addprefix $(SRCDIR), $(addsuffix .c, $(SOURCE)))
 OBJ	= $(addprefix $(OBJDIR), $(addsuffix .o, $(SOURCE)))
@@ -32,8 +38,8 @@ CC		= cc
 RMF	= rm -f
 RMRF	= rm -rf
 RMDIR	= rmdir
-CFLAGS	= -Wall -Wextra -Werror
-FFLAGS	= -lreadline -L /Users/$(USER)/.brew/opt/readline/lib
+CFLAGS	= -Wall -Wextra -Werror -g
+FFLAGS	= -L/Users/$(USER)/.brew/opt/readline/lib -lreadline 
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	mkdir -p $(@D)
