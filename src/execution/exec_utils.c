@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/27 02:13:01 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/27 15:10:03 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,10 @@ int	exec_command(t_cmd *cmd)
 		{
 			if (execve(ncmd, cmd->args, cmd->envp) == -1)
 			{
-				printf("2\n");
-				printf("exec failed %s %s %s\n", ncmd, *(cmd->args), *(cmd->envp));
+				ft_fprintf(2,"2\n");
+				printf("exec failed ncmd: %s\n", ncmd);
+				printf("exec failed envp: %s\n", *(cmd->envp));
+				printf("exec failed args: %s\n", *(cmd->args));
 			}
 		}
 	}
