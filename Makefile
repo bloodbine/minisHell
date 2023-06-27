@@ -18,7 +18,8 @@ EXPANDER	=	expander/expander \
 				expander/expander_utils
 
 EXECUTION	=	execution/exec	\
-				execution/exec_utils
+				execution/exec_utils \
+				execution/exec_utils2
 
 MISC		=	misc/string_func
 

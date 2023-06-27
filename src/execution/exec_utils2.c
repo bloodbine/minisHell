@@ -1,0 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils2.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/24 12:03:39 by gpasztor          #+#    #+#             */
+/*   Updated: 2023/06/25 10:56:17 by gpasztor         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../includes/minishell.h"
+
+void	write_output(int infd, int outfd)
+{
+	char	*line;
+
+	ft_fprintf(2, "DEBUG: Writing output to redirection\n");
+	while (1)
+	{
+		line = get_next_line(infd);
+		if (line == NULL)
+			break ;
+		write(outfd, line, ft_strlen(line));
+		free(line);
+	}
+}
+
+void	reset_std_fds(int stdinfd, int stdoutfd)
+{
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	dup2(stdinfd, STDIN_FILENO);
+	dup2(stdoutfd, STDOUT_FILENO);
+	close(stdinfd);
+	close(stdoutfd);
+}

@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/23 16:32:57 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/27 15:05:34 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,23 +90,15 @@ int	exec_command(t_cmd *cmd)
 	{
 		ncmd = check_paths(ft_strjoin("/", cmd->args[0]));
 		if (ncmd != NULL)
-			execve(ncmd, cmd->args, cmd->envp);
+		{
+			if (execve(ncmd, cmd->args, cmd->envp) == -1)
+				ft_fprintf(2, "DEBUG: Failed to execute command: %s\n", ncmd);
+		}
 	}
 	else if (check_exist_access(cmd->args[0]) == 0)
-		execve(cmd->args[0], cmd->args, cmd->envp);
-	exit(EXIT_FAILURE);
-}
-
-void	write_output(void)
-{
-	char	*line;
-
-	while (1)
 	{
-		line = get_next_line(STDIN_FILENO);
-		if (line == NULL)
-			break ;
-		write(STDOUT_FILENO, line, ft_strlen(line));
-		free(line);
+		if (execve(cmd->args[0], cmd->args, cmd->envp) == -1)
+			ft_fprintf(2, "DEBUG: Failed to execute command\n");
 	}
+	exit(EXIT_FAILURE);
 }
