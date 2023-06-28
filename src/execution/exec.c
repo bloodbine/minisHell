@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/27 19:19:19 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/28 15:49:54 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ int	input(t_cmd *cmd)
 		if (in != NULL && in_fd != -1)
 			close(in_fd);
 	}
-	// ft_fprintf(2, "DEBUG: infile: %s %d\n", content->word, in_fd);
-	if (dup2(in_fd, STDIN_FILENO) == -1)
+	ft_fprintf(2, "DEBUG: infile: %d\n", in_fd);
+	if (cmd->prev != NULL && cmd->in == NULL)
+		in_fd = cmd->prev->fd[0];
+	if (in_fd != STDIN_FILENO && dup2(in_fd, STDIN_FILENO) == -1)
 		ft_fprintf(2, "DEBUG: failed to dup infd: %d\n", in_fd);
 	if (in_fd != STDIN_FILENO)
 		close(in_fd);
@@ -58,7 +60,7 @@ int	output(t_cmd *cmd)
 			out_fd = -1;
 		out = out->next;
 	}
-	// ft_fprintf(2, "DEBUG: outfile: %s %d\n", content->word, out_fd);
+	ft_fprintf(2, "DEBUG: outfile: %d\n", out_fd);
 	if (dup2(out_fd, STDOUT_FILENO) == -1)
 		ft_fprintf(2, "DEBUG: failed to dup outfd: %d\n", out_fd);
 	if (out_fd != STDOUT_FILENO)
@@ -82,18 +84,16 @@ void	pipeline(t_cmd	*cmd, char **envp)
 	else if (proc == 0)
 	{
 		close(cmd->fd[0]);
-		if (cmd->out == NULL)
-			dup2(cmd->fd[1], STDOUT_FILENO);
+		dup2(cmd->fd[1], STDOUT_FILENO);
 		close(cmd->fd[1]);
 		exec_command(cmd, envp);
 	}
 	else
 	{
-		dup2(cmd->fd[0], STDIN_FILENO);
 		close(cmd->fd[1]);
-		close(cmd->fd[0]);
+		dup2(cmd->fd[0], STDIN_FILENO);
 		if (cmd->out != NULL)
-			write()
+			write_output(STDIN_FILENO, STDOUT_FILENO);
 	}
 }
 
@@ -103,8 +103,8 @@ void	last_cmd(t_cmd	*cmd, char **envp)
 	int			out_fd;
 	int			in_fd;
 
-	out_fd = output(cmd);
 	in_fd = input(cmd);
+	out_fd = output(cmd);
 	proc = fork();
 	if (proc == -1)
 		return (((void)(ft_fprintf(2, "DEBUG: Failed to fork\n"))));
@@ -126,16 +126,16 @@ int	execute(t_data *data)
 		cmd = data->cmd;
 		stdinfd = dup(STDIN_FILENO);
 		stdoutfd = dup(STDOUT_FILENO);
+		envlist = convert_env(data->l_envp);
 		while (cmd->next != NULL)
 		{
-			envlist = convert_env(data->l_envp);
 			pipeline(cmd, envlist);
 			cmd = cmd->next;
 			dup2(stdinfd, STDIN_FILENO);
 			dup2(stdoutfd, STDOUT_FILENO);
-			free(envlist);
 		}
 		last_cmd(cmd, envlist);
+		free(envlist);
 		reset_std_fds(stdinfd, stdoutfd);
 	}
 	return (0);

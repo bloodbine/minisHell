@@ -53,21 +53,6 @@ libmake:
 	$(MAKE) all bonus -C ./includes/libft
 	# curl https://icanhazdadjoke.com/
 
-# check_brew:
-# 	@if [ `which brew` = "$(HOME)/.brew/bin/brew" ]; then \
-# 		echo "Brew is installed"; \
-# 		if [ `find $(HOME)/.brew/Cellar -name "libreadline.dylib" | wc -l` -gt 0 ]; then \
-#     		echo "readline is installed"; \
-# 		else \
-# 			echo "No readline found"; \
-# 			brew install readline; \
-# 		fi; \
-# 	else \
-# 		echo "No Brew found"; \
-# 		curl -fsSL https://rawgit.com/kube/42homebrew/master/install.sh | zsh; \
-# 		brew install readline; \
-# 	fi
-
 clean:
 	$(RMRF) $(OBJ)
 	$(RMRF) $(OBJDIR)
