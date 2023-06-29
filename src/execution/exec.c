@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/28 15:49:54 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/29 11:17:08 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	input(t_cmd *cmd)
 	while (in != NULL)
 	{
 		content = ((t_content *)(in->content));
-		if (check_file(content->word, R_OK) == 0)
+		if (!check_file(content->word, R_OK))
 			in_fd = open(content->word, O_RDONLY, 0644);
 		else
 			in_fd = -1;
@@ -31,7 +31,6 @@ int	input(t_cmd *cmd)
 		if (in != NULL && in_fd != -1)
 			close(in_fd);
 	}
-	ft_fprintf(2, "DEBUG: infile: %d\n", in_fd);
 	if (cmd->prev != NULL && cmd->in == NULL)
 		in_fd = cmd->prev->fd[0];
 	if (in_fd != STDIN_FILENO && dup2(in_fd, STDIN_FILENO) == -1)
@@ -52,9 +51,9 @@ int	output(t_cmd *cmd)
 	while (out != NULL)
 	{
 		content = ((t_content *)(out->content));
-		if (check_file(content->word, W_OK) != 2 && content->token == OUT)
+		if (check_file(content->word, W_OK) == 0 && content->token == OUT)
 			out_fd = open(content->word, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (check_file(content->word, W_OK) != 2 && content->token == APPEND)
+		else if (check_file(content->word, W_OK) == 0)
 			out_fd = open(content->word, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else
 			out_fd = -1;
