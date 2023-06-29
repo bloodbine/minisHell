@@ -21,6 +21,8 @@ EXECUTION	=	execution/exec	\
 				execution/exec_utils \
 				execution/exec_utils2
 
+BUILTINS	=	builtins/builtins
+
 ENVP		=	envp/environment
 
 SIGNALS		=	signals/signals
@@ -29,7 +31,7 @@ LISTFUNC	=	listfunc/double_linked_list
 
 MISC		=	misc/string_func
 
-SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(ENVP) $(SIGNALS) $(LISTFUNC) $(MISC)
+SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(BUILTINS) $(ENVP) $(SIGNALS) $(LISTFUNC) $(MISC)
 
 SRC	= $(addprefix $(SRCDIR), $(addsuffix .c, $(SOURCE)))
 OBJ	= $(addprefix $(OBJDIR), $(addsuffix .o, $(SOURCE)))

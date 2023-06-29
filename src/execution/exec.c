@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/29 11:17:08 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/29 15:29:58 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int	output(t_cmd *cmd)
 			out_fd = -1;
 		out = out->next;
 	}
-	ft_fprintf(2, "DEBUG: outfile: %d\n", out_fd);
 	if (dup2(out_fd, STDOUT_FILENO) == -1)
 		ft_fprintf(2, "DEBUG: failed to dup outfd: %d\n", out_fd);
 	if (out_fd != STDOUT_FILENO)
@@ -67,7 +66,7 @@ int	output(t_cmd *cmd)
 	return (out_fd);
 }
 
-void	pipeline(t_cmd	*cmd, char **envp)
+void	pipeline(t_data *data, t_cmd *cmd, char **envp)
 {
 	pid_t	proc;
 	int		in_fd;
@@ -85,7 +84,7 @@ void	pipeline(t_cmd	*cmd, char **envp)
 		close(cmd->fd[0]);
 		dup2(cmd->fd[1], STDOUT_FILENO);
 		close(cmd->fd[1]);
-		exec_command(cmd, envp);
+		exec_command(data, cmd, envp);
 	}
 	else
 	{
@@ -96,7 +95,7 @@ void	pipeline(t_cmd	*cmd, char **envp)
 	}
 }
 
-void	last_cmd(t_cmd	*cmd, char **envp)
+void	last_cmd(t_data *data, t_cmd *cmd, char **envp)
 {
 	pid_t		proc;
 	int			out_fd;
@@ -108,7 +107,7 @@ void	last_cmd(t_cmd	*cmd, char **envp)
 	if (proc == -1)
 		return (((void)(ft_fprintf(2, "DEBUG: Failed to fork\n"))));
 	else if (proc == 0)
-		exec_command(cmd, envp);
+		exec_command(data, cmd, envp);
 	else
 		waitpid(proc, NULL, 0);
 }
@@ -128,12 +127,12 @@ int	execute(t_data *data)
 		envlist = convert_env(data->l_envp);
 		while (cmd->next != NULL)
 		{
-			pipeline(cmd, envlist);
+			pipeline(data, cmd, envlist);
 			cmd = cmd->next;
 			dup2(stdinfd, STDIN_FILENO);
 			dup2(stdoutfd, STDOUT_FILENO);
 		}
-		last_cmd(cmd, envlist);
+		last_cmd(data, cmd, envlist);
 		free(envlist);
 		reset_std_fds(stdinfd, stdoutfd);
 	}

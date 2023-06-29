@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/29 11:42:16 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/29 14:55:45 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,13 @@ int	count_cmds(t_cmd *cmdlst)
 	return (cnt);
 }
 
-int	exec_command(t_cmd *cmd, char **envp)
+int	exec_command(t_data *data, t_cmd *cmd, char **envp)
 {
 	char	*ncmd;
 
-	if (!ft_strchr(cmd->args[0], '/'))
+	if (cmd->builtin == 1)
+		exec_builtin(data, cmd->args[0], cmd->args);
+	else if (!ft_strchr(cmd->args[0], '/'))
 	{
 		ncmd = check_paths(ft_strjoin("/", cmd->args[0]));
 		if (ncmd != NULL)
