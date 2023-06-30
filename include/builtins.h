@@ -1,27 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.h                                             :+:      :+:    :+:   */
+/*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 12:27:55 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/30 17:36:36 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/30 22:27:18 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXEC_H
-# define EXEC_H
+#ifndef BUILTINS_H
+# define BUILTINS_H
 
-int		check_file(char *file, int check);
-int		check_exist_access(char *cmd);
-char	*check_paths(char *cmd);
-int		count_cmds(t_cmd *cmdlst);
-void	write_output(int infd, int outfd);
-void	reset_std_fds(int stdinfd, int stdoutfd);
-char	**convert_env(t_list *envp);
-int		execute(t_data *data);
-void	exec_builtin(t_data *data, char *cmd, char **argv);
-int		exec_command(t_data *data, t_cmd *cmd, char **envp);
+void	print_env(void *data);
+void	my_env(t_list *l_envp);
+int		my_cd(char** path, t_data *data);
+char	*my_pwd(t_data *data, int id);
+void	my_echo(char **argv);
+void 	change_PWD(t_list *l_envp, char *path);
+void	my_exit(char **args);
+void	my_export_unset(char **args, t_data *data);
+void	toggle_env_var(char *arg, t_list *l_envp);
 
 #endif

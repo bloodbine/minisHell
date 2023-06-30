@@ -26,9 +26,13 @@ SIGNALS		=	signals/signals
 LISTFUNC	=	listfunc/double_linked_list
 
 EXECUTION	= execution/exec \
-				execution/exec_utils
+				execution/exec_utils \
+				execution/exec_utils2
 
-SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(MISC) $(ENVP) $(SIGNALS) $(LISTFUNC)
+BUILTINS	= builtins/builtins \
+				builtins/builtin_utils
+
+SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(MISC) $(ENVP) $(SIGNALS) $(LISTFUNC) $(BUILTINS)
 
 SRC	= $(addprefix $(SRCDIR), $(addsuffix .c, $(SOURCE)))
 OBJ	= $(addprefix $(OBJDIR), $(addsuffix .o, $(SOURCE)))

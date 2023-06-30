@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/27 02:12:33 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/30 17:34:31 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,18 @@ int	input(t_cmd *cmd)
 	while (in != NULL)
 	{
 		content = ((t_content *)(in->content));
-		if (check_file(content->word, R_OK) == 0)
+		if (!check_file(content->word, R_OK))
 			in_fd = open(content->word, O_RDONLY, 0644);
-		// else
-		// 	in_fd = -1;
+		else
+			in_fd = -1;
 		in = in->next;
 		if (in != NULL && in_fd != -1)
 			close(in_fd);
 	}
-	//ft_fprintf(2, "DEBUG: infd: %d\n", in_fd);
-	dup2(in_fd, STDIN_FILENO);
+	if (cmd->prev != NULL && cmd->in == NULL)
+		in_fd = cmd->prev->fd[0];
+	if (in_fd != STDIN_FILENO && dup2(in_fd, STDIN_FILENO) == -1)
+		ft_fprintf(2, "DEBUG: failed to dup infd: %d\n", in_fd);
 	if (in_fd != STDIN_FILENO)
 		close(in_fd);
 	return (in_fd);
@@ -49,22 +51,22 @@ int	output(t_cmd *cmd)
 	while (out != NULL)
 	{
 		content = ((t_content *)(out->content));
-		if (check_file(content->word, W_OK) != 2 && content->token == OUT)
+		if (check_file(content->word, W_OK) == 0 && content->token == OUT)
 			out_fd = open(content->word, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (check_file(content->word, W_OK) != 2 && content->token == APPEND)
+		else if (check_file(content->word, W_OK) == 0)
 			out_fd = open(content->word, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		// else
-		// 	out_fd = -1;
+		else
+			out_fd = -1;
 		out = out->next;
 	}
-	//ft_fprintf(2, "DEBUG: outfd: %d\n", out_fd);
-	dup2(out_fd, STDOUT_FILENO);
+	if (dup2(out_fd, STDOUT_FILENO) == -1)
+		ft_fprintf(2, "DEBUG: failed to dup outfd: %d\n", out_fd);
 	if (out_fd != STDOUT_FILENO)
 		close(out_fd);
 	return (out_fd);
 }
 
-void	pipeline(t_cmd	*cmd)
+void	pipeline(t_data *data, t_cmd *cmd, char **envp)
 {
 	pid_t	proc;
 	int		in_fd;
@@ -77,63 +79,62 @@ void	pipeline(t_cmd	*cmd)
 	proc = fork();
 	if (proc == -1)
 		return (((void)(ft_fprintf(2, "DEBUG: Failed to fork\n"))));
-	else if (proc == 0) // child
+	else if (proc == 0)
 	{
 		close(cmd->fd[0]);
 		dup2(cmd->fd[1], STDOUT_FILENO);
 		close(cmd->fd[1]);
-		exec_command(cmd);
+		exec_command(data, cmd, envp);
 	}
-	else // parent
+	else
 	{
-		dup2(cmd->fd[0], STDIN_FILENO);
 		close(cmd->fd[1]);
+		dup2(cmd->fd[0], STDIN_FILENO);
 		if (cmd->out != NULL)
-			write_output();
-		close(cmd->fd[0]);
+			write_output(STDIN_FILENO, STDOUT_FILENO);
 	}
 }
 
-void	last_cmd(t_cmd	*cmd)
+void	last_cmd(t_data *data, t_cmd *cmd, char **envp)
 {
-	pid_t	proc;
-	int		out_fd;
-	int		in_fd;
+	pid_t		proc;
+	int			out_fd;
+	int			in_fd;
 
-	out_fd = output(cmd);
 	in_fd = input(cmd);
+	out_fd = output(cmd);
 	proc = fork();
 	if (proc == -1)
 		return (((void)(ft_fprintf(2, "DEBUG: Failed to fork\n"))));
 	else if (proc == 0)
-		exec_command(cmd);
+		exec_command(data, cmd, envp);
 	else
 		waitpid(proc, NULL, 0);
 }
 
-int	execute(t_cmd *cmdlst)
+int	execute(t_data *data)
 {
 	t_cmd	*cmd;
+	char	**envlist;
 	int		stdinfd;
 	int		stdoutfd;
-	
-	if (cmdlst != NULL)
+
+	if (data->cmd != NULL)
 	{
-		cmd = cmdlst;
+		cmd = data->cmd;
 		stdinfd = dup(STDIN_FILENO);
 		stdoutfd = dup(STDOUT_FILENO);
+		envlist = convert_env(data->l_envp);
 		while (cmd->next != NULL)
 		{
-			pipeline(cmd);
+			pipeline(data, cmd, envlist);
 			cmd = cmd->next;
+			dup2(stdinfd, STDIN_FILENO);
+			dup2(stdoutfd, STDOUT_FILENO);
 		}
-		last_cmd(cmd);
-		close(STDIN_FILENO);
-		close(STDOUT_FILENO);
-		dup2(stdinfd, STDIN_FILENO);
-		dup2(stdoutfd, STDOUT_FILENO);
-		close(stdinfd);
-		close(stdoutfd);
+		last_cmd(data, cmd, envlist);
+		free(envlist);
+		reset_std_fds(stdinfd, stdoutfd);
 	}
 	return (0);
 }

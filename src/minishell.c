@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/27 02:16:15 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/30 22:39:03 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,10 @@ int	main(int argc, char *argv[], char *envp[])
 		free(lptr);
 		if (data.cmd != NULL)
 		{
-			data.cmd->envp = envp;
-			execute(data.cmd);
-			//clear_cmdlst(&(data.cmd));
+			execute(&data);
+			clear_cmdlst(&(data.cmd));
+			//char test[1024];
+			//printf("curr: %s\n", getcwd(test, sizeof(test)));
 		}
 	}
 	clear_cmdlst(&(data.cmd));

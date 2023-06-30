@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/26 22:46:49 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/30 17:06:19 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,12 @@ typedef struct s_content
 	char	*word;
 	t_tok	token;
 }			t_content;
+
+typedef struct s_envp
+{
+	char	*word;
+	int		status;
+}			t_envp;
 
 typedef struct s_lexdata
 {

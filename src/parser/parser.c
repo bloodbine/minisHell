@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/27 02:46:47 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/06/28 16:46:19 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	print_content(void *data)
 {
 	t_content	*content;
-	
+
 	content = (t_content *)data;
 	printf("	%s(%d)\n", content->word, content->token);
 }
@@ -134,7 +134,7 @@ t_cmd	*parse(t_list *lex, t_list *l_envp)
 {
 	t_cmd	*cmd;
 	int		test;
-	
+
 	cmd = NULL;
 	if (!lex)
 		return (NULL);
