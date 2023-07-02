@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 15:27:08 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/29 15:33:10 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/06/30 12:40:40 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,22 +33,26 @@ void	my_pwd(t_data *data)
 	env = data->l_envp;
 	while (1)
 	{
-		cont = ((char *)(env->content));
-		if (ft_strncmp(cont, "PWD", 3) == 0)
-			break ;
-		env = env->next;
 		if (env == NULL)
 			exit(1);
+		cont = ((char *)(env->content));
+		if (ft_strncmp(cont, "pwd", 3) == 0)
+			break ;
+		else if (ft_strncmp(cont, "PWD", 3) == 0)
+			break ;
+		env = env->next;
 	}
 	write(STDOUT_FILENO, (cont + 4), ft_strlen(cont + 4));
 	write(STDOUT_FILENO, "\n", 2);
 }
 
-void	exec_builtin(t_data *data, char *cmd, char **argv)
+void	exec_child_builtin(t_data *data, char *cmd, char **argv)
 {
 	if (ft_strncmp(cmd, "echo", 4) == 0)
 		my_echo(argv);
 	if (ft_strncmp(cmd, "pwd", 3) == 0)
 		my_pwd(data);
+	if (ft_strncmp(cmd, "env", 3) == 0)
+		env(data->l_envp);
 	exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/29 10:56:32 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/01 15:09:21 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	main(int argc, char *argv[], char *envp[])
 		free(lptr);
 		if (data.cmd != NULL)
 		{
-			execute(&data);
+			g_signal = execute(&data);
 			clear_cmdlst(&(data.cmd));
 		}
 	}

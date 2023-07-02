@@ -21,7 +21,7 @@ EXECUTION	=	execution/exec	\
 				execution/exec_utils \
 				execution/exec_utils2
 
-BUILTINS	=	builtins/builtins
+BUILTINS	=	builtins/childbuiltins
 
 ENVP		=	envp/environment
 

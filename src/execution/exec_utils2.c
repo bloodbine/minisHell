@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 12:03:39 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/27 19:06:13 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/02 12:56:26 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	write_output(int infd, int outfd)
 {
 	char	*line;
 
-	ft_fprintf(2, "DEBUG: Writing output to redirection\n");
 	while (1)
 	{
 		line = get_next_line(infd);
@@ -52,7 +51,7 @@ char	**convert_env(t_list *envp)
 	}
 	list = malloc((i + 1) * sizeof(char *));
 	if (list == NULL)
-		ft_fprintf(2, "DEBUG: failed to malloc for envp list");
+		return (NULL);
 	temp = envp;
 	i = 0;
 	while (temp != NULL)
