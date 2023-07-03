@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/30 17:15:58 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/03 17:52:31 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ t_content	*init_content(char *str)
 
 	content = malloc(sizeof(t_content));
 	if (!content)
-	{
-		// memory managen free()
 		return (NULL);
-	}
 	content->word = NULL;
 	content->token = WORD;
 	if (!ft_strncmp(str, "|", 1))

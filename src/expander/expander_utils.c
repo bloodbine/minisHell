@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/26 15:47:49 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/03 17:45:30 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,7 @@ int	heredoc(char *delim, t_list *l_envp)
 			break ;
 		}
 		lptr = exp_env_var(lptr, l_envp);
-		write(fd, lptr, ft_strlen(lptr));
-		write(fd, "\n", 1);
+		ft_fprintf(fd, "%s\n", lptr);
 		free(lptr);
 	}
 	close(fd);

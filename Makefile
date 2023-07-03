@@ -15,7 +15,8 @@ PARSER		=	parser/parser \
 				parser/parser_utils
 
 EXPANDER	=	expander/expander \
-				expander/expander_utils
+				expander/expander_utils \
+				expander/expander_utils2 
 
 MISC		=	misc/string_func
 

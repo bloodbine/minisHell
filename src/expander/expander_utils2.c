@@ -1,26 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.h                                         :+:      :+:    :+:   */
+/*   expander_utils2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/16 12:27:55 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/03 19:49:02 by ffederol         ###   ########.fr       */
+/*   Created: 2023/07/03 17:48:42 by ffederol          #+#    #+#             */
+/*   Updated: 2023/07/03 17:49:02 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTINS_H
-# define BUILTINS_H
+#include "../../include/minishell.h"
 
-void	print_env(void *data);
-void	my_env(t_list *l_envp);
-int		my_cd(char **path, t_data *data);
-char	*my_pwd(t_data *data, int id);
-void	my_echo(char **argv);
-void	change_pwd(t_list *l_envp, char *path);
-void	my_exit(char **args);
-void	my_export_unset(char **args, t_data *data);
-void	toggle_env_var(char *arg, t_list *l_envp);
-
-#endif
+int	expand_helper(char *str, t_expdata *exp, int s)
+{
+	if (!exp->count && exp->i && str[exp->i - 1] == '$')
+		exp->sub = get_sub(ft_substr(str, s, exp->i - s - 1), exp);
+	else if (!exp->count)
+		exp->sub = get_sub(ft_substr(str, s, exp->i - s), exp);
+	else if (exp->count == 1)
+		exp->sub = get_sub(ft_substr(str, s, exp->i - s + 1), exp);
+	return (exp->start);
+}

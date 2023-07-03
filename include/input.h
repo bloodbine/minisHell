@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/30 17:06:19 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/03 19:47:16 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,15 @@ typedef struct s_expdata
 
 typedef struct s_cmd
 {
-	char	**args;  //for execve
-	char	**envp;
-	t_list	*in;
-	t_list	*out;
-	int		builtin;
-	int		idx;
-	int		fd[2];
-	struct	s_cmd	*next;
-	struct	s_cmd	*prev;
+	char			**args;
+	char			**envp;
+	t_list			*in;
+	t_list			*out;
+	int				builtin;
+	int				idx;
+	int				fd[2];
+	struct s_cmd	*next;
+	struct s_cmd	*prev;
 }			t_cmd;
 
 void		init_signals(void);
@@ -114,11 +114,14 @@ void		add_word(t_lexdata *l_data, t_list **token);
 void		set_builtin(t_cmd *cmd);
 int			heredoc(char *delim, t_list *l_envp);
 char		*my_getenv(char *var, t_list *l_envp);
-void 		clear_cmdlst(t_cmd **cmd);
+void		clear_cmdlst(t_cmd **cmd);
 char		**init_args(int lstsize);
 void		clear_args(char **args);
 t_cmd		*get_last_node(t_cmd *cmd);
 t_cmd		*get_first_node(t_cmd *cmd);
 void		init_newnode(t_cmd *new, int lstsize);
+int			expand_helper(char *str, t_expdata *exp, int s);
+char		*get_sub(char *str, t_expdata *exp);
+void		set_vars(int *i, int *argument);
 
 #endif

@@ -6,11 +6,12 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/30 17:34:31 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/02 22:47:01 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+#include <sys/wait.h>
 
 int	input(t_cmd *cmd)
 {
@@ -69,11 +70,11 @@ int	output(t_cmd *cmd)
 void	pipeline(t_data *data, t_cmd *cmd, char **envp)
 {
 	pid_t	proc;
-	int		in_fd;
-	int		out_fd;
+	// int		in_fd;
+	// int		out_fd;
 
-	in_fd = input(cmd);
-	out_fd = output(cmd);
+	// in_fd = input(cmd);
+	// out_fd = output(cmd);
 	if (pipe(cmd->fd) != 0)
 		ft_fprintf(2, "DEBUG: Failed to pipe\n");
 	proc = fork();
@@ -98,11 +99,11 @@ void	pipeline(t_data *data, t_cmd *cmd, char **envp)
 void	last_cmd(t_data *data, t_cmd *cmd, char **envp)
 {
 	pid_t		proc;
-	int			out_fd;
-	int			in_fd;
+	// //int			out_fd;
+	// int			in_fd;
 
-	in_fd = input(cmd);
-	out_fd = output(cmd);
+	// in_fd = input(cmd);
+	// out_fd = output(cmd);
 	proc = fork();
 	if (proc == -1)
 		return (((void)(ft_fprintf(2, "DEBUG: Failed to fork\n"))));

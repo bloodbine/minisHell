@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/30 22:38:47 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/03 15:50:44 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,8 @@ int	exec_command(t_data *data, t_cmd *cmd, char **envp)
 {
 	char	*ncmd;
 
-	data = NULL;
+	if (data)
+		data = NULL;
 	//if (cmd->builtin == 1)
 	//	exec_builtin(data, cmd->args[0], cmd->args);
 	if (!ft_strchr(cmd->args[0], '/'))

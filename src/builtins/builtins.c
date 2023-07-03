@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 15:21:34 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/30 22:34:18 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/03 17:45:48 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	my_env(t_list *l_envp)
 	ft_lstiter(l_envp, print_env);
 }
 
-int	my_cd(char** path, t_data *data)
+int	my_cd(char **path, t_data *data)
 {
 	if (path[1] == NULL)
 	{
@@ -41,15 +41,15 @@ int	my_cd(char** path, t_data *data)
 		write(2, "\n", 1);
 		return (1);
 	}
-	change_PWD(data->l_envp, path[1]);
+	change_pwd(data->l_envp, path[1]);
 	return (0);
 }
 
-char *my_pwd(t_data *data, int id)
+char	*my_pwd(t_data *data, int id)
 {
 	t_list	*env;
 	t_envp	*cont;
-	
+
 	env = data->l_envp;
 	while (1)
 	{
@@ -81,7 +81,7 @@ void	my_echo(char **argv)
 		write(STDOUT_FILENO, "\n", 2);
 }
 
-void my_exit(char **args)
+void	my_exit(char **args)
 {
 	if (!args[1])
 		exit(g_signal);
@@ -93,7 +93,7 @@ void my_exit(char **args)
 
 void	my_export_unset(char **args, t_data *data)
 {
-	while(*args)
+	while (*args)
 	{
 		if (ft_isalnum(ft_atoi(*args)))
 		{

@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/30 16:09:55 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/03 17:48:57 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*exp_env_var(char *str, t_list *l_envp)
 		expanded = my_strjoin(expanded, ft_substr(str, i, pos - i), 3);
 		pos += get_seq(&str[pos + 1], &seq);
 		i = ++pos;
-		expanded = my_strjoin(expanded, my_strcpy(my_getenv(seq, l_envp)), 3);
+		expanded = my_strjoin(expanded, my_getenv(seq, l_envp), 3);
 		free(seq);
 		pos += dollar_pos(&str[pos]);
 	}
@@ -64,25 +64,19 @@ char	*get_sub(char *str, t_expdata *exp)
 char	*expand(char *str, t_expdata *exp)
 {
 	int	s;
-	int	len;
 
-	len = ft_strlen(str);
 	s = exp->start;
 	while (str[exp->i] != '\0')
 	{
 		if (exp->quotes == 0)
 		{
-			exp->sub = my_strjoin(exp->sub, exp_env_var \
-				(ft_substr(str, exp->i, len - exp->i), exp->l_envp), 3);
+			exp->sub = my_strjoin(exp->sub, exp_env_var (ft_substr \
+				(str, exp->i, ft_strlen(str) - exp->i), exp->l_envp), 3);
 			break ;
 		}
 		if (str[exp->i] == exp->quotes)
 		{
-			if (!exp->count)
-				exp->sub = get_sub(ft_substr(str, s, exp->i - s), exp);
-			else if (exp->count == 1)
-				exp->sub = get_sub(ft_substr(str, s, exp->i - s + 1), exp);
-			s = exp->start;
+			s = expand_helper(str, exp, s);
 			exp->count++;
 			if (!exp->count)
 				exp->quotes = get_outer_quotes(&str[s]);
@@ -93,13 +87,14 @@ char	*expand(char *str, t_expdata *exp)
 	return (exp->sub);
 }
 
-void	init_expdata(t_expdata *data)
+void	init_expdata(t_expdata *data, t_list *l_envp)
 {
 	data->count = 0;
 	data->i = 0;
 	data->start = 0;
 	data->quotes = 0;
 	data->sub = NULL;
+	data->l_envp = l_envp;
 }
 
 void	expander(t_list *lex, t_list *l_envp)
@@ -107,10 +102,9 @@ void	expander(t_list *lex, t_list *l_envp)
 	t_content	*content;
 	t_expdata	exp;
 
-	exp.l_envp = l_envp;
 	while (lex)
 	{
-		init_expdata(&exp);
+		init_expdata(&exp, l_envp);
 		content = (t_content *)lex->content;
 		if (!content->word)
 			break ;
