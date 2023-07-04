@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/27 15:40:44 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:48:18 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ t_content	*init_content(char *str)
 
 	content = malloc(sizeof(t_content));
 	if (!content)
-	{
-		// memory managen free()
 		return (NULL);
-	}
 	content->word = NULL;
 	content->token = WORD;
 	if (!ft_strncmp(str, "|", 1))

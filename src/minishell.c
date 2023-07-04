@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/04 12:59:13 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:46:17 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ int	main(int argc, char *argv[], char *envp[])
 		if (data.cmd != NULL)
 		{
 			g_signal = execute(&data);
-			// ft_fprintf(2, "g_signal test: %d\n", g_signal);
 			clear_cmdlst(&(data.cmd));
 		}
 	}

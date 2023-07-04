@@ -15,14 +15,15 @@ PARSER		=	parser/parser \
 				parser/parser_utils
 
 EXPANDER	=	expander/expander \
-				expander/expander_utils
+				expander/expander_utils \
+				expander/expander_utils2 
 
 EXECUTION	=	execution/exec	\
 				execution/exec_utils \
 				execution/exec_utils2
 
-BUILTINS	=	builtins/childbuiltins
-
+BUILTINS	=	builtins/builtins \
+				builtins/builtin_utils
 ENVP		=	envp/environment
 
 SIGNALS		=	signals/signals
@@ -40,7 +41,7 @@ CC		= cc
 RMF	= rm -f
 RMRF	= rm -rf
 RMDIR	= rmdir
-CFLAGS	= -Wall -Wextra -Werror -g
+CFLAGS	= -Wall -Wextra -Werror
 FFLAGS	= -L/Users/$(USER)/.brew/opt/readline/lib -lreadline 
 
 $(OBJDIR)%.o: $(SRCDIR)%.c

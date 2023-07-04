@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:09:53 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/27 15:40:32 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:49:30 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ void	clear_args(char **args)
 {
 	char	**temp;
 
+	if (!args)
+		return ;
 	temp = args;
 	while (*temp)
 	{
@@ -61,4 +63,10 @@ void	clear_args(char **args)
 		temp++;
 	}
 	free(args);
+}
+
+void	set_vars(int *i, int *argument)
+{
+	*argument = 0;
+	*i = 0;
 }

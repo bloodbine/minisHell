@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/04 14:32:45 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:58:40 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,10 @@ int	exec_command(t_data *data, t_cmd *cmd, char **envp)
 {
 	char	*ncmd;
 
-	if (cmd->builtin == 1)
-		exec_child_builtin(data, cmd->args[0], cmd->args);
-	else if (!ft_strchr(cmd->args[0], '/'))
+	data = NULL;
+	// if (cmd->builtin == 1)
+	// 	exec_child_builtin(data, cmd->args[0], cmd->args);
+	if (!ft_strchr(cmd->args[0], '/'))
 	{
 		ncmd = check_paths(ft_strjoin("/", cmd->args[0]), envp);
 		if (ncmd != NULL)

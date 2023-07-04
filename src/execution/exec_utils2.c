@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 12:03:39 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/04 14:26:36 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:41:30 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	**convert_env(t_list *envp)
 	i = 0;
 	while (temp != NULL)
 	{
-		list[i] = (((char *)(temp->content)));
+		list[i] = ((((t_content *)(temp->content))->word));
 		i += 1;
 		temp = temp->next;
 	}

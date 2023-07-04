@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/27 15:52:07 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:48:22 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	init_lex_data(t_lexdata **l_data, t_list *l_envp)
 	if (!l_data)
 	{
 		write(2, "allocation failed", 17);
-		clear_history();
+		rl_clear_history();
 		ft_lstclear(&l_envp, clear_str);
 		exit (1);
 	}

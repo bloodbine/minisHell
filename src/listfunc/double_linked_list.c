@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 19:27:15 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/27 15:40:38 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:49:45 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 t_cmd	*get_first_node(t_cmd *cmd)
 {
+	if (!cmd)
+		return (NULL);
 	while (cmd && cmd->prev)
 		cmd = cmd->prev;
 	return (cmd);
@@ -65,16 +67,20 @@ int	add_newnode_back(t_cmd **cmd, int lstsize)
 
 void	clear_cmdlst(t_cmd **cmd)
 {
-	if (!cmd)
+	if (!cmd || !(*cmd))
 		return ;
 	*cmd = get_last_node(*cmd);
-	while (*cmd)
+	while (1)
 	{
 		clear_args((*cmd)->args);
 		ft_lstclear(&(*cmd)->in, clear_content);
 		ft_lstclear(&(*cmd)->out, clear_content);
-		*cmd = (*cmd)->prev;
-		if (*cmd)
-			free((*cmd)->next);
+		if ((*cmd)->prev)
+			*cmd = (*cmd)->prev;
+		else
+			break ;
+		free((*cmd)->next);
 	}
+	free(*cmd);
+	*cmd = NULL;
 }

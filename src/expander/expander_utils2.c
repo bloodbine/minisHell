@@ -1,36 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parentbuiltins.c                                   :+:      :+:    :+:   */
+/*   expander_utils2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/30 12:41:04 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/30 12:49:53 by gpasztor         ###   ########.fr       */
+/*   Created: 2023/07/03 17:48:42 by ffederol          #+#    #+#             */
+/*   Updated: 2023/07/04 16:48:45 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	my_cd()
+#include "../../includes/minishell.h"
+
+int	expand_helper(char *str, t_expdata *exp, int s)
 {
-
-}
-
-void	my_export()
-{
-
-}
-
-void	my_unset()
-{
-	
-}
-
-void	exec_parent_builtin(t_data *data, char *cmd, char **argv)
-{
-	if (ft_strncmp(cmd, "cd", 4) == 0)
-		
-	if (ft_strncmp(cmd, "export", 3) == 0)
-		
-	if (ft_strncmp(cmd, "unset", 3) == 0)
-		
+	if (!exp->count && exp->i && str[exp->i - 1] == '$')
+		exp->sub = get_sub(ft_substr(str, s, exp->i - s - 1), exp);
+	else if (!exp->count)
+		exp->sub = get_sub(ft_substr(str, s, exp->i - s), exp);
+	else if (exp->count == 1)
+		exp->sub = get_sub(ft_substr(str, s, exp->i - s + 1), exp);
+	return (exp->start);
 }

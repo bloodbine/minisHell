@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/27 15:40:42 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:48:15 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,11 @@ int	is_token(char *str)
 		return (0);
 	if (str[0] == '|')
 	{
-		if (str[1] == '|') //|| str[-1] == '|')
+		if (str[1] == '|')
 			return (0);
 		return (1);
 	}
-	if (str[1] == str[0]) //&& (!(ft_strchr("|><", str[2])) || str[2] == '\0'))
+	if (str[1] == str[0])
 		return (2);
-	// else if (str[1] == str[0])
-	// 	return (3);
 	return (1);
 }

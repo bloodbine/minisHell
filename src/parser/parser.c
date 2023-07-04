@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/06/27 15:40:30 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:59:27 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	print_content(void *data)
 {
 	t_content	*content;
-	
+
 	content = (t_content *)data;
 	printf("	%s(%d)\n", content->word, content->token);
 }
@@ -79,23 +79,21 @@ int	build_cmds(t_list *lex, t_cmd **cmd)
 	int	i;
 	int	argument;
 
-	argument = 0;
-	i = 0;
+	set_vars(&i, &argument);
 	if (((t_content *)(lex->content))->token == PIPE)
-		return (write(2, "Minishell: syntax error near unexpected token `|'\n", 50), 0);
+		return (0);
 	add_newnode_back(cmd, ft_lstsize(lex));
 	while (lex)
 	{
 		if (((t_content *)(lex->content))->token == PIPE)
 		{
-			if (!lex->next || ((t_content *)(lex->next->content))->token == PIPE)
-				return (write(2, "Minishell: syntax error near unexpected token `|'\n", 50), 0);
+			if (!lex->next || \
+					((t_content *)(lex->next->content))->token == PIPE)
+				return (0);
 			if (!((t_content *)(lex->next->content))->word)
 				return (-1);
-			fill_cmd_struct(lex, *cmd, &i, &argument);
 			add_newnode_back(cmd, ft_lstsize(lex));
-			argument = 0;
-			i = 0;
+			set_vars(&i, &argument);
 		}
 		else if (!((t_content *)(lex->content))->word)
 			return (-1);
@@ -105,52 +103,56 @@ int	build_cmds(t_list *lex, t_cmd **cmd)
 	return (1);
 }
 
-void	print_cmds(t_cmd *cmd)
-{
-	cmd = get_first_node(cmd);
-	char **temp;
+// void	print_cmds(t_cmd *cmd)
+// {
+// 	cmd = get_first_node(cmd);
+// 	char **temp;
 
-	while (cmd)
-	{
-		printf("char **args:");
-		temp = cmd->args;
-		while (*temp)
-		{
-			printf("	%s", *temp);
-			temp++;
-		}
-		printf("\n");
-		printf("in:");
-		ft_lstiter(cmd->in, print_content);
-		printf("\n");
-		printf("out:");
-		ft_lstiter(cmd->out, print_content);
-		printf("\n");
-		cmd = cmd->next;
-	}
-}
+// 	while (cmd)
+// 	{
+// 		printf("char **args:");
+// 		temp = cmd->args;
+// 		while (*temp)
+// 		{
+// 			printf("	%s", *temp);
+// 			temp++;
+// 		}
+// 		printf("\n");
+// 		printf("in:");
+// 		ft_lstiter(cmd->in, print_content);
+// 		printf("\n");
+// 		printf("out:");
+// 		ft_lstiter(cmd->out, print_content);
+// 		printf("\n");
+// 		cmd = cmd->next;
+// 	}
+// }
 
 t_cmd	*parse(t_list *lex, t_list *l_envp)
 {
 	t_cmd	*cmd;
 	int		test;
-	
+
 	cmd = NULL;
 	if (!lex)
 		return (NULL);
+	//ft_lstiter(lex, print_content);
 	expander(lex, l_envp);
-	if (g_signal == 1)
-	{
-		ft_lstclear(&lex, clear_content);
-		return (NULL);
-	}
-	// ft_lstiter(lex, print_content);
+	// if (g_signal == 1)
+	// {
+	// 	ft_lstclear(&lex, clear_content);
+	// 	return (NULL);
+	// }
+	//ft_lstiter(lex, print_content);
 	test = build_cmds(lex, &cmd);
-	if(test <= 0)
+	if (test <= 0)
 	{
 		clear_cmdlst(&cmd);
-		if (test == - 1)
-			write(2, "Minishell: syntax error near unexpected token `newline'\n", 56);
+		write(2, "Minishell: syntax error near unexpected token ", 46);
+		if (test == -1)
+			write(2, "`newline'\n", 10);
+		else
+			write(2, "`|'\n", 4);
 		g_signal = 2;
 	}
 	ft_lstclear(&lex, clear_content);
