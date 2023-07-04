@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/01 14:42:43 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 14:32:45 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,24 +45,24 @@ int	check_exist_access(char *cmd)
 {
 	if (access(cmd, F_OK) == -1)
 	{
-		ft_fprintf(2, "minishell: %s: Command not found\n", cmd + 2);
+		ft_fprintf(2, "minishell: %s: Command not found\n", cmd);
 		return (1);
 	}
 	if (access(cmd, X_OK) == -1)
 	{
-		ft_fprintf(2, "minishell: %s: Permission denied\n", cmd + 2);
+		ft_fprintf(2, "minishell: %s: Permission denied\n", cmd);
 		return (2);
 	}
 	return (0);
 }
 
-char	*check_paths(char *cmd)
+char	*check_paths(char *cmd, char **envp)
 {
 	char	**path_list;
 	char	*ncmd;
 	int		i;
 
-	path_list = ft_split(getenv("PATH"), ':');
+	path_list = ft_split(get_path_env(envp), ':');
 	i = -1;
 	ncmd = NULL;
 	while (path_list[++i] != NULL)
@@ -104,7 +104,7 @@ int	exec_command(t_data *data, t_cmd *cmd, char **envp)
 		exec_child_builtin(data, cmd->args[0], cmd->args);
 	else if (!ft_strchr(cmd->args[0], '/'))
 	{
-		ncmd = check_paths(ft_strjoin("/", cmd->args[0]));
+		ncmd = check_paths(ft_strjoin("/", cmd->args[0]), envp);
 		if (ncmd != NULL)
 		{
 			if (execve(ncmd, cmd->args, envp) == -1)

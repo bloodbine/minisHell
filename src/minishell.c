@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/01 15:09:21 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 12:59:13 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,15 @@ int	main(int argc, char *argv[], char *envp[])
 	init(&data, envp);
 	while (1)
 	{
-		lptr = readline("$ > ");
+		if (isatty(fileno(stdin)))
+			lptr = readline("$ > ");
+		else
+			lptr = ft_strtrim(get_next_line(fileno(stdin)), "\n");
 		if (lptr && !ft_strncmp(lptr, "exit", 5))
 			break ;
 		if (!lptr)
 		{
-			printf("\x1b[A$ > exit\n");
+			// printf("\x1b[A$ > exit\n");
 			break ;
 		}
 		if (lptr[0] != '\0')
@@ -52,6 +55,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (data.cmd != NULL)
 		{
 			g_signal = execute(&data);
+			// ft_fprintf(2, "g_signal test: %d\n", g_signal);
 			clear_cmdlst(&(data.cmd));
 		}
 	}

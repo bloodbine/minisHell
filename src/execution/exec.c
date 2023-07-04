@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/02 12:56:14 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 13:58:55 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int	input(t_cmd *cmd)
 			in_fd = open(content->word, O_RDONLY, 0644);
 		else
 			in_fd = -1;
+		if (content->token == HEREDOC)
+			unlink(content->word);
 		in = in->next;
 		if (in != NULL && in_fd != -1)
 			close(in_fd);

@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 12:03:39 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/02 12:56:26 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/04 14:26:36 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,18 @@ char	**convert_env(t_list *envp)
 	}
 	list[i] = NULL;
 	return (list);
+}
+
+char	*get_path_env(char **envp)
+{
+	int	i;
+
+	i = -1;
+	while (1)
+	{
+		if (envp[++i] == NULL)
+			return (NULL);
+		else if (ft_strncmp(envp[i], "PATH", 4) == 0)
+			return (envp[i]);
+	}
 }
