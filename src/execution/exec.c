@@ -6,12 +6,11 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/02 22:47:01 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/04 15:28:31 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include <sys/wait.h>
 
 int	input(t_cmd *cmd)
 {
@@ -28,14 +27,17 @@ int	input(t_cmd *cmd)
 			in_fd = open(content->word, O_RDONLY, 0644);
 		else
 			in_fd = -1;
+		if (content->token == HEREDOC)
+			unlink(content->word);
 		in = in->next;
 		if (in != NULL && in_fd != -1)
 			close(in_fd);
 	}
 	if (cmd->prev != NULL && cmd->in == NULL)
 		in_fd = cmd->prev->fd[0];
-	if (in_fd != STDIN_FILENO && dup2(in_fd, STDIN_FILENO) == -1)
-		ft_fprintf(2, "DEBUG: failed to dup infd: %d\n", in_fd);
+	if (in_fd == -1)
+		return (-1);
+	dup2(in_fd, STDIN_FILENO);
 	if (in_fd != STDIN_FILENO)
 		close(in_fd);
 	return (in_fd);
@@ -60,26 +62,28 @@ int	output(t_cmd *cmd)
 			out_fd = -1;
 		out = out->next;
 	}
-	if (dup2(out_fd, STDOUT_FILENO) == -1)
-		ft_fprintf(2, "DEBUG: failed to dup outfd: %d\n", out_fd);
+	if (out_fd == -1)
+		return (-1);
+	dup2(out_fd, STDOUT_FILENO);
 	if (out_fd != STDOUT_FILENO)
 		close(out_fd);
 	return (out_fd);
 }
 
-void	pipeline(t_data *data, t_cmd *cmd, char **envp)
+int	pipeline(t_data *data, t_cmd *cmd, char **envp)
 {
 	pid_t	proc;
-	// int		in_fd;
-	// int		out_fd;
+	int		in_fd;
+	int		out_fd;
+	int		status;
 
-	// in_fd = input(cmd);
-	// out_fd = output(cmd);
+	in_fd = input(cmd);
+	out_fd = output(cmd);
 	if (pipe(cmd->fd) != 0)
-		ft_fprintf(2, "DEBUG: Failed to pipe\n");
+		return (errno);
 	proc = fork();
 	if (proc == -1)
-		return (((void)(ft_fprintf(2, "DEBUG: Failed to fork\n"))));
+		return (errno);
 	else if (proc == 0)
 	{
 		close(cmd->fd[0]);
@@ -87,30 +91,38 @@ void	pipeline(t_data *data, t_cmd *cmd, char **envp)
 		close(cmd->fd[1]);
 		exec_command(data, cmd, envp);
 	}
-	else
-	{
-		close(cmd->fd[1]);
-		dup2(cmd->fd[0], STDIN_FILENO);
-		if (cmd->out != NULL)
-			write_output(STDIN_FILENO, STDOUT_FILENO);
-	}
+	close(cmd->fd[1]);
+	dup2(cmd->fd[0], STDIN_FILENO);
+	if (cmd->out != NULL)
+		write_output(STDIN_FILENO, STDOUT_FILENO);
+	waitpid(proc, &status, WNOHANG);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	return (0);
 }
 
-void	last_cmd(t_data *data, t_cmd *cmd, char **envp)
+int	last_cmd(t_data *data, t_cmd *cmd, char **envp)
 {
 	pid_t		proc;
-	// //int			out_fd;
-	// int			in_fd;
+	int			out_fd;
+	int			in_fd;
+	int			status;
 
-	// in_fd = input(cmd);
-	// out_fd = output(cmd);
+	in_fd = input(cmd);
+	if (in_fd == -1)
+		return (errno);
+	out_fd = output(cmd);
+	if (out_fd == -1)
+		return (errno);
 	proc = fork();
 	if (proc == -1)
-		return (((void)(ft_fprintf(2, "DEBUG: Failed to fork\n"))));
+		return (errno);
 	else if (proc == 0)
 		exec_command(data, cmd, envp);
-	else
-		waitpid(proc, NULL, 0);
+	waitpid(proc, &status, 0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	return (0);
 }
 
 int	execute(t_data *data)
@@ -119,23 +131,32 @@ int	execute(t_data *data)
 	char	**envlist;
 	int		stdinfd;
 	int		stdoutfd;
+	int		error;
 
+	error = 0;
 	if (data->cmd != NULL)
 	{
 		cmd = data->cmd;
 		stdinfd = dup(STDIN_FILENO);
 		stdoutfd = dup(STDOUT_FILENO);
+		if (stdinfd == -1 || stdoutfd == -1)
+			return (errno);
 		envlist = convert_env(data->l_envp);
 		while (cmd->next != NULL)
 		{
-			pipeline(data, cmd, envlist);
+			error = pipeline(data, cmd, envlist);
+			if (error != 0)
+			{
+				reset_std_fds(stdinfd, stdoutfd);
+				return (error);
+			}
 			cmd = cmd->next;
 			dup2(stdinfd, STDIN_FILENO);
 			dup2(stdoutfd, STDOUT_FILENO);
 		}
-		last_cmd(data, cmd, envlist);
+		error = last_cmd(data, cmd, envlist);
 		free(envlist);
 		reset_std_fds(stdinfd, stdoutfd);
 	}
-	return (0);
+	return (error);
 }

@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/03 17:48:57 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/04 15:34:10 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ void	expander(t_list *lex, t_list *l_envp)
 				g_signal = errno;
 				return ;
 			}
+			g_signal = 0;
 			free(content->word);
 			content->word = my_strcpy("heredoc");
 		}

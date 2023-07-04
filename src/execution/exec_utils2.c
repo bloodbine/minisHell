@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 12:03:39 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/06/30 22:11:35 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/04 15:11:32 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	write_output(int infd, int outfd)
 {
 	char	*line;
 
-	ft_fprintf(2, "DEBUG: Writing output to redirection\n");
 	while (1)
 	{
 		line = get_next_line(infd);
@@ -52,12 +51,12 @@ char	**convert_env(t_list *envp)
 	}
 	list = malloc((i + 1) * sizeof(char *));
 	if (list == NULL)
-		ft_fprintf(2, "DEBUG: failed to malloc for envp list");
+		return (NULL);
 	temp = envp;
 	i = 0;
 	while (temp != NULL)
 	{
-		list[i] = (((char *)(temp->content)));
+		list[i] = ((((t_content *)(temp->content))->word));
 		i += 1;
 		temp = temp->next;
 	}
@@ -65,19 +64,16 @@ char	**convert_env(t_list *envp)
 	return (list);
 }
 
-void	exec_builtin(t_data *data, char *cmd, char **argv)
+char	*get_path_env(char **envp)
 {
-	if (ft_strncmp(cmd, "echo", 5) == 0)
-		my_echo(argv);
-	if (ft_strncmp(cmd, "pwd", 4) == 0)
-		my_pwd(data, 0);
-	if (ft_strncmp(cmd, "cd", 3) == 0)
-		my_cd(argv, data);
-	if (ft_strncmp(cmd, "env", 4) == 0)
-		my_env(data->l_envp);
-	if (!ft_strncmp(cmd, "export", 7) || !ft_strncmp(cmd, "unset", 6))
-		my_export_unset(argv, data);
-	if (ft_strncmp(cmd, "exit", 5) == 0)
-		my_exit(argv);
-	exit(0);
+	int	i;
+
+	i = -1;
+	while (1)
+	{
+		if (envp[++i] == NULL)
+			return (NULL);
+		else if (ft_strncmp(envp[i], "PATH", 4) == 0)
+			return (envp[i]);
+	}
 }
