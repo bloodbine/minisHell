@@ -23,7 +23,9 @@ EXECUTION	=	execution/exec	\
 				execution/exec_utils2
 
 BUILTINS	=	builtins/builtins \
+				builtins/builtins2 \
 				builtins/builtin_utils
+
 ENVP		=	envp/environment
 
 SIGNALS		=	signals/signals
