@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 15:21:34 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/03 17:45:48 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/05 22:23:10 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,13 @@ int	my_cd(char **path, t_data *data)
 	if (path[1] == NULL)
 	{
 		chdir(ft_strjoin("/Users/", my_getenv("USER", data->l_envp)));
+		change_pwd(data->l_envp, ft_strjoin("/Users/", my_getenv("USER", data->l_envp)));
 		return (0);
 	}
 	if (path[2] != NULL)
 	{
 		write(2, "cd: to many arguments\n", 22);
-		return (1);
+		return(1);
 	}
 	if (path[1][0] != '/')
 	{
@@ -39,7 +40,7 @@ int	my_cd(char **path, t_data *data)
 		write(2, "cd: no such file or directory: ", 31);
 		write(2, path[1], ft_strlen(path[1]));
 		write(2, "\n", 1);
-		return (1);
+		return(1);
 	}
 	change_pwd(data->l_envp, path[1]);
 	return (0);
@@ -70,15 +71,20 @@ char	*my_pwd(t_data *data, int id)
 
 void	my_echo(char **argv)
 {
-	int		i;
+	int	i;
 
-	i = 0;
-	if (ft_strncmp(argv[1], "-n", 3) == 0)
-		i = 1;
-	while (argv[++i] != NULL)
+	i = 1;
+	if (!ft_strncmp(argv[1], "-n", 3))
+		i = 2;
+	while (argv[i])
+	{
 		write(STDOUT_FILENO, argv[i], ft_strlen(argv[i]));
-	if (ft_strncmp(argv[1], "-n", 3) != 0)
-		write(STDOUT_FILENO, "\n", 2);
+		i++;
+		if (argv[i])
+			write(STDOUT_FILENO, " ", 1);
+	}
+	if (ft_strncmp(argv[1], "-n", 3))
+		write(STDOUT_FILENO, "\n", 1);
 }
 
 void	my_exit(char **args)
@@ -89,20 +95,4 @@ void	my_exit(char **args)
 		exit((256 + ft_isalnum(ft_atoi(args[1]))) % 256);
 	else
 		exit (255);
-}
-
-void	my_export_unset(char **args, t_data *data)
-{
-	while (*args)
-	{
-		if (ft_isalnum(ft_atoi(*args)))
-		{
-			write(2, "minishell: unset: `", 18);
-			write(2, *args, ft_strlen(*args));
-			write(2, "': not a valid identifier", 25);
-		}
-		else
-			toggle_env_var(*args, data->l_envp);
-		args++;
-	}
 }

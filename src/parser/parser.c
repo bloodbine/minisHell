@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/03 19:37:55 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/05 22:46:18 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,37 @@ void	fill_redir(t_cmd *cmd, t_content *l)
 		free (word);
 }
 
+int	check_echo(char **args, char *word, int *argument, int *j)
+{
+	int	i;
+
+	i = 1;
+	if (ft_strncmp(*args, "echo", 5) || ft_strncmp(*args, "/bin/echo", 10))
+	{
+		while (word[i] == 'n')
+			i++;
+		if (word[i] != '\0')
+		{
+			*argument = 1;
+			args[*j] = my_strcpy(word);
+			return (1);
+		}
+		else 
+		{
+			if(args[1] && !ft_strncmp(*args, "echo", 5))
+				return (*j = 1, 1);
+			if(args[1] && !ft_strncmp(*args, "/bin/echo", 10))
+			{
+				args[*j] = my_strcpy(word);
+				return (1);	
+			}
+			free(word);
+			word = my_strcpy("-n");
+		}
+	}
+	return (0);	
+}
+
 void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i, int *argument)
 {
 	t_content	*l;
@@ -60,8 +91,11 @@ void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i, int *argument)
 			cmd->args[0] = my_strcpy(l->word);
 		else if (!(*argument) && l->word[0] == '-')
 		{
-			cmd->args[1] = my_strjoin(cmd->args[1], &(l->word[*i - 1]), 1);
-			*i = 1;
+			if (!check_echo(cmd->args, l->word, argument, i))
+			{
+				cmd->args[1] = my_strjoin(cmd->args[1], &(l->word[*i - 1]), 1);
+				*i = 1;
+			}
 		}
 		else
 		{
@@ -103,30 +137,30 @@ int	build_cmds(t_list *lex, t_cmd **cmd)
 	return (1);
 }
 
-// void	print_cmds(t_cmd *cmd)
-// {
-// 	cmd = get_first_node(cmd);
-// 	char **temp;
+void	print_cmds(t_cmd *cmd)
+{
+	cmd = get_first_node(cmd);
+	char **temp;
 
-// 	while (cmd)
-// 	{
-// 		printf("char **args:");
-// 		temp = cmd->args;
-// 		while (*temp)
-// 		{
-// 			printf("	%s", *temp);
-// 			temp++;
-// 		}
-// 		printf("\n");
-// 		printf("in:");
-// 		ft_lstiter(cmd->in, print_content);
-// 		printf("\n");
-// 		printf("out:");
-// 		ft_lstiter(cmd->out, print_content);
-// 		printf("\n");
-// 		cmd = cmd->next;
-// 	}
-// }
+	while (cmd)
+	{
+		printf("char **args:");
+		temp = cmd->args;
+		while (*temp)
+		{
+			printf("	%s", *temp);
+			temp++;
+		}
+		printf("\n");
+		printf("in:");
+		ft_lstiter(cmd->in, print_content);
+		printf("\n");
+		printf("out:");
+		ft_lstiter(cmd->out, print_content);
+		printf("\n");
+		cmd = cmd->next;
+	}
+}
 
 t_cmd	*parse(t_list *lex, t_list *l_envp)
 {
@@ -138,11 +172,11 @@ t_cmd	*parse(t_list *lex, t_list *l_envp)
 		return (NULL);
 	//ft_lstiter(lex, print_content);
 	expander(lex, l_envp);
-	if (g_signal == 1)
-	{
-		ft_lstclear(&lex, clear_content);
-		return (NULL);
-	}
+	// if (g_signal == 1)
+	// {
+	// 	ft_lstclear(&lex, clear_content);
+	// 	return (NULL);
+	// }
 	//ft_lstiter(lex, print_content);
 	test = build_cmds(lex, &cmd);
 	if (test <= 0)

@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 12:27:55 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/04 14:55:21 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/05 19:32:30 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	reset_std_fds(int stdinfd, int stdoutfd);
 char	**convert_env(t_list *envp);
 char	*get_path_env(char **envp);
 int		execute(t_data *data);
-void	exec_child_builtin(t_data *data, char *cmd, char **argv);
 int		exec_command(t_data *data, t_cmd *cmd, char **envp);
+int		exec_builtin(t_data *data, t_cmd *cmd);
+
 #endif

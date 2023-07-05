@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/04 15:28:31 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/05 19:31:51 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ int	last_cmd(t_data *data, t_cmd *cmd, char **envp)
 	int			in_fd;
 	int			status;
 
+	if (cmd->builtin == 1)
+		return (exec_builtin(data, cmd));
 	in_fd = input(cmd);
 	if (in_fd == -1)
 		return (errno);

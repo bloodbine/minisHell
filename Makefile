@@ -2,10 +2,10 @@ NAME	= minishell
 
 OBJDIR	= obj/
 SRCDIR	= src/
-INCDIR 	= -I ./include -I/Users/$(USER)/.brew/opt/readline/include
+INCDIR 	= -I ./include -I /Users/$(USER)/.brew/opt/readline/include
 LIBFT   = ./includes/libft/libft.a
 
-MAIN	=	minishell \
+MAIN	=	minishell
 
 LEXER		=	lexer/lexer \
 				lexer/lexer_utils \
@@ -18,22 +18,23 @@ EXPANDER	=	expander/expander \
 				expander/expander_utils \
 				expander/expander_utils2 
 
-MISC		=	misc/string_func
+EXECUTION	=	execution/exec	\
+				execution/exec_utils \
+				execution/exec_utils2
 
-ENVP		=	envp/environment 
+BUILTINS	=	builtins/builtins \
+				builtins/builtins2 \
+				builtins/builtin_utils
+
+ENVP		=	envp/environment
 
 SIGNALS		=	signals/signals
 
 LISTFUNC	=	listfunc/double_linked_list
 
-EXECUTION	= execution/exec \
-				execution/exec_utils \
-				execution/exec_utils2
+MISC		=	misc/string_func
 
-BUILTINS	= builtins/builtins \
-				builtins/builtin_utils
-
-SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(MISC) $(ENVP) $(SIGNALS) $(LISTFUNC) $(BUILTINS)
+SOURCE		= $(MAIN) $(LEXER) $(PARSER) $(EXPANDER) $(EXECUTION) $(BUILTINS) $(ENVP) $(SIGNALS) $(LISTFUNC) $(MISC)
 
 SRC	= $(addprefix $(SRCDIR), $(addsuffix .c, $(SOURCE)))
 OBJ	= $(addprefix $(OBJDIR), $(addsuffix .o, $(SOURCE)))
@@ -69,4 +70,4 @@ re: fclean all
 
 all: $(NAME)
 
-.PHONY: all clean fclean re libmake check_brew
+.PHONY: all clean fclean re libmake

@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/04 15:31:11 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:25:47 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ int	main(int argc, char *argv[], char *envp[])
 			add_history(lptr);
 		data.cmd = parse(lex(lptr, data.l_envp), data.l_envp);
 		free(lptr);
-		if (data.cmd != NULL)
-			g_signal = execute(&data);
+		g_signal = execute(&data);
 		clear_cmdlst(&(data.cmd));
 	}
 	rl_clear_history();

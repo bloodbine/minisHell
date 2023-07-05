@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:09:53 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/03 19:38:17 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/05 22:42:18 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,19 @@ void	set_builtin(t_cmd *cmd)
 {
 	if (!cmd->args[0])
 		return ;
-	if (!ft_strncmp(cmd->args[0], "echo", 4))
+	if (!ft_strncmp(cmd->args[0], "echo", 5))
 		cmd->builtin = 1;
-	else if (!ft_strncmp(cmd->args[0], "cd", 2))
+	else if (!ft_strncmp(cmd->args[0], "cd", 3))
 		cmd->builtin = 1;
-	else if (!ft_strncmp(cmd->args[0], "pwd", 3))
+	else if (!ft_strncmp(cmd->args[0], "pwd", 4))
 		cmd->builtin = 1;
-	else if (!ft_strncmp(cmd->args[0], "export", 6))
+	else if (!ft_strncmp(cmd->args[0], "export", 7))
 		cmd->builtin = 1;
-	else if (!ft_strncmp(cmd->args[0], "unset", 5))
+	else if (!ft_strncmp(cmd->args[0], "unset", 6))
 		cmd->builtin = 1;
-	else if (!ft_strncmp(cmd->args[0], "env", 3))
+	else if (!ft_strncmp(cmd->args[0], "env", 4))
 		cmd->builtin = 1;
-	else if (!ft_strncmp(cmd->args[0], "exit", 4))
+	else if (!ft_strncmp(cmd->args[0], "exit", 5))
 		cmd->builtin = 1;
 }
 
