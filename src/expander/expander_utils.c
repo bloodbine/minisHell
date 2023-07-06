@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/06 19:06:58 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/06 21:16:47 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,11 @@ int	heredoc(char *delim, t_list *l_envp)
 {
 	char	*lptr;
 	int		fd;
-
+	char	quotes;
+	char	*temp;
+	
+	quotes = get_outer_quotes(delim);
+	temp = rm_quotes(my_strcpy(delim), quotes);
 	fd = open("heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 		return (-1);
@@ -102,15 +106,17 @@ int	heredoc(char *delim, t_list *l_envp)
 			printf("\x1b[A> ");
 			break ;
 		}
-		if (g_signal == 1 || !ft_strncmp(lptr, delim, ft_strlen(delim) + 1))
+		if (g_signal == 1 || !ft_strncmp(lptr, temp, ft_strlen(temp) + 1))
 		{
 			free (lptr);
 			break ;
 		}
-		lptr = exp_env_var(lptr, l_envp);
+		if (quotes == 0)
+			lptr = exp_env_var(lptr, l_envp);
 		ft_fprintf(fd, "%s\n", lptr);
 		free(lptr);
 	}
+	free(temp);
 	close(fd);
 	return (0);
 }

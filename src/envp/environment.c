@@ -6,16 +6,45 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:53:32 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/06 19:07:12 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/06 22:26:25 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+char *remove_double_spaces(char *str)
+{
+	int		i;
+	int		j;
+	char	*removed;
+	int		space;
+	
+	space = 0;
+	removed = malloc((ft_strlen(str) + 1) * sizeof(char));
+	i = 0;
+	j = 0;
+	while(str && str[i] != '\0')
+	{
+		if (str[i] == ' ')
+			space++;
+		else	
+			space = 0;
+		if (space <= 1)
+		{
+			removed[j] = str[i];
+			j++;
+		}
+		i++;
+	}
+	removed[i] = '\0';
+	return (removed);
+}
+
 char	*my_getenv(char *var, t_list *l_envp)
 {
 	t_envp	*content;
-
+	char *temp;
+	
 	if (!ft_strncmp(var, "?", 2))
 		return (ft_itoa(g_signal));
 	else if (var[0] == ' ' || var[0] == '\0')
@@ -27,7 +56,10 @@ char	*my_getenv(char *var, t_list *l_envp)
 				ft_strlen(var)) && content->status)
 		{
 			if ((content->word)[ft_strlen(var)] == '=')
-				return (my_strcpy(content->word + ft_strlen(var) + 1));
+			{
+				temp = remove_double_spaces(content->word + ft_strlen(var) + 1);
+				return (temp);
+			}
 		}
 		l_envp = l_envp->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 15:21:34 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/06 19:07:19 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/06 22:41:30 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,11 @@ int	my_exit(char **args)
 	if (ft_atoi(args[1]) && args[2] == NULL)
 		exit((256 + ft_atoi(args[1])) % 256);
 	else
+	{
+		write(2, "minishell: exit: ", 17);
+		write(2, args[1], ft_strlen(args[1]));
+		write(2, ": numeric argument required\n", 28);
 		exit (255);
+	}
+		
 }
