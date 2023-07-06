@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/06 21:16:47 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/07 00:51:00 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	get_seq(char *str, char **seq)
 	i = 0;
 	while (str[i] != '\0')
 	{
-		if (str[i] == '$' || str[i] == ' ' || str[i] == '\'' || str[i] == '\"' || str[i] == '?')
+		if (str[i] == '$' || str[i] == ' ' || str[i] == '\'' || str[i] == '\"' || str[i] == '?' || str[i] == '/')
 		{
 			if (str[i] == '?')
 				i++;

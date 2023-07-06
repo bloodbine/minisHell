@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:53:32 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/06 22:26:25 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/06 23:15:54 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	cpy_envp(t_list **l_envp, char **envp)
 {
 	while (*envp)
 	{
-		ft_lstadd_back(l_envp, ft_lstnew(init_content_envp(*envp)));
+		ft_lstadd_front(l_envp, ft_lstnew(init_content_envp(*envp)));
 		envp++;
 	}
 }
