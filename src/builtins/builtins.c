@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 15:21:34 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/06 10:52:11 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/06 12:38:13 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ void	my_echo(char **argv)
 	int	i;
 
 	i = 1;
+	if (argv[0] == NULL || argv[1] == NULL)
+		return ;
 	if (!ft_strncmp(argv[1], "-n", 3))
 		i = 2;
 	while (argv[i])

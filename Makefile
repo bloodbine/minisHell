@@ -43,7 +43,7 @@ CC		= cc
 RMF	= rm -f
 RMRF	= rm -rf
 RMDIR	= rmdir
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror -g
 FFLAGS	= -L/Users/$(USER)/.brew/opt/readline/lib -lreadline 
 
 $(OBJDIR)%.o: $(SRCDIR)%.c

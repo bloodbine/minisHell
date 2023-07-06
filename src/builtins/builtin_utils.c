@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 19:21:58 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/06 10:52:05 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/06 12:29:34 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	exec_builtin(t_data *data, t_cmd *cmd)
 	int	error;
 
 	error = 0;
-	cmdlen = ft_strlen(cmd->args[0]);
+	cmdlen = ft_strlen(cmd->args[0]) + 1;
 	if (ft_strncmp(cmd->args[0], "exit", cmdlen) == 0)
 		my_exit(cmd->args);
 	if (ft_strncmp(cmd->args[0], "echo", cmdlen) == 0)

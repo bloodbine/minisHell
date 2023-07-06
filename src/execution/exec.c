@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/06 10:52:23 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/06 12:07:26 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,11 +133,10 @@ int	execute(t_data *data)
 	char	**envlist;
 	int		stdinfd;
 	int		stdoutfd;
-	int		error;
 
-	error = 0;
 	if (data->cmd != NULL)
 	{
+		data->my_errno = 0;
 		cmd = data->cmd;
 		stdinfd = dup(STDIN_FILENO);
 		stdoutfd = dup(STDOUT_FILENO);
@@ -146,19 +145,19 @@ int	execute(t_data *data)
 		envlist = convert_env(data->l_envp);
 		while (cmd->next != NULL)
 		{
-			error = pipeline(data, cmd, envlist);
-			if (error != 0)
+			data->my_errno = pipeline(data, cmd, envlist);
+			if (data->my_errno != 0)
 			{
 				reset_std_fds(stdinfd, stdoutfd);
-				return (error);
+				return (data->my_errno);
 			}
 			cmd = cmd->next;
 			dup2(stdinfd, STDIN_FILENO);
 			dup2(stdoutfd, STDOUT_FILENO);
 		}
-		error = last_cmd(data, cmd, envlist);
+		data->my_errno = last_cmd(data, cmd, envlist);
 		free(envlist);
 		reset_std_fds(stdinfd, stdoutfd);
 	}
-	return (error);
+	return (data->my_errno);
 }
