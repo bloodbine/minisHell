@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/06 10:52:17 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/06 15:57:55 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,12 @@ int	check_exist_access(char *cmd)
 {
 	if (access(cmd, F_OK) == -1)
 	{
-		ft_fprintf(2, "minishell: %s: Command not found\n", cmd[1]);
+		ft_fprintf(2, "minishell: %s: Command not found\n", cmd + 1);
 		return (1);
 	}
 	if (access(cmd, X_OK) == -1)
 	{
-		ft_fprintf(2, "minishell: %s: Permission denied\n", cmd[1]);
+		ft_fprintf(2, "minishell: %s: Permission denied\n", cmd + 1);
 		return (2);
 	}
 	return (0);
@@ -63,21 +63,20 @@ char	*check_paths(char *cmd, char **envp)
 	int		i;
 
 	path_list = ft_split(get_path_env(envp), ':');
+	if (path_list != NULL)
+		path_list[0] += 5;
 	i = -1;
 	ncmd = NULL;
 	while (path_list[++i] != NULL)
 	{
 		ncmd = ft_strjoin(path_list[i], cmd);
-		if (access(ncmd, F_OK) == 0)
-		{
-			if (access(ncmd, X_OK) == 0)
-				break ;
-		}
+		if (access(ncmd, X_OK) == 0)
+			break ;
 		free(ncmd);
 		ncmd = NULL;
 	}
 	if (ncmd == NULL)
-		ft_fprintf(2, "minishell: %s: Command not found\n", cmd[1]);
+		ft_fprintf(2, "minishell: %s: Command not found\n", cmd + 1);
 	return (free(cmd), ncmd);
 }
 
@@ -116,5 +115,5 @@ int	exec_command(t_data *data, t_cmd *cmd, char **envp)
 		if (execve(cmd->args[0], cmd->args, envp) == -1)
 			exit(errno);
 	}
-	return (1);
+	exit(127);
 }

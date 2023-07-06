@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/06 12:07:26 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:01:11 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	pipeline(t_data *data, t_cmd *cmd, char **envp)
 		close(cmd->fd[0]);
 		dup2(cmd->fd[1], STDOUT_FILENO);
 		close(cmd->fd[1]);
-		exec_command(data, cmd, envp);
+		exit(exec_command(data, cmd, envp));
 	}
 	close(cmd->fd[1]);
 	dup2(cmd->fd[0], STDIN_FILENO);
@@ -120,10 +120,12 @@ int	last_cmd(t_data *data, t_cmd *cmd, char **envp)
 	if (proc == -1)
 		return (errno);
 	else if (proc == 0)
-		exec_command(data, cmd, envp);
+		exit(exec_command(data, cmd, envp));
 	waitpid(proc, &status, 0);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
+	if (cmd->prev != NULL)
+		close(cmd->prev->fd[1]);
 	return (0);
 }
 
@@ -156,6 +158,9 @@ int	execute(t_data *data)
 			dup2(stdoutfd, STDOUT_FILENO);
 		}
 		data->my_errno = last_cmd(data, cmd, envlist);
+		if (data->my_errno > 2)
+			perror("minishell");
+		g_signal = data->my_errno;
 		free(envlist);
 		reset_std_fds(stdinfd, stdoutfd);
 	}
