@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/04 16:46:17 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/06 10:52:45 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	my_event_hook(void)
 {
-	return 0;
+	return (0);
 }
 
 void	init(t_data *data, char **envp)
@@ -23,7 +23,7 @@ void	init(t_data *data, char **envp)
 	data->cmd = NULL;
 	cpy_envp(&(data->l_envp), envp);
 	rl_catch_signals = 0;
-	rl_event_hook = (rl_hook_func_t *)my_event_hook;
+	//rl_event_hook = (rl_hook_func_t *)my_event_hook;
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -40,26 +40,28 @@ int	main(int argc, char *argv[], char *envp[])
 		if (isatty(fileno(stdin)))
 			lptr = readline("$ > ");
 		else
-			lptr = ft_strtrim(get_next_line(fileno(stdin)), "\n");
+		{
+			char *line;
+			line = get_next_line(fileno(stdin));
+			lptr = ft_strtrim(line, "\n");
+			free(line);
+		}	
+		//lptr = readline("$ > ");
 		if (lptr && !ft_strncmp(lptr, "exit", 5))
 			break ;
 		if (!lptr)
 		{
-			// printf("\x1b[A$ > exit\n");
+			//printf("\x1b[A$ > exit\n");
 			break ;
 		}
 		if (lptr[0] != '\0')
 			add_history(lptr);
 		data.cmd = parse(lex(lptr, data.l_envp), data.l_envp);
 		free(lptr);
-		if (data.cmd != NULL)
-		{
-			g_signal = execute(&data);
-			clear_cmdlst(&(data.cmd));
-		}
+		g_signal = execute(&data);
+		clear_cmdlst(&(data.cmd));
 	}
-	clear_cmdlst(&(data.cmd));
-	clear_history();
-	ft_lstclear(&data.l_envp, clear_str);
+	rl_clear_history();
+	ft_lstclear(&(data.l_envp), clear_content);
 	return (g_signal);
 }

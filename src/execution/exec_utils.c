@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/05 15:43:38 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/06 10:52:17 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,12 @@ int	check_exist_access(char *cmd)
 {
 	if (access(cmd, F_OK) == -1)
 	{
-		ft_fprintf(2, "minishell: %s: Command not found\n", cmd);
+		ft_fprintf(2, "minishell: %s: Command not found\n", cmd[1]);
 		return (1);
 	}
 	if (access(cmd, X_OK) == -1)
 	{
-		ft_fprintf(2, "minishell: %s: Permission denied\n", cmd);
+		ft_fprintf(2, "minishell: %s: Permission denied\n", cmd[1]);
 		return (2);
 	}
 	return (0);
@@ -77,7 +77,7 @@ char	*check_paths(char *cmd, char **envp)
 		ncmd = NULL;
 	}
 	if (ncmd == NULL)
-		ft_fprintf(2, "minishell: %s: Command not found\n", cmd);
+		ft_fprintf(2, "minishell: %s: Command not found\n", cmd[1]);
 	return (free(cmd), ncmd);
 }
 

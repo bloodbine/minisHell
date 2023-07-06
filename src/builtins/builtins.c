@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 15:21:34 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/05 16:41:18 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/06 10:52:11 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,18 @@ void	my_env(t_list *l_envp)
 	ft_lstiter(l_envp, print_env);
 }
 
-void	my_cd(char **path, t_data *data)
+int	my_cd(char **path, t_data *data)
 {
 	if (path[1] == NULL)
 	{
 		chdir(ft_strjoin("/Users/", my_getenv("USER", data->l_envp)));
-		exit (0);
+		change_pwd(data->l_envp, ft_strjoin("/Users/", my_getenv("USER", data->l_envp)));
+		return (0);
 	}
 	if (path[2] != NULL)
 	{
 		write(2, "cd: to many arguments\n", 22);
-		exit(1);
+		return(1);
 	}
 	if (path[1][0] != '/')
 	{
@@ -39,9 +40,10 @@ void	my_cd(char **path, t_data *data)
 		write(2, "cd: no such file or directory: ", 31);
 		write(2, path[1], ft_strlen(path[1]));
 		write(2, "\n", 1);
-		exit(1);
+		return(1);
 	}
 	change_pwd(data->l_envp, path[1]);
+	return (0);
 }
 
 char	*my_pwd(t_data *data, int id)
@@ -69,15 +71,20 @@ char	*my_pwd(t_data *data, int id)
 
 void	my_echo(char **argv)
 {
-	int		i;
+	int	i;
 
-	i = 0;
-	if (ft_strncmp(argv[1], "-n", 3) == 0)
-		i = 1;
-	while (argv[++i] != NULL)
+	i = 1;
+	if (!ft_strncmp(argv[1], "-n", 3))
+		i = 2;
+	while (argv[i])
+	{
 		write(STDOUT_FILENO, argv[i], ft_strlen(argv[i]));
-	if (ft_strncmp(argv[1], "-n", 3) != 0)
-		write(STDOUT_FILENO, "\n", 2);
+		i++;
+		if (argv[i])
+			write(STDOUT_FILENO, " ", 1);
+	}
+	if (ft_strncmp(argv[1], "-n", 3))
+		write(STDOUT_FILENO, "\n", 1);
 }
 
 void	my_exit(char **args)

@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 19:21:58 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/05 17:22:55 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/06 10:52:05 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,19 @@ void	change_pwd(t_list *l_envp, char *path)
 {
 	t_envp	*content;
 	char	*pwd;
-	char	**old;
 
-	old = NULL;
 	pwd = NULL;
 	while (l_envp)
 	{
 		content = (t_envp *)(l_envp->content);
-		if (ft_strncmp(content->word, "PWD", 4))
+		if (!ft_strncmp(content->word, "PWD=", 4))
 		{
-			pwd = my_strcpy(content->word);
 			free (content->word);
-			content->word = my_strcpy(path);
+			content->word = my_strjoin("PWD=", path, 0);
 		}
-		if (ft_strncmp(content->word, "OLDPWD", 7))
-			old = &content->word;
 		l_envp = l_envp->next;
 	}
-	free(*old);
-	*old = pwd;
+	//need to change oldpwd
 }
 
 void	print_env(void *data)
@@ -68,7 +62,9 @@ t_list	*check_exist_env(t_data *data, char *envname)
 int	exec_builtin(t_data *data, t_cmd *cmd)
 {
 	int	cmdlen;
+	int	error;
 
+	error = 0;
 	cmdlen = ft_strlen(cmd->args[0]);
 	if (ft_strncmp(cmd->args[0], "exit", cmdlen) == 0)
 		my_exit(cmd->args);
@@ -76,11 +72,13 @@ int	exec_builtin(t_data *data, t_cmd *cmd)
 		my_echo(cmd->args);
 	if (ft_strncmp(cmd->args[0], "env", cmdlen) == 0)
 		my_env(data->l_envp);
-	// if (ft_strncmp(cmd->args[0], "cd", cmdlen) == 0)
-	// 	my_cd((my_getenv("PATH", data->l_envp), data);
+	if (ft_strncmp(cmd->args[0], "pwd", cmdlen) == 0)
+		my_pwd(data, 0);
+	if (ft_strncmp(cmd->args[0], "cd", cmdlen) == 0)
+		error = my_cd(cmd->args, data);
 	if (ft_strncmp(cmd->args[0], "export", cmdlen) == 0)
 		my_export(cmd->args, data);
 	if (ft_strncmp(cmd->args[0], "unset", cmdlen) == 0)
 		my_unset(cmd->args, data);
-	return (0);
+	return (error);
 }
