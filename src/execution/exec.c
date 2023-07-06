@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/06 16:20:29 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/06 19:12:06 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,8 @@ int	execute(t_data *data)
 			dup2(stdinfd, STDIN_FILENO);
 			dup2(stdoutfd, STDOUT_FILENO);
 		}
-		data->my_errno = last_cmd(data, cmd, envlist);
+		if (data->my_errno == 0)
+			data->my_errno = last_cmd(data, cmd, envlist);
 		if (data->my_errno > 2)
 			perror("minishell");
 		g_signal = data->my_errno;
