@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/05 22:46:18 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/06 19:07:43 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,19 @@ void	fill_redir(t_cmd *cmd, t_content *l)
 		free (word);
 }
 
-int	check_echo(char **args, char *word, int *argument, int *j)
+int	check_echo(char **args, char **word, int *argument, int *j)
 {
 	int	i;
 
 	i = 1;
 	if (ft_strncmp(*args, "echo", 5) || ft_strncmp(*args, "/bin/echo", 10))
 	{
-		while (word[i] == 'n')
+		while (word[0][i] == 'n')
 			i++;
-		if (word[i] != '\0')
+		if (word[0][i] != '\0')
 		{
 			*argument = 1;
-			args[*j] = my_strcpy(word);
+			args[*j] = my_strcpy(word[0]);
 			return (1);
 		}
 		else 
@@ -70,11 +70,11 @@ int	check_echo(char **args, char *word, int *argument, int *j)
 				return (*j = 1, 1);
 			if(args[1] && !ft_strncmp(*args, "/bin/echo", 10))
 			{
-				args[*j] = my_strcpy(word);
+				args[*j] = my_strcpy(word[0]);
 				return (1);	
 			}
-			free(word);
-			word = my_strcpy("-n");
+			free(word[0]);
+			word[0] = my_strcpy("-n");
 		}
 	}
 	return (0);	
@@ -91,7 +91,7 @@ void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i, int *argument)
 			cmd->args[0] = my_strcpy(l->word);
 		else if (!(*argument) && l->word[0] == '-')
 		{
-			if (!check_echo(cmd->args, l->word, argument, i))
+			if (!check_echo(cmd->args, &l->word, argument, i))
 			{
 				cmd->args[1] = my_strjoin(cmd->args[1], &(l->word[*i - 1]), 1);
 				*i = 1;

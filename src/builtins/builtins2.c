@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 12:19:04 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/05 19:31:54 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:06:03 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	env_validity_check(char **args)
 	{
 		while (args[i][++j] != '\0')
 		{
-			if (ft_isalnum(args[i][j] == 0))
+			if (ft_isalnum(args[i][j] == 0) )
 			{
 				ft_fprintf(2, "minishell: %s: '%s': not a valid identifier", args[0], args[i]);
 				return (1);
@@ -41,9 +41,9 @@ int	my_export(char **args, t_data *data)
 
 	if (env_validity_check(args) == 1)
 		return (1);
-	i = 1;
+	i = 0;
 	env = NULL;
-	if (args == NULL || args[0] == 0)
+	if (args == NULL || args[1] == NULL)
 		return (1);
 	while (args[++i] != NULL)
 	{
@@ -71,8 +71,12 @@ int	my_unset(char **args, t_data *data)
 	if (env_validity_check(args) == 1)
 		return (1);
 	i = 0;
+	env = NULL;
+	if (args[1] == NULL)
+		return (1);
 	while (args[++i] != NULL)
 	{
+		args[i] = my_strjoin(args[i], "=", 1);
 		env = check_exist_env(data, args[i]);
 		if (env != NULL)
 			((t_envp *)(env->content))->status = 0;

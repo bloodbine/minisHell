@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 15:21:34 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/05 22:23:10 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/06 19:07:19 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,22 @@ void	my_env(t_list *l_envp)
 
 int	my_cd(char **path, t_data *data)
 {
-	if (path[1] == NULL)
+	char *temp;
+
+	temp = &path[1][1];
+	if (path[1] == NULL || path[1][0] == '~')
 	{
-		chdir(ft_strjoin("/Users/", my_getenv("USER", data->l_envp)));
-		change_pwd(data->l_envp, ft_strjoin("/Users/", my_getenv("USER", data->l_envp)));
-		return (0);
+		if (path[1] && path[1][1] != '\0')
+		{
+			path[1] = ft_strjoin("/Users/", my_getenv("USER", data->l_envp));
+			path[1] = my_strjoin(path[1], temp, 1);
+		}
+		else
+		{
+			chdir(ft_strjoin("/Users/", my_getenv("USER", data->l_envp)));
+			change_pwd(data->l_envp, ft_strjoin("/Users/", my_getenv("USER", data->l_envp)));
+			return (0);
+		}
 	}
 	if (path[2] != NULL)
 	{
@@ -64,7 +75,7 @@ char	*my_pwd(t_data *data, int id)
 	if (!id)
 	{
 		write(STDOUT_FILENO, (cont->word + 4), ft_strlen(cont->word + 4));
-		write(STDOUT_FILENO, "\n", 2);
+		write(STDOUT_FILENO, "\n", 1);
 	}
 	return (&cont->word[4]);
 }
@@ -74,6 +85,11 @@ void	my_echo(char **argv)
 	int	i;
 
 	i = 1;
+	if (argv[1] == NULL)
+	{
+		write(STDOUT_FILENO, "\n", 1);
+		return ;
+	}
 	if (!ft_strncmp(argv[1], "-n", 3))
 		i = 2;
 	while (argv[i])
@@ -87,12 +103,19 @@ void	my_echo(char **argv)
 		write(STDOUT_FILENO, "\n", 1);
 }
 
-void	my_exit(char **args)
+int	my_exit(char **args)
 {
 	if (!args[1])
-		exit(g_signal);
-	if (ft_isalnum(ft_atoi(args[1])) && args[2] == NULL)
-		exit((256 + ft_isalnum(ft_atoi(args[1]))) % 256);
+		exit(0);
+	if (args[2] && ft_atoi(args[1]) != 0)
+	{
+		write(2, "minishell: exit: too many arguments\n", 36);
+		return (1);
+	}
+	if (ft_atoi(args[1]) == 0 && ft_isdigit(args[1][0]))
+		exit (0);
+	if (ft_atoi(args[1]) && args[2] == NULL)
+		exit((256 + ft_atoi(args[1])) % 256);
 	else
 		exit (255);
 }

@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/04 16:25:47 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:49:04 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	main(int argc, char *argv[], char *envp[])
 	init(&data, envp);
 	while (1)
 	{
+		data.my_errno = g_signal;
 		if (isatty(fileno(stdin)))
 			lptr = readline("$ > ");
 		else
@@ -47,8 +48,8 @@ int	main(int argc, char *argv[], char *envp[])
 			free(line);
 		}	
 		//lptr = readline("$ > ");
-		if (lptr && !ft_strncmp(lptr, "exit", 5))
-			break ;
+		// if (lptr && !ft_strncmp(lptr, "exit", 5))
+		// 	break ;
 		if (!lptr)
 		{
 			//printf("\x1b[A$ > exit\n");
@@ -58,10 +59,10 @@ int	main(int argc, char *argv[], char *envp[])
 			add_history(lptr);
 		data.cmd = parse(lex(lptr, data.l_envp), data.l_envp);
 		free(lptr);
-		g_signal = execute(&data);
+		data.my_errno = execute(&data);
 		clear_cmdlst(&(data.cmd));
 	}
 	rl_clear_history();
 	ft_lstclear(&(data.l_envp), clear_content);
-	return (g_signal);
+	return (data.my_errno);
 }

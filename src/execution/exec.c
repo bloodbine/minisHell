@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/05 19:31:51 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:33:07 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,11 @@ int	pipeline(t_data *data, t_cmd *cmd, char **envp)
 	int		status;
 
 	in_fd = input(cmd);
+	if (in_fd == -1)
+		return (errno);
 	out_fd = output(cmd);
+	if (out_fd == -1)
+		return (errno);
 	if (pipe(cmd->fd) != 0)
 		return (errno);
 	proc = fork();
@@ -89,7 +93,7 @@ int	pipeline(t_data *data, t_cmd *cmd, char **envp)
 		close(cmd->fd[0]);
 		dup2(cmd->fd[1], STDOUT_FILENO);
 		close(cmd->fd[1]);
-		exec_command(data, cmd, envp);
+		exit(exec_command(data, cmd, envp));
 	}
 	close(cmd->fd[1]);
 	dup2(cmd->fd[0], STDIN_FILENO);
@@ -120,10 +124,12 @@ int	last_cmd(t_data *data, t_cmd *cmd, char **envp)
 	if (proc == -1)
 		return (errno);
 	else if (proc == 0)
-		exec_command(data, cmd, envp);
+		exit(exec_command(data, cmd, envp));
 	waitpid(proc, &status, 0);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
+	if (cmd->prev != NULL)
+		close(cmd->prev->fd[1]);
 	return (0);
 }
 
@@ -133,11 +139,10 @@ int	execute(t_data *data)
 	char	**envlist;
 	int		stdinfd;
 	int		stdoutfd;
-	int		error;
 
-	error = 0;
 	if (data->cmd != NULL)
 	{
+		data->my_errno = 0;
 		cmd = data->cmd;
 		stdinfd = dup(STDIN_FILENO);
 		stdoutfd = dup(STDOUT_FILENO);
@@ -146,19 +151,22 @@ int	execute(t_data *data)
 		envlist = convert_env(data->l_envp);
 		while (cmd->next != NULL)
 		{
-			error = pipeline(data, cmd, envlist);
-			if (error != 0)
+			data->my_errno = pipeline(data, cmd, envlist);
+			if (data->my_errno != 0)
 			{
 				reset_std_fds(stdinfd, stdoutfd);
-				return (error);
+				return (data->my_errno);
 			}
 			cmd = cmd->next;
 			dup2(stdinfd, STDIN_FILENO);
 			dup2(stdoutfd, STDOUT_FILENO);
 		}
-		error = last_cmd(data, cmd, envlist);
+		data->my_errno = last_cmd(data, cmd, envlist);
+		if (data->my_errno > 2)
+			perror("minishell");
+		g_signal = data->my_errno;
 		free(envlist);
 		reset_std_fds(stdinfd, stdoutfd);
 	}
-	return (error);
+	return (data->my_errno);
 }

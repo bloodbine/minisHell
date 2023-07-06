@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 19:21:58 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/05 22:41:35 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/06 18:58:15 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ void	change_pwd(t_list *l_envp, char *path)
 	char	*pwd;
 
 	pwd = NULL;
+	if (path[ft_strlen(path) - 1] == '/')
+		path[ft_strlen(path) - 1] = '\0';
+
 	while (l_envp)
 	{
 		content = (t_envp *)(l_envp->content);
@@ -62,12 +65,10 @@ t_list	*check_exist_env(t_data *data, char *envname)
 int	exec_builtin(t_data *data, t_cmd *cmd)
 {
 	int	cmdlen;
-	int	error;
 
-	error = 0;
-	cmdlen = ft_strlen(cmd->args[0]);
+	cmdlen = ft_strlen(cmd->args[0]) + 1;
 	if (ft_strncmp(cmd->args[0], "exit", cmdlen) == 0)
-		my_exit(cmd->args);
+		data->my_errno = my_exit(cmd->args);
 	if (ft_strncmp(cmd->args[0], "echo", cmdlen) == 0)
 		my_echo(cmd->args);
 	if (ft_strncmp(cmd->args[0], "env", cmdlen) == 0)
@@ -75,10 +76,10 @@ int	exec_builtin(t_data *data, t_cmd *cmd)
 	if (ft_strncmp(cmd->args[0], "pwd", cmdlen) == 0)
 		my_pwd(data, 0);
 	if (ft_strncmp(cmd->args[0], "cd", cmdlen) == 0)
-		error = my_cd(cmd->args, data);
+		data->my_errno = my_cd(cmd->args, data);
 	if (ft_strncmp(cmd->args[0], "export", cmdlen) == 0)
 		my_export(cmd->args, data);
 	if (ft_strncmp(cmd->args[0], "unset", cmdlen) == 0)
 		my_unset(cmd->args, data);
-	return (error);
+	return (data->my_errno);
 }
