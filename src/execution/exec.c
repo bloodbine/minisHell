@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/06 16:01:11 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:20:29 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,11 @@ int	pipeline(t_data *data, t_cmd *cmd, char **envp)
 	int		status;
 
 	in_fd = input(cmd);
+	if (in_fd == -1)
+		return (errno);
 	out_fd = output(cmd);
+	if (out_fd == -1)
+		return (errno);
 	if (pipe(cmd->fd) != 0)
 		return (errno);
 	proc = fork();

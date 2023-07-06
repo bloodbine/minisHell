@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/06 15:57:55 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:22:22 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check_file(char *file, int check)
 		if (access(file, F_OK == 1))
 		{
 			ft_fprintf(2, "minishell: %s: No such file or directory\n", file);
-			errno = ENOENT;
+			errno = EPERM;
 			return (1);
 		}
 		else if (access(file, R_OK == -1))
