@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/04 16:25:47 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/05 22:55:59 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	init(t_data *data, char **envp)
 	data->cmd = NULL;
 	cpy_envp(&(data->l_envp), envp);
 	rl_catch_signals = 0;
-	//rl_event_hook = (rl_hook_func_t *)my_event_hook;
+	rl_event_hook = (rl_hook_func_t *)my_event_hook;
 }
 
 int	main(int argc, char *argv[], char *envp[])
