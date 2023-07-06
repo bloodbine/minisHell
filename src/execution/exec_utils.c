@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/06 17:00:21 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/06 19:33:26 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ int	check_exist_access(char *cmd)
 	if (access(cmd, F_OK) == -1)
 	{
 		ft_fprintf(2, "minishell: %s: Command not found\n", cmd + 1);
-		return (1);
+		exit(127);
 	}
 	if (access(cmd, X_OK) == -1)
 	{
 		ft_fprintf(2, "minishell: %s: Permission denied\n", cmd + 1);
-		return (2);
+		exit(126);
 	}
 	return (0);
 }
@@ -76,7 +76,11 @@ char	*check_paths(char *cmd, char **envp)
 		ncmd = NULL;
 	}
 	if (ncmd == NULL)
+	{
 		ft_fprintf(2, "minishell: %s: Command not found\n", cmd + 1);
+		free(cmd);
+		exit(127);
+	}
 	return (free(cmd), ncmd);
 }
 
@@ -100,7 +104,7 @@ int	exec_command(t_data *data, t_cmd *cmd, char **envp)
 	char	*ncmd;
 
 	if (cmd->builtin == 1)
-		exit(exec_builtin(data, cmd));
+		exec_builtin(data, cmd);
 	else if (!ft_strchr(cmd->args[0], '/'))
 	{
 		ncmd = check_paths(ft_strjoin("/", cmd->args[0]), envp);
@@ -115,5 +119,5 @@ int	exec_command(t_data *data, t_cmd *cmd, char **envp)
 		if (execve(cmd->args[0], cmd->args, envp) == -1)
 			exit(errno);
 	}
-	exit(127);
+	exit(0);
 }
