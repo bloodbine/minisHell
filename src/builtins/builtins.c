@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 15:21:34 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/07 00:33:37 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/07 04:45:14 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	my_env(t_list *l_envp)
 
 int	my_cd(char **path, t_data *data)
 {
-	char *temp;
+	char	*temp;
 
 	temp = &path[1][1];
 	if (path[1] == NULL || path[1][0] == '~')
@@ -39,7 +39,7 @@ int	my_cd(char **path, t_data *data)
 	if (path[2] != NULL)
 	{
 		write(2, "cd: to many arguments\n", 22);
-		return(1);
+		return (1);
 	}
 	if (path[1][0] != '/')
 	{
@@ -51,7 +51,7 @@ int	my_cd(char **path, t_data *data)
 		write(2, "cd: no such file or directory: ", 31);
 		write(2, path[1], ft_strlen(path[1]));
 		write(2, "\n", 1);
-		return(1);
+		return (1);
 	}
 	change_pwd(data->l_envp, path[1]);
 	return (0);
@@ -123,5 +123,4 @@ int	my_exit(char **args)
 		write(2, ": numeric argument required\n", 28);
 		exit (255);
 	}
-		
 }

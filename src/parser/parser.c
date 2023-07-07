@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/07 00:13:33 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/07 04:48:54 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,20 +64,20 @@ int	check_echo(char **args, char **word, int *argument, int *j)
 			args[*j] = my_strcpy(word[0]);
 			return (1);
 		}
-		else 
+		else
 		{
-			if(args[1] && !ft_strncmp(*args, "echo", 5))
+			if (args[1] && !ft_strncmp(*args, "echo", 5))
 				return (*j = 1, 1);
-			if(args[1] && !ft_strncmp(*args, "/bin/echo", 10))
+			if (args[1] && !ft_strncmp(*args, "/bin/echo", 10))
 			{
 				args[*j] = my_strcpy(word[0]);
-				return (1);	
+				return (1);
 			}
 			free(word[0]);
 			word[0] = my_strcpy("-n");
 		}
 	}
-	return (0);	
+	return (0);
 }
 
 void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i, int *argument)

@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 19:21:58 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/07 01:31:24 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/07 04:43:23 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	change_pwd(t_list *l_envp, char *path)
 
 	if (path[ft_strlen(path) - 1] == '/')
 		path[ft_strlen(path) - 1] = '\0';
-
 	while (l_envp)
 	{
 		content = (t_envp *)(l_envp->content);
@@ -53,7 +52,7 @@ t_list	*check_exist_env(t_data *data, char *envname)
 		checklen = ft_strlen(envname);
 	while (envp != NULL)
 	{
-		if (ft_strncmp((((t_envp *)(envp->content))->word), envname, checklen) == 0)
+		if (!ft_strncmp((((t_envp *)(envp->content))->word), envname, checklen))
 			return (envp);
 		envp = envp->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 12:19:04 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/07 01:30:02 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/07 04:45:31 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ int	charcheck(char *string, int i)
 {
 	if (string[i] == '=' && i == 0)
 		return (1);
-	if ((string[i] < '0' || string[i] > 'z' || string[i] == '?') && string[i] != ' ')
+	if ((string[i] < '0' || string[i] > 'z' \
+			|| string[i] == '?') && string[i] != ' ')
 		return (1);
 	// if (string[i] > '9' && string[i] < 'A' && id == 1 && string[i] != ' ')
 	// 	return (1);

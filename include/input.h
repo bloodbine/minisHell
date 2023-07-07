@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/06 22:25:55 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/07 04:40:59 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,17 @@
 
 # include <signal.h>
 # include <errno.h>
+
+int	g_signal;
+
+typedef struct s_cmd t_cmd;
+
+typedef struct s_data
+{
+	t_cmd	*cmd;
+	t_list	*l_envp;
+	int		my_errno;
+}			t_data;
 
 typedef enum e_token
 {
@@ -123,5 +134,6 @@ void		init_newnode(t_cmd *new, int lstsize);
 int			expand_helper(char *str, t_expdata *exp, int s);
 char		*get_sub(char *str, t_expdata *exp);
 void		set_vars(int *i, int *argument);
+void		cpy_envp(t_list **l_envp, char **envp);
 
 #endif

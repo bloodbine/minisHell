@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/07 00:51:00 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/07 04:47:46 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,12 @@ int	get_seq(char *str, char **seq)
 	i = 0;
 	while (str[i] != '\0')
 	{
-		if (str[i] == '$' || str[i] == ' ' || str[i] == '\'' || str[i] == '\"' || str[i] == '?' || str[i] == '/')
+		if (str[i] == '$' || str[i] == ' ' || str[i] == '\'' \
+				|| str[i] == '\"' || str[i] == '?' || str[i] == '/')
 		{
 			if (str[i] == '?')
 				i++;
-			break ;	
+			break ;
 		}
 		i++;
 	}
@@ -92,7 +93,7 @@ int	heredoc(char *delim, t_list *l_envp)
 	int		fd;
 	char	quotes;
 	char	*temp;
-	
+
 	quotes = get_outer_quotes(delim);
 	temp = rm_quotes(my_strcpy(delim), quotes);
 	fd = open("heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
