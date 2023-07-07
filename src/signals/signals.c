@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 19:25:30 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/04 15:57:30 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/07 02:24:49 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,5 @@ void	handle_signal_interactive(int signal)
 void	init_signals(void)
 {
 	signal(SIGINT, handle_signal_interactive);
+	signal(SIGQUIT, SIG_IGN);
 }

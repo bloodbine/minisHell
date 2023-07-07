@@ -6,15 +6,14 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 12:19:04 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/07 00:47:39 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/07 01:30:02 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	charcheck(char *string, int i, int id)
+int	charcheck(char *string, int i)
 {
-	id = 0;
 	if (string[i] == '=' && i == 0)
 		return (1);
 	if ((string[i] < '0' || string[i] > 'z' || string[i] == '?') && string[i] != ' ')
@@ -28,20 +27,16 @@ int	charcheck(char *string, int i, int id)
 
 int	env_validity_check(char **args)
 {
-	int	id;
 	int	i;
 	int	j;
 
-	id = 0;
 	i = 0;
 	j = -1;
 	while (args[++i] != NULL)
 	{
 		while (args[i][++j] != '\0')
 		{
-			if (args[i][j] == '=')
-				id = 1;
-			if (charcheck(args[i], j, id) == 1)
+			if (charcheck(args[i], j) == 1)
 			{
 				ft_fprintf(2, "minishell: %s: '%s': not a valid identifier\n", args[0], args[i]);
 				exit(1);

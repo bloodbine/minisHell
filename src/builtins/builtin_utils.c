@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 19:21:58 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/06 18:58:15 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/07 01:31:24 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 void	change_pwd(t_list *l_envp, char *path)
 {
 	t_envp	*content;
-	char	*pwd;
 
-	pwd = NULL;
 	if (path[ft_strlen(path) - 1] == '/')
 		path[ft_strlen(path) - 1] = '\0';
 

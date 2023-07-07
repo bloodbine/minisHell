@@ -6,11 +6,12 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/06 21:13:59 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/07 01:29:15 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+#include <sys/wait.h>
 
 int	input(t_cmd *cmd)
 {

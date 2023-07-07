@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/06 21:12:07 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/07 02:35:37 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	init(t_data *data, char **envp)
 {
 	init_signals();
 	data->cmd = NULL;
+	data->l_envp = NULL;
+	data->my_errno = 0;
 	cpy_envp(&(data->l_envp), envp);
 	rl_catch_signals = 0;
 	//rl_event_hook = (rl_hook_func_t *)my_event_hook;
@@ -48,8 +50,8 @@ int	main(int argc, char *argv[], char *envp[])
 			free(line);
 		}	
 		//lptr = readline("$ > ");
-		// if (lptr && !ft_strncmp(lptr, "exit", 5))
-		// 	break ;
+		if (lptr && !ft_strncmp(lptr, "exit", 5))
+			break ;
 		if (!lptr)
 		{
 			//printf("\x1b[A$ > exit\n");
