@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 12:27:55 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/05 19:32:30 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/08 13:43:20 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXEC_H
 # define EXEC_H
 
-int		check_file(char *file, int check);
+int		check_file(t_data *data, char *file, int check);
 int		check_exist_access(char *cmd);
 char	*check_paths(char *cmd, char **envp);
 int		count_cmds(t_cmd *cmdlst);

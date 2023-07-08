@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/07 02:35:37 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/08 14:57:49 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,11 @@ int	main(int argc, char *argv[], char *envp[])
 	t_data	data;
 
 	g_signal = 0;
+	// if (getenv("USER") == NULL)
+	// {
+	// 	ft_fprintf(2, "Fuck off.\n");
+	// 	exit(1);
+	// }
 	if (argc != 1 && argv[1] == NULL && envp)
 		return (write(2, "No Arguments allowed\n", 21), 1);
 	init(&data, envp);

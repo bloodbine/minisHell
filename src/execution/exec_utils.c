@@ -3,40 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/06 19:33:26 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/08 14:21:43 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	check_file(char *file, int check)
+int	check_file(t_data *data, char *file, int check)
 {
-	if (check == W_OK)
+	if (access(file, F_OK == 1))
 	{
-		if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
-		{
-			ft_fprintf(2, "minishell: %s: Permission denied\n", file);
-			errno = EPERM;
-			return (1);
-		}
+		ft_fprintf(2, "minishell: %s: No such file or directory\n", file);
+		data->my_errno = 1;
+		return (1);
 	}
-	else if (check == R_OK)
+	else if (access(file, check == -1))
 	{
-		if (access(file, F_OK == 1))
-		{
-			ft_fprintf(2, "minishell: %s: No such file or directory\n", file);
-			errno = EPERM;
-			return (1);
-		}
-		else if (access(file, R_OK == -1))
-		{
-			ft_fprintf(2, "minishell: %s: Permission denied\n", file);
-			errno = EPERM;
-			return (2);
-		}
+		ft_fprintf(2, "minishell: %s: Permission denied\n", file);
+		data->my_errno = 1;
+		return (2);
 	}
 	return (0);
 }

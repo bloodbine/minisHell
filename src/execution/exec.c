@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/07 01:29:15 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/08 14:06:42 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include <sys/wait.h>
 
-int	input(t_cmd *cmd)
+int	input(t_cmd *cmd, t_data *data)
 {
 	t_content	*content;
 	t_list		*in;
@@ -24,7 +24,7 @@ int	input(t_cmd *cmd)
 	while (in != NULL)
 	{
 		content = ((t_content *)(in->content));
-		if (!check_file(content->word, R_OK))
+		if (check_file(data, content->word, R_OK) == 0)
 			in_fd = open(content->word, O_RDONLY, 0644);
 		else
 			in_fd = -1;
@@ -44,7 +44,7 @@ int	input(t_cmd *cmd)
 	return (in_fd);
 }
 
-int	output(t_cmd *cmd)
+int	output(t_cmd *cmd, t_data *data)
 {
 	t_content	*content;
 	t_list		*out;
@@ -55,12 +55,14 @@ int	output(t_cmd *cmd)
 	while (out != NULL)
 	{
 		content = ((t_content *)(out->content));
-		if (check_file(content->word, W_OK) == 0 && content->token == OUT)
+		if (content->token == OUT)
 			out_fd = open(content->word, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (check_file(content->word, W_OK) == 0)
+		else if (content->token == APPEND)
 			out_fd = open(content->word, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else
 			out_fd = -1;
+		if (check_file(data, content->word, W_OK) != 0)
+			return (-1);
 		out = out->next;
 	}
 	if (out_fd == -1)
@@ -78,12 +80,12 @@ int	pipeline(t_data *data, t_cmd *cmd, char **envp)
 	int		out_fd;
 	int		status;
 
-	in_fd = input(cmd);
+	in_fd = input(cmd, data);
 	if (in_fd == -1)
-		return (errno);
-	out_fd = output(cmd);
+		return (data->my_errno);
+	out_fd = output(cmd, data);
 	if (out_fd == -1)
-		return (errno);
+		return (data->my_errno);
 	if (pipe(cmd->fd) != 0)
 		return (errno);
 	proc = fork();
@@ -115,12 +117,12 @@ int	last_cmd(t_data *data, t_cmd *cmd, char **envp)
 
 	if (cmd->builtin == 1)
 		return (exec_builtin(data, cmd));
-	in_fd = input(cmd);
+	in_fd = input(cmd, data);
 	if (in_fd == -1)
-		return (errno);
-	out_fd = output(cmd);
+		return (data->my_errno);
+	out_fd = output(cmd, data);
 	if (out_fd == -1)
-		return (errno);
+		return (data->my_errno);
 	proc = fork();
 	if (proc == -1)
 		return (errno);
@@ -153,6 +155,7 @@ int	execute(t_data *data)
 		while (cmd->next != NULL)
 		{
 			data->my_errno = pipeline(data, cmd, envlist);
+			// ft_fprintf(2, "DEBUG: %d\n", data->my_errno);
 			if (data->my_errno != 0)
 			{
 				reset_std_fds(stdinfd, stdoutfd);
@@ -164,8 +167,9 @@ int	execute(t_data *data)
 		}
 		if (data->my_errno == 0)
 			data->my_errno = last_cmd(data, cmd, envlist);
-		if (data->my_errno > 2)
-			perror("minishell");
+		// ft_fprintf(2, "DEBUG: %d\n", data->my_errno);
+		// if (data->my_errno > 2)
+		// 	perror("minishell");
 		g_signal = data->my_errno;
 		free(envlist);
 		reset_std_fds(stdinfd, stdoutfd);
