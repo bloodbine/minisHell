@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/07 04:47:46 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/09 14:09:20 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,20 +101,17 @@ int	heredoc(char *delim, t_list *l_envp)
 		return (-1);
 	while (1)
 	{
-		lptr = readline("> ");
+		lptr = ft_strtrim(get_next_line(STDIN_FILENO), "\n");
 		if (!lptr)
-		{
-			printf("\x1b[A> ");
 			break ;
-		}
-		if (g_signal == 1 || !ft_strncmp(lptr, temp, ft_strlen(temp) + 1))
+		if (quotes == 0)
+			lptr = exp_env_var(lptr, l_envp);
+		if (ft_strncmp(lptr, delim, ft_strlen(delim) + 1) == 0)
 		{
 			free (lptr);
 			break ;
 		}
-		if (quotes == 0)
-			lptr = exp_env_var(lptr, l_envp);
-		ft_fprintf(fd, "%s\n", lptr);
+		write(fd, ft_strjoin(lptr, "\n"), ft_strlen(lptr) + 1);
 		free(lptr);
 	}
 	free(temp);

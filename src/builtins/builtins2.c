@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 12:19:04 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/09 11:37:11 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/09 12:07:49 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ int	my_unset(char **args, t_data *data)
 	t_list	*env;
 	int		i;
 
+	if (args[1] == NULL)
+		return (0);
 	if (env_validity_check(args) == 1)
 		return (1);
 	i = 0;

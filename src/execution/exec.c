@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/08 14:06:42 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/09 11:55:22 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,6 @@ int	execute(t_data *data)
 		while (cmd->next != NULL)
 		{
 			data->my_errno = pipeline(data, cmd, envlist);
-			// ft_fprintf(2, "DEBUG: %d\n", data->my_errno);
 			if (data->my_errno != 0)
 			{
 				reset_std_fds(stdinfd, stdoutfd);
@@ -167,9 +166,6 @@ int	execute(t_data *data)
 		}
 		if (data->my_errno == 0)
 			data->my_errno = last_cmd(data, cmd, envlist);
-		// ft_fprintf(2, "DEBUG: %d\n", data->my_errno);
-		// if (data->my_errno > 2)
-		// 	perror("minishell");
 		g_signal = data->my_errno;
 		free(envlist);
 		reset_std_fds(stdinfd, stdoutfd);
