@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 12:19:04 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/08 14:40:31 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/09 11:37:11 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,7 @@ int	charcheck(char *string, int i)
 	if ((string[i] < '0' || string[i] > 'z' \
 			|| string[i] == '?') && string[i] != ' ' && string[i] != '\t')
 		return (1);
-	// if (string[i] > '9' && string[i] < 'A' && id == 1 && string[i] != ' ')
-	// 	return (1);
-	return(0);
+	return (0);
 }
 
 int	env_validity_check(char **args)
@@ -38,7 +36,7 @@ int	env_validity_check(char **args)
 			if (charcheck(args[i], j) == 1)
 			{
 				ft_fprintf(2, "minishell: %s: '%s': not a valid identifier\n", args[0], args[i]);
-				exit(1);
+				return (1);
 			}
 		}
 		j = -1;
@@ -51,6 +49,8 @@ int	my_export(char **args, t_data *data)
 	t_list	*env;
 	int		i;
 
+	if (args[1] == NULL)
+		return (0);
 	if (env_validity_check(args) == 1)
 		return (1);
 	i = 0;
@@ -92,8 +92,6 @@ int	my_unset(char **args, t_data *data)
 		env = check_exist_env(data, args[i]);
 		if (env != NULL)
 			((t_envp *)(env->content))->status = 0;
-		else
-			return (1);
 	}
 	return (0);
 }

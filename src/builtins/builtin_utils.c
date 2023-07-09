@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 19:21:58 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/07 04:43:23 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/09 11:31:24 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ int	exec_builtin(t_data *data, t_cmd *cmd)
 	if (ft_strncmp(cmd->args[0], "cd", cmdlen) == 0)
 		data->my_errno = my_cd(cmd->args, data);
 	if (ft_strncmp(cmd->args[0], "export", cmdlen) == 0)
-		my_export(cmd->args, data);
+		data->my_errno = my_export(cmd->args, data);
 	if (ft_strncmp(cmd->args[0], "unset", cmdlen) == 0)
-		my_unset(cmd->args, data);
+		data->my_errno = my_unset(cmd->args, data);
 	return (data->my_errno);
 }
