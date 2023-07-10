@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 19:21:58 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/09 11:31:24 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/10 11:13:43 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,13 @@ t_list	*check_exist_env(t_data *data, char *envname)
 
 	envp = data->l_envp;
 	if (ft_strchr(envname, '=') != NULL)
-		checklen = ft_strlen(envname) - ft_strlen((ft_strchr(envname, '=')));
+		checklen = ft_strlen(envname) - ft_strlen((ft_strchr(envname, '='))) + 1;
 	else
-		checklen = ft_strlen(envname);
+		checklen = ft_strlen(envname) + 1;
 	while (envp != NULL)
 	{
-		if (!ft_strncmp((((t_envp *)(envp->content))->word), envname, checklen))
+		// ft_fprintf(2, "DEBUG: |%s|%s|%d|\n", envname, (((t_envp *)(envp->content))->word), checklen);
+		if (ft_strncmp((((t_envp *)(envp->content))->word), envname, checklen) == 0)
 			return (envp);
 		envp = envp->next;
 	}
