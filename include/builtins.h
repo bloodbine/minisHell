@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 12:27:55 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/06 17:01:27 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/17 11:25:15 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define BUILTINS_H
 
 void	print_env(void *data);
-void	change_pwd(t_list *l_envp, char *path);
+void	change_pwd(t_list *l_envp);
 void	toggle_env_var(char *arg, t_list *l_envp);
 t_list	*check_exist_env(t_data *data, char *envname);
 t_envp	*init_content_envp(char *str);

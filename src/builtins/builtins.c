@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 15:21:34 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/07 04:45:14 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/17 12:19:40 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,42 +19,31 @@ void	my_env(t_list *l_envp)
 
 int	my_cd(char **path, t_data *data)
 {
-	char	*temp;
+	char	*npath;
 
-	temp = &path[1][1];
-	if (path[1] == NULL || path[1][0] == '~')
+	if (!path[1] || ft_strncmp(path[1], "~", 2) == 0)
 	{
-		if (path[1] && path[1][1] != '\0')
-		{
-			path[1] = ft_strjoin("/Users/", my_getenv("USER", data->l_envp));
-			path[1] = my_strjoin(path[1], temp, 1);
-		}
+		npath = my_getenv("HOME", data->l_envp);
+		if (chdir(npath) == 0)
+			change_pwd(data->l_envp);
 		else
 		{
-			chdir(ft_strjoin("/Users/", my_getenv("USER", data->l_envp)));
-			change_pwd(data->l_envp, ft_strjoin("/Users/", my_getenv("USER", data->l_envp)));
-			return (0);
+			perror("minishell");
+			return (free(npath), 1);
 		}
+		return (free(npath), 0);
 	}
-	if (path[2] != NULL)
+	if (path[1][0] == '~')
 	{
-		write(2, "cd: to many arguments\n", 22);
-		return (1);
+		npath = my_getenv("HOME", data->l_envp);
+		npath = my_strjoin(npath, path[1] + 1, 1);
 	}
-	if (path[1][0] != '/')
-	{
-		path[1] = my_strjoin("/", path[1], 2);
-		path[1] = my_strjoin(my_pwd(data, 1), path[1], 2);
-	}
-	if (chdir(path[1]))
-	{
-		write(2, "cd: no such file or directory: ", 31);
-		write(2, path[1], ft_strlen(path[1]));
-		write(2, "\n", 1);
-		return (1);
-	}
-	change_pwd(data->l_envp, path[1]);
-	return (0);
+	else
+		npath = ft_strdup(path[1]);
+	if (chdir(npath) == 0)
+		return (free(npath), change_pwd(data->l_envp), 0);
+	else
+		return (perror("minishell"), free(npath), 1);
 }
 
 char	*my_pwd(t_data *data, int id)

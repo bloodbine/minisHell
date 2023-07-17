@@ -6,29 +6,35 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 19:21:58 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/10 11:13:43 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/17 11:28:18 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	change_pwd(t_list *l_envp, char *path)
+void	change_pwd(t_list *l_envp)
 {
 	t_envp	*content;
+	char	*buff;
 
-	if (path[ft_strlen(path) - 1] == '/')
-		path[ft_strlen(path) - 1] = '\0';
+	buff = malloc(1024 * sizeof(char));
+	if (!buff)
+		return (perror("minishell"));
+	getcwd(buff, (1024 * sizeof(char)));
+	if (!buff)
+		return (perror("minishell"));
 	while (l_envp)
 	{
 		content = (t_envp *)(l_envp->content);
-		if (!ft_strncmp(content->word, "PWD=", 4))
+		if (ft_strncmp(content->word, "PWD=", 4) == 0)
 		{
 			free (content->word);
-			content->word = my_strjoin("PWD=", path, 0);
+			content->word = my_strjoin("PWD=", buff, 0);
+			return (free(buff));
 		}
 		l_envp = l_envp->next;
 	}
-	//need to change oldpwd
+	free(buff);
 }
 
 void	print_env(void *data)
@@ -52,7 +58,6 @@ t_list	*check_exist_env(t_data *data, char *envname)
 		checklen = ft_strlen(envname) + 1;
 	while (envp != NULL)
 	{
-		// ft_fprintf(2, "DEBUG: |%s|%s|%d|\n", envname, (((t_envp *)(envp->content))->word), checklen);
 		if (ft_strncmp((((t_envp *)(envp->content))->word), envname, checklen) == 0)
 			return (envp);
 		envp = envp->next;
