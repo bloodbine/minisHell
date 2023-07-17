@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/09 12:18:41 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/17 19:11:30 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ int	my_event_hook(void)
 void	init(t_data *data, char **envp)
 {
 	init_signals();
+	g_signal = 0;
 	data->cmd = NULL;
 	data->l_envp = NULL;
 	data->my_errno = 0;
 	cpy_envp(&(data->l_envp), envp);
 	rl_catch_signals = 0;
-	//rl_event_hook = (rl_hook_func_t *)my_event_hook;
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -33,11 +33,8 @@ int	main(int argc, char *argv[], char *envp[])
 	char	*lptr;
 	t_data	data;
 
-	g_signal = 0;
-	if (getenv("USER") == NULL)
-		exit(0);
-	if (argc != 1 && argv[1] == NULL && envp)
-		return (write(2, "No Arguments allowed\n", 21), 1);
+	if (argc != 1 || argv[1] != NULL || getenv("USER") == NULL)
+		return (0);
 	init(&data, envp);
 	while (1)
 	{
@@ -46,14 +43,8 @@ int	main(int argc, char *argv[], char *envp[])
 			lptr = readline("$ > ");
 		else
 			lptr = ft_strtrim(get_next_line(fileno(stdin)), "\n");
-		//lptr = readline("$ > ");
-		if (lptr && !ft_strncmp(lptr, "exit", 5))
+		if ((lptr && !ft_strncmp(lptr, "exit", 5)) || !lptr)
 			break ;
-		if (!lptr)
-		{
-			//printf("\x1b[A$ > exit\n");
-			break ;
-		}
 		if (lptr[0] != '\0')
 			add_history(lptr);
 		data.cmd = parse(lex(lptr, data.l_envp), data.l_envp);
@@ -62,6 +53,5 @@ int	main(int argc, char *argv[], char *envp[])
 		clear_cmdlst(&(data.cmd));
 	}
 	rl_clear_history();
-	ft_lstclear(&(data.l_envp), clear_content);
-	return (data.my_errno);
+	return (ft_lstclear(&(data.l_envp), clear_content), data.my_errno);
 }

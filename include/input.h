@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/07 04:40:59 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/17 16:23:51 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,18 @@
 
 int	g_signal;
 
-typedef struct s_cmd t_cmd;
+typedef struct s_cmd
+{
+	char			**args;
+	char			**envp;
+	t_list			*in;
+	t_list			*out;
+	int				builtin;
+	int				idx;
+	int				fd[2];
+	struct s_cmd	*next;
+	struct s_cmd	*prev;
+}			t_cmd;
 
 typedef struct s_data
 {
@@ -79,19 +90,6 @@ typedef struct s_expdata
 	char	*sub;
 	char	quotes;
 }			t_expdata;
-
-typedef struct s_cmd
-{
-	char			**args;
-	char			**envp;
-	t_list			*in;
-	t_list			*out;
-	int				builtin;
-	int				idx;
-	int				fd[2];
-	struct s_cmd	*next;
-	struct s_cmd	*prev;
-}			t_cmd;
 
 void		init_signals(void);
 void		handle_interrupt(int signal);
