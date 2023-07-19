@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/06 22:25:01 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/19 15:41:41 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,8 @@ void	init_expdata(t_expdata *data, t_list *l_envp)
 	data->l_envp = l_envp;
 }
 
-void	expander(t_list *lex, t_list *l_envp)
+void	expander(t_list *lex, t_list *l_envp, t_content *content)
 {
-	t_content	*content;
 	t_expdata	exp;
 
 	while (lex)

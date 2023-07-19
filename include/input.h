@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/17 16:23:51 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/19 15:42:15 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int			get_tokens(t_list **token, t_lexdata *l_data);
 t_list		*tokenize(t_list *substring, t_lexdata *l_data);
 char		get_outer_quotes(char *str);
 char		*rm_quotes(char *str, char quotes);
-void		expander(t_list *lex, t_list *l_envp);
+void		expander(t_list *lex, t_list *l_envp, t_content *content);
 t_cmd		*parse(t_list *lex, t_list *l_envp);
 t_content	*init_content(char *str);
 char		*my_strcpy(char *str);
