@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 12:19:04 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/15 12:41:55 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/19 12:39:06 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ int	charcheck(char *string, int i)
 	if (string[i] == '=' && i == 0)
 		return (1);
 	if ((string[i] < '0' || string[i] > 'z' \
-			|| string[i] == '?' || string[i] == '^' || string[i] == '@' || string[i] == '-') && string[i] != ' ' && string[i] != '\t')
+			|| string[i] == '?' \
+			|| string[i] == '^' \
+			|| string[i] == '@' \
+			|| string[i] == '-') && string[i] != ' ' && string[i] != '\t')
 		return (1);
 	return (0);
 }
@@ -35,7 +38,8 @@ int	env_validity_check(char **args)
 		{
 			if (charcheck(args[i], j) == 1)
 			{
-				ft_fprintf(2, "minishell: %s: '%s': not a valid identifier\n", args[0], args[i]);
+				ft_fprintf(2, "minishell: %s: '%s':", args[0], args[i]);
+				ft_fprintf(2, " not a valid idetifier\n");
 				return (1);
 			}
 		}
@@ -44,17 +48,12 @@ int	env_validity_check(char **args)
 	return (0);
 }
 
-int	my_export(char **args, t_data *data)
+int	my_export(char **args, t_data *data, int i)
 {
 	t_list	*env;
-	int		i;
 
-	if (args[1] == NULL)
-		return (0);
 	if (env_validity_check(args) == 1)
 		return (1);
-	i = 0;
-	env = NULL;
 	if (args == NULL || args[1] == NULL)
 		return (0);
 	while (args[++i] != NULL)
@@ -63,7 +62,10 @@ int	my_export(char **args, t_data *data)
 		{
 			env = check_exist_env(data, args[i]);
 			if (env == NULL)
-				ft_lstadd_front(&data->l_envp, ft_lstnew(init_content_envp(args[i])));
+			{
+				env = ft_lstnew(init_content_envp(args[i]));
+				ft_lstadd_front(&data->l_envp, env);
+			}
 			else
 			{
 				free(((t_envp *)(env->content))->word);

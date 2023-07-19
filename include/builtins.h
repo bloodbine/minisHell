@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 12:27:55 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/17 11:25:15 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/19 12:39:37 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,6 @@ int		my_exit(char **args);
 char	*my_pwd(t_data *data, int id);
 void	my_echo(char **argv);
 int		my_unset(char **args, t_data *data);
-int		my_export(char **args, t_data *data);
+int		my_export(char **args, t_data *data, int i);
 
 #endif

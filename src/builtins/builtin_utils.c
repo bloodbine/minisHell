@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 19:21:58 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/17 11:28:18 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/19 12:39:24 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,16 @@ void	print_env(void *data)
 t_list	*check_exist_env(t_data *data, char *envname)
 {
 	t_list	*envp;
-	int		checklen;
+	int		len;
 
 	envp = data->l_envp;
 	if (ft_strchr(envname, '=') != NULL)
-		checklen = ft_strlen(envname) - ft_strlen((ft_strchr(envname, '='))) + 1;
+		len = ft_strlen(envname) - ft_strlen((ft_strchr(envname, '='))) + 1;
 	else
-		checklen = ft_strlen(envname) + 1;
+		len = ft_strlen(envname) + 1;
 	while (envp != NULL)
 	{
-		if (ft_strncmp((((t_envp *)(envp->content))->word), envname, checklen) == 0)
+		if (ft_strncmp((((t_envp *)(envp->content))->word), envname, len) == 0)
 			return (envp);
 		envp = envp->next;
 	}
@@ -81,7 +81,7 @@ int	exec_builtin(t_data *data, t_cmd *cmd)
 	if (ft_strncmp(cmd->args[0], "cd", cmdlen) == 0)
 		data->my_errno = my_cd(cmd->args, data);
 	if (ft_strncmp(cmd->args[0], "export", cmdlen) == 0)
-		data->my_errno = my_export(cmd->args, data);
+		data->my_errno = my_export(cmd->args, data, 0);
 	if (ft_strncmp(cmd->args[0], "unset", cmdlen) == 0)
 		data->my_errno = my_unset(cmd->args, data);
 	return (data->my_errno);
