@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/17 19:11:30 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/19 14:48:17 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	main(int argc, char *argv[], char *envp[])
 			add_history(lptr);
 		data.cmd = parse(lex(lptr, data.l_envp), data.l_envp);
 		free(lptr);
-		data.my_errno = execute(&data);
+		data.my_errno = execute(&data, NULL);
 		clear_cmdlst(&(data.cmd));
 	}
 	rl_clear_history();

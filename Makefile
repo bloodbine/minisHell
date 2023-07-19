@@ -20,7 +20,8 @@ EXPANDER	=	expander/expander \
 
 EXECUTION	=	execution/exec	\
 				execution/exec_utils \
-				execution/exec_utils2
+				execution/exec_utils2 \
+				execution/exec_utils3
 
 BUILTINS	=	builtins/builtins \
 				builtins/builtins2 \
