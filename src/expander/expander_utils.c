@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/09 14:09:20 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/21 13:41:13 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,9 @@ int	get_seq(char *str, char **seq)
 	return (i);
 }
 
-int	heredoc(char *delim, t_list *l_envp)
+int	heredoc(char *delim, t_list *l_envp, int fd)
 {
 	char	*lptr;
-	int		fd;
 	char	quotes;
 	char	*temp;
 
@@ -108,13 +107,11 @@ int	heredoc(char *delim, t_list *l_envp)
 			lptr = exp_env_var(lptr, l_envp);
 		if (ft_strncmp(lptr, delim, ft_strlen(delim) + 1) == 0)
 		{
-			free (lptr);
+			free(lptr);
 			break ;
 		}
 		write(fd, ft_strjoin(lptr, "\n"), ft_strlen(lptr) + 1);
 		free(lptr);
 	}
-	free(temp);
-	close(fd);
-	return (0);
+	return (free(temp), close(fd), 0);
 }

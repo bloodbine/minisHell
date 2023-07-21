@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/19 15:41:41 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/21 13:41:45 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	expander(t_list *lex, t_list *l_envp, t_content *content)
 			content->word = expand(content->word, &exp);
 		else if (content->token == HEREDOC)
 		{
-			if (heredoc(content->word, l_envp) == -1)
+			if (heredoc(content->word, l_envp, 0) == -1)
 			{
 				write(2, "heredoc failed", 14);
 				g_signal = errno;

@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/19 15:42:15 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/21 13:41:34 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void		clear_content(void *data);
 void		add_token(t_lexdata *l_data, t_list **token);
 void		add_word(t_lexdata *l_data, t_list **token);
 void		set_builtin(t_cmd *cmd);
-int			heredoc(char *delim, t_list *l_envp);
+int			heredoc(char *delim, t_list *l_envp, int fd);
 char		*my_getenv(char *var, t_list *l_envp);
 void		clear_cmdlst(t_cmd **cmd);
 char		**init_args(int lstsize);
