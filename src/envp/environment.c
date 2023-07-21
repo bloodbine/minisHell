@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:53:32 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/07 04:46:35 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/21 16:43:14 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,20 @@ char	*remove_double_spaces(char *str)
 	return (removed);
 }
 
-char	*my_getenv(char *var, t_list *l_envp)
+char	*my_getenv(char *var, t_data *data)
 {
 	t_envp	*content;
 	char	*temp;
+	t_list	*ptr_envp;
 
+	ptr_envp = data->l_envp;
 	if (!ft_strncmp(var, "?", 2))
-		return (ft_itoa(g_signal));
+		return (ft_itoa(data->my_errno));
 	else if (var[0] == ' ' || var[0] == '\0')
 		return (my_strcpy("$"));
-	while (l_envp)
+	while (ptr_envp)
 	{
-		content = ((t_envp *)(l_envp->content));
+		content = ((t_envp *)(ptr_envp->content));
 		if (!ft_strncmp(var, (content->word), \
 				ft_strlen(var)) && content->status)
 		{
@@ -61,7 +63,7 @@ char	*my_getenv(char *var, t_list *l_envp)
 				return (temp);
 			}
 		}
-		l_envp = l_envp->next;
+		ptr_envp = ptr_envp->next;
 	}
 	return (NULL);
 }

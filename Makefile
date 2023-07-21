@@ -16,7 +16,7 @@ PARSER		=	parser/parser \
 
 EXPANDER	=	expander/expander \
 				expander/expander_utils \
-				expander/expander_utils2 
+				expander/heredoc 
 
 EXECUTION	=	execution/exec	\
 				execution/exec_utils \

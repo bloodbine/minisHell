@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/19 15:46:10 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/21 19:07:57 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-// void	print_content(void *data)
-// {
-// 	t_content	*content;
+void	print_content(void *data)
+{
+	t_content	*content;
 
-// 	content = (t_content *)data;
-// 	printf("	%s(%d)\n", content->word, content->token);
-// }
+	content = (t_content *)data;
+	printf("	%s(%d)\n", content->word, content->token);
+}
 
 void	fill_redir(t_cmd *cmd, t_content *l)
 {
@@ -162,7 +162,7 @@ int	build_cmds(t_list *lex, t_cmd **cmd)
 // 	}
 // }
 
-t_cmd	*parse(t_list *lex, t_list *l_envp)
+t_cmd	*parse(t_list *lex, t_data *data)
 {
 	t_cmd	*cmd;
 	int		test;
@@ -170,7 +170,7 @@ t_cmd	*parse(t_list *lex, t_list *l_envp)
 	cmd = NULL;
 	if (!lex)
 		return (NULL);
-	expander(lex, l_envp, NULL);
+	expander(lex, data, NULL);
 	test = build_cmds(lex, &cmd);
 	if (test <= 0)
 	{
@@ -180,8 +180,9 @@ t_cmd	*parse(t_list *lex, t_list *l_envp)
 			write(2, "`newline'\n", 10);
 		else
 			write(2, "`|'\n", 4);
-		g_signal = 2;
+		data->my_errno = 2;
 	}
+	// print_cmds(cmd);
 	ft_lstclear(&lex, clear_content);
 	return (get_first_node(cmd));
 }

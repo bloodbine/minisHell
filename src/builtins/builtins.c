@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 15:21:34 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/17 12:19:40 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/21 16:33:53 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	my_cd(char **path, t_data *data)
 
 	if (!path[1] || ft_strncmp(path[1], "~", 2) == 0)
 	{
-		npath = my_getenv("HOME", data->l_envp);
+		npath = my_getenv("HOME", data);
 		if (chdir(npath) == 0)
 			change_pwd(data->l_envp);
 		else
@@ -35,7 +35,7 @@ int	my_cd(char **path, t_data *data)
 	}
 	if (path[1][0] == '~')
 	{
-		npath = my_getenv("HOME", data->l_envp);
+		npath = my_getenv("HOME", data);
 		npath = my_strjoin(npath, path[1] + 1, 1);
 	}
 	else

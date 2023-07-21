@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/21 13:41:13 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/21 19:14:59 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,31 +87,14 @@ int	get_seq(char *str, char **seq)
 	return (i);
 }
 
-int	heredoc(char *delim, t_list *l_envp, int fd)
+int	expand_helper(char *str, t_expdata *exp, int s)
 {
-	char	*lptr;
-	char	quotes;
-	char	*temp;
-
-	quotes = get_outer_quotes(delim);
-	temp = rm_quotes(my_strcpy(delim), quotes);
-	fd = open("heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-		return (-1);
-	while (1)
-	{
-		lptr = ft_strtrim(get_next_line(STDIN_FILENO), "\n");
-		if (!lptr)
-			break ;
-		if (quotes == 0)
-			lptr = exp_env_var(lptr, l_envp);
-		if (ft_strncmp(lptr, delim, ft_strlen(delim) + 1) == 0)
-		{
-			free(lptr);
-			break ;
-		}
-		write(fd, ft_strjoin(lptr, "\n"), ft_strlen(lptr) + 1);
-		free(lptr);
-	}
-	return (free(temp), close(fd), 0);
+	if (!exp->count && exp->i && str[exp->i - 1] == '$')
+		exp->sub = get_sub(ft_substr(str, s, exp->i - s - 1), exp);
+	else if (!exp->count)
+		exp->sub = get_sub(ft_substr(str, s, exp->i - s), exp);
+	else if (exp->count == 1)
+		exp->sub = get_sub(ft_substr(str, s, exp->i - s + 1), exp);
+	return (exp->start);
 }
+

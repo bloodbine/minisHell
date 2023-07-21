@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/19 14:57:26 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/21 19:24:10 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,14 +143,11 @@ int	execute(t_data *data, t_cmd *cmd)
 		while (cmd->next != NULL)
 		{
 			data->my_errno = pipeline(data, cmd, envlist);
-			if (data->my_errno != 0)
-				return (reset_std_fds(stdinfd, stdoutfd), data->my_errno);
 			cmd = cmd->next;
 			dup2(stdinfd, STDIN_FILENO);
 			dup2(stdoutfd, STDOUT_FILENO);
 		}
 		data->my_errno = last_cmd(data, cmd, envlist);
-		g_signal = data->my_errno;
 		free(envlist);
 		reset_std_fds(stdinfd, stdoutfd);
 	}
