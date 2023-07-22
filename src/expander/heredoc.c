@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_utils2.c                                  :+:      :+:    :+:   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 17:48:42 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/21 19:14:56 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 11:18:25 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int	open_heredoc(int *fd, char **filename)
 {
-	static int heredoc;
-	
+	static int	heredoc;
+
 	*fd = open(ft_itoa(heredoc), O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	
+
 	free(*filename);
 	*filename = my_strcpy(ft_itoa(heredoc));
 	heredoc++;
@@ -31,13 +31,14 @@ int	heredoc(char **delim, t_data *data, int fd)
 	char	*lptr;
 	char	quotes;
 	char	*temp;
-	
+
 	quotes = get_outer_quotes(*delim);
 	temp = rm_quotes(my_strcpy(*delim), quotes);
 	if (open_heredoc(&fd, delim) == -1)
 		return (-1);
 	while (1)
 	{
+		// lptr = ft_strtrim(get_next_line(STDIN_FILENO), "\n");
 		lptr = readline("> ");
 		if (!lptr)
 		{

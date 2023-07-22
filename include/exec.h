@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 12:27:55 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/19 14:56:57 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 11:04:17 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ int		exec_command(t_data *data, t_cmd *cmd, char **envp);
 int		exec_builtin(t_data *data, t_cmd *cmd);
 void	child_exec(t_data *data, t_cmd *cmd, char **envp);
 int		setup_fds_envlist(int *in_fd, int *out_fd, char ***elist, t_data *data);
+int		handle_special(char *cmd);
 
 #endif
