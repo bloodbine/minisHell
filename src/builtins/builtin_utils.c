@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 19:21:58 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/19 12:39:24 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 16:17:00 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@ int	exec_builtin(t_data *data, t_cmd *cmd)
 	if (ft_strncmp(cmd->args[0], "exit", cmdlen) == 0)
 		data->my_errno = my_exit(cmd->args);
 	if (ft_strncmp(cmd->args[0], "echo", cmdlen) == 0)
-		my_echo(cmd->args);
+		data->my_errno = my_echo(cmd->args);
 	if (ft_strncmp(cmd->args[0], "env", cmdlen) == 0)
-		my_env(data->l_envp);
+		data->my_errno = my_env(data->l_envp);
 	if (ft_strncmp(cmd->args[0], "pwd", cmdlen) == 0)
 		my_pwd(data, 0);
 	if (ft_strncmp(cmd->args[0], "cd", cmdlen) == 0)

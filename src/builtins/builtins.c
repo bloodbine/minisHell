@@ -6,22 +6,23 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 15:21:34 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/21 16:33:53 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 16:16:49 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	my_env(t_list *l_envp)
+int	my_env(t_list *l_envp)
 {
 	ft_lstiter(l_envp, print_env);
+	return (0);
 }
 
 int	my_cd(char **path, t_data *data)
 {
 	char	*npath;
 
-	if (!path[1] || ft_strncmp(path[1], "~", 2) == 0)
+	if (!path[1] || !ft_strncmp(path[1], "~", 2) || !ft_strncmp(path[1], "--", 3))
 	{
 		npath = my_getenv("HOME", data);
 		if (chdir(npath) == 0)
@@ -69,7 +70,7 @@ char	*my_pwd(t_data *data, int id)
 	return (&cont->word[4]);
 }
 
-void	my_echo(char **argv)
+int	my_echo(char **argv)
 {
 	int	i;
 
@@ -77,7 +78,7 @@ void	my_echo(char **argv)
 	if (argv[1] == NULL)
 	{
 		write(STDOUT_FILENO, "\n", 1);
-		return ;
+		return (0);
 	}
 	if (!ft_strncmp(argv[1], "-n", 3))
 		i = 2;
@@ -90,6 +91,7 @@ void	my_echo(char **argv)
 	}
 	if (ft_strncmp(argv[1], "-n", 3))
 		write(STDOUT_FILENO, "\n", 1);
+	return (0);
 }
 
 int	my_exit(char **args)

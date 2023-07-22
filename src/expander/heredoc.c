@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 17:48:42 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/22 15:24:33 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 15:30:33 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ int	heredoc(char **delim, t_data *data, int fd)
 		return (-1);
 	while (1)
 	{
-		// lptr = ft_strtrim(get_next_line(STDIN_FILENO), "\n");
-		lptr = readline("> ");
+		lptr = ft_strtrim(get_next_line(STDIN_FILENO), "\n");
+		//lptr = readline("> ");
 		if (!lptr)
 		{
 			printf("\x1b[A> ");
