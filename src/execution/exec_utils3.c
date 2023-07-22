@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:21:08 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/22 17:05:18 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 17:44:56 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,6 @@ int	setup_fds_envlist(int *in_fd, int *out_fd, char ***elist, t_data *data)
 
 int	handle_special(t_data *data, char *cmd)
 {
-	int	i;
-
-	i = 0;
 	if (ft_strncmp(cmd, "~", 2) == 0)
 	{
 		ft_fprintf(2, "minishell: %s: is a directory\n",  my_getenv("HOME", data));
@@ -53,4 +50,13 @@ int	handle_special(t_data *data, char *cmd)
 		exit(127);
 	}
 	return (0);
+}
+
+void	signal_error(t_data *data)
+{
+	if (g_signal == 1)
+		data->my_errno = 130;
+	else if (g_signal == 3)
+		data->my_errno = 131;
+	g_signal = 0;
 }

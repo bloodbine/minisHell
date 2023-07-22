@@ -6,13 +6,16 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 12:27:55 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/22 17:05:04 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 17:39:48 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXEC_H
 # define EXEC_H
 
+void	init_signals_child(struct termios *termios_mirror);
+void	signal_error(t_data *data);
+void	signals_parent(void);
 int		check_file(t_data *data, char *file, int check);
 int		check_exist_access(char *cmd);
 char	*check_paths(char *cmd, char **envp);

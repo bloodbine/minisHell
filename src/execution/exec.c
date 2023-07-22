@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:41:48 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/22 16:17:41 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 17:05:41 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ int	pipeline(t_data *data, t_cmd *cmd, char **envp)
 	else if (proc == 0)
 		child_exec(data, cmd, envp);
 	close(cmd->fd[1]);
-	dup2(cmd->fd[0], STDIN_FILENO);
-	if (cmd->out != NULL)
+	signals_parent();
+	if (dup2(cmd->fd[0], STDIN_FILENO) > 0 && cmd->out != NULL)
 		write_output(STDIN_FILENO, STDOUT_FILENO);
 	if (waitpid(proc, &status, WNOHANG) && WIFEXITED(status))
 		return (WEXITSTATUS(status));
@@ -120,6 +120,7 @@ int	last_cmd(t_data *data, t_cmd *cmd, char **envp)
 		return (errno);
 	else if (proc == 0)
 		exit(exec_command(data, cmd, envp));
+	signals_parent();
 	waitpid(proc, &status, 0);
 	if (cmd->prev != NULL)
 		close(cmd->prev->fd[1]);
@@ -137,17 +138,20 @@ int	execute(t_data *data, t_cmd *cmd)
 	if (data->cmd != NULL)
 	{
 		data->my_errno = 0;
+		g_signal = 0;
 		cmd = data->cmd;
 		if (setup_fds_envlist(&stdinfd, &stdoutfd, &envlist, data) == -1)
 			return (errno);
 		while (cmd->next != NULL)
 		{
 			data->my_errno = pipeline(data, cmd, envlist);
+			signal_error(data);
 			cmd = cmd->next;
 			dup2(stdinfd, STDIN_FILENO);
 			dup2(stdoutfd, STDOUT_FILENO);
 		}
 		data->my_errno = last_cmd(data, cmd, envlist);
+		signal_error(data);
 		free(envlist);
 		reset_std_fds(stdinfd, stdoutfd);
 	}

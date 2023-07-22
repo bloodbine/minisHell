@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/22 17:26:37 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 17:38:41 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int	exec_command(t_data *data, t_cmd *cmd, char **envp)
 {
 	char	*ncmd;
 
+	init_signals_child(data->termios_mirror);
 	handle_special(data, cmd->args[0]);
 	if (cmd->builtin == 1)
 		exec_builtin(data, cmd);

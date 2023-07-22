@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:17:16 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/22 13:23:06 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 17:57:17 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <readline/history.h>
 # include <fcntl.h>
 # include <termios.h>
+# include <signal.h>
 # include "../includes/libft/libft.h"
 # include "input.h"
 # include "builtins.h"
