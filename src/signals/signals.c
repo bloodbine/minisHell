@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 19:25:30 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/22 15:05:40 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 20:38:12 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@ void	handle_signal_interactive(int signal)
 	if (signal == SIGINT)
 	{
 		g_signal = 1;
-		write(1, "\n", 2);
-		rl_on_new_line();
+		rl_done = 1;
 		rl_replace_line("", 0);
-		rl_redisplay();
 	}
 }
 
@@ -48,8 +46,8 @@ void	copy_termios_rem_c(struct termios *termios_mirror)
 {
 	struct termios	termios;
 
-	tcgetattr(1, termios_mirror);
 	tcgetattr(1, &termios);
+	termios_mirror = &termios;
 	termios.c_lflag &= ~ECHOCTL;
 	tcsetattr(1, TCSAFLUSH, &termios);
 }

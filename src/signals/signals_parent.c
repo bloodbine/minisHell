@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 12:16:34 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/22 17:48:14 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 20:01:36 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	handle_backslash_parent(int signal)
 	if (signal == SIGQUIT)
 	{
 		g_signal = 3;
-		write(1, "Quit: 3\n", 9);
+		write(1, "^\\Quit: 3\n", 11);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 	}

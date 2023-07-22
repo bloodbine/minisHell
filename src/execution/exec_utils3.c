@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:21:08 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/22 17:44:56 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 20:43:38 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ int	handle_special(t_data *data, char *cmd)
 {
 	if (ft_strncmp(cmd, "~", 2) == 0)
 	{
-		ft_fprintf(2, "minishell: %s: is a directory\n",  my_getenv("HOME", data));
+		ft_fprintf(2, "minishell: %s: is a directory\n", \
+						my_getenv("HOME", data));
 		exit(126);
 	}
 	if (ft_strncmp(cmd, "/", 2) == 0)

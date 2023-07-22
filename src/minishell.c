@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/22 17:02:58 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 20:44:55 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	init(t_data *data, char **envp)
 	data->my_errno = 0;
 	cpy_envp(&(data->l_envp), envp);
 	rl_catch_signals = 0;
-	// rl_event_hook = (rl_hook_func_t *)my_event_hook;
+	rl_event_hook = (rl_hook_func_t *)my_event_hook;
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -43,8 +43,13 @@ int	main(int argc, char *argv[], char *envp[])
 		if (isatty(fileno(stdin)))
 			lptr = readline("$ > ");
 		else
-			lptr = ft_strtrim(get_next_line(fileno(stdin)), "\n");
-		if ((lptr && !ft_strncmp(lptr, "exit", 5)) || !lptr)
+		{
+			char	*line;
+			line = get_next_line(fileno(stdin));
+			lptr = ft_strtrim(line, "\n");
+			free(line);
+		}
+		if (!lptr)
 			break ;
 		if (lptr[0] != '\0')
 			add_history(lptr);

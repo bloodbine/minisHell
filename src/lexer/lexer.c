@@ -6,27 +6,12 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/21 17:29:36 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 20:41:42 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-// void	print_content2(void *data)
-// {
-// 	t_content	*content = (t_content *)data;
-// 	printf("next\n");
-// 	printf("token: %d   word: %s\n", content->token, content->word);
-// }
-
-// void	print_content1(void *data)
-// {
-//    	char	*content = (char *)data;
-// 	printf("next\n");
-//     printf("substr: %s\n", content);
-// }
-
-// splits line on whitespaces. Ignore whitespaaces when in between quotes
 t_list	*get_substrings(char *lptr)
 {
 	t_list	*lexlst;
@@ -82,7 +67,6 @@ t_list	*tokenize(t_list *substring, t_lexdata *l_data, t_data *data)
 
 	temp = substring;
 	token = NULL;
-	// ft_lstiter(substring, print_content1);
 	while (temp)
 	{
 		l_data->str = temp->content;
@@ -98,7 +82,6 @@ t_list	*tokenize(t_list *substring, t_lexdata *l_data, t_data *data)
 		}	
 		temp = temp->next;
 	}
-	//ft_lstiter(token, print_content2);
 	ft_lstclear(&substring, clear_str);
 	return (token);
 }

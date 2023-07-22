@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/22 17:38:41 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 20:43:57 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	check_file(t_data *data, char *file, int check)
 		data->my_errno = 1;
 		return (2);
 	}
-	else if(access(file, X_OK) != -1)
+	else if (access(file, X_OK) != -1)
 	{
 		ft_fprintf(2, "minishell: %s: Is a directory\n", file);
 		data->my_errno = 1;

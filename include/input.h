@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/22 17:57:28 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 21:11:05 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,5 +133,6 @@ int			expand_helper(char *str, t_expdata *exp, int s);
 char		*get_sub(char *str, t_expdata *exp);
 void		set_vars(int *i, int *argument);
 void		cpy_envp(t_list **l_envp, char **envp);
+int			check_echo(char **args, char **word, int *argument, int *j);
 
 #endif

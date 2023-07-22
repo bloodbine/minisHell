@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 15:21:34 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/22 17:11:42 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 20:53:25 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,14 @@ int	my_cd(char **path, t_data *data)
 {
 	char	*npath;
 
-	if (!path[1] || !ft_strncmp(path[1], "~", 2) || !ft_strncmp(path[1], "--", 3))
+	if (!path[1] || !ft_strncmp(path[1], "~", 2) \
+					|| !ft_strncmp(path[1], "--", 3))
 	{
 		npath = my_getenv("HOME", data);
 		if (chdir(npath) == 0)
 			change_pwd(data->l_envp);
 		else
-		{
-			perror("minishell");
-			return (free(npath), 1);
-		}
+			return (perror("minishell"), free(npath), 1);
 		return (free(npath), 0);
 	}
 	if (path[1][0] == '~')

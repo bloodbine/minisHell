@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 12:16:37 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/22 17:48:17 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 20:40:39 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	signal_ctrl_backslash_child(void)
 	struct sigaction	ctrl_backslash;
 
 	ctrl_backslash.sa_handler = SIG_DFL;
-	ctrl_backslash.sa_mask = SA_RESTART;
+	ctrl_backslash.sa_flags = SA_RESTART;
 	sigemptyset(&ctrl_backslash.sa_mask);
 	sigaction(SIGQUIT, &ctrl_backslash, NULL);
 }

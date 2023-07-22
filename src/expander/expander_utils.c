@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/21 19:14:59 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 20:43:01 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,3 @@ int	expand_helper(char *str, t_expdata *exp, int s)
 		exp->sub = get_sub(ft_substr(str, s, exp->i - s + 1), exp);
 	return (exp->start);
 }
-

@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:09:53 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/05 22:42:18 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 21:10:42 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,31 @@ void	set_vars(int *i, int *argument)
 {
 	*argument = 0;
 	*i = 0;
+}
+
+int	check_echo(char **args, char **word, int *argument, int *j)
+{
+	int	i;
+
+	i = 1;
+	if (ft_strncmp(*args, "echo", 5) || ft_strncmp(*args, "/bin/echo", 10))
+	{
+		while (word[0][i] == 'n')
+			i++;
+		if (word[0][i] != '\0')
+			return (*argument = 1, args[*j] = my_strcpy(word[0]), 1);
+		else
+		{
+			if (args[1] && !ft_strncmp(*args, "echo", 5))
+				return (*j = 1, 1);
+			if (args[1] && !ft_strncmp(*args, "/bin/echo", 10))
+			{
+				args[*j] = my_strcpy(word[0]);
+				return (1);
+			}
+			free(word[0]);
+			word[0] = my_strcpy("-n");
+		}
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/21 19:07:57 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 21:10:34 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,37 +47,6 @@ void	fill_redir(t_cmd *cmd, t_content *l)
 	}
 	else
 		free (word);
-}
-
-int	check_echo(char **args, char **word, int *argument, int *j)
-{
-	int	i;
-
-	i = 1;
-	if (ft_strncmp(*args, "echo", 5) || ft_strncmp(*args, "/bin/echo", 10))
-	{
-		while (word[0][i] == 'n')
-			i++;
-		if (word[0][i] != '\0')
-		{
-			*argument = 1;
-			args[*j] = my_strcpy(word[0]);
-			return (1);
-		}
-		else
-		{
-			if (args[1] && !ft_strncmp(*args, "echo", 5))
-				return (*j = 1, 1);
-			if (args[1] && !ft_strncmp(*args, "/bin/echo", 10))
-			{
-				args[*j] = my_strcpy(word[0]);
-				return (1);
-			}
-			free(word[0]);
-			word[0] = my_strcpy("-n");
-		}
-	}
-	return (0);
 }
 
 void	fill_cmd_struct(t_list *lex, t_cmd *cmd, int *i, int *argument)
@@ -137,31 +106,6 @@ int	build_cmds(t_list *lex, t_cmd **cmd)
 	return (1);
 }
 
-// void	print_cmds(t_cmd *cmd)
-// {
-// 	char	**temp;
-
-// 	cmd = get_first_node(cmd);
-// 	while (cmd)
-// 	{
-// 		printf("char **args:");
-// 		temp = cmd->args;
-// 		while (*temp)
-// 		{
-// 			printf("	%s", *temp);
-// 			temp++;
-// 		}
-// 		printf("\n");
-// 		printf("in:");
-// 		ft_lstiter(cmd->in, print_content);
-// 		printf("\n");
-// 		printf("out:");
-// 		ft_lstiter(cmd->out, print_content);
-// 		printf("\n");
-// 		cmd = cmd->next;
-// 	}
-// }
-
 t_cmd	*parse(t_list *lex, t_data *data)
 {
 	t_cmd	*cmd;
@@ -182,7 +126,6 @@ t_cmd	*parse(t_list *lex, t_data *data)
 			write(2, "`|'\n", 4);
 		data->my_errno = 2;
 	}
-	// print_cmds(cmd);
 	ft_lstclear(&lex, clear_content);
 	return (get_first_node(cmd));
 }
