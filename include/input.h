@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/21 19:06:26 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/22 13:43:30 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,10 @@ typedef struct s_cmd
 
 typedef struct s_data
 {
-	t_cmd	*cmd;
-	t_list	*l_envp;
-	int		my_errno;
+	t_cmd			*cmd;
+	t_list			*l_envp;
+	struct termios	*termios_mirror;
+	int				my_errno;
 }			t_data;
 
 typedef enum e_token
@@ -91,7 +92,7 @@ typedef struct s_expdata
 	char	quotes;
 }			t_expdata;
 
-void		init_signals(void);
+void		init_signals(struct termios *termios_mirror);
 void		handle_interrupt(int signal);
 int			get_closing_quote(char *lptr, char quote);
 int			get_len(char *lptr, int i);

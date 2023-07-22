@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/22 11:06:36 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 13:44:52 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ int	my_event_hook(void)
 
 void	init(t_data *data, char **envp)
 {
-	init_signals();
+	init_signals(data->termios_mirror);
 	g_signal = 0;
 	data->cmd = NULL;
 	data->l_envp = NULL;
 	data->my_errno = 0;
 	cpy_envp(&(data->l_envp), envp);
 	rl_catch_signals = 0;
-	//rl_event_hook = (rl_hook_func_t *)my_event_hook;
+	// rl_event_hook = (rl_hook_func_t *)my_event_hook;
 }
 
 int	main(int argc, char *argv[], char *envp[])
