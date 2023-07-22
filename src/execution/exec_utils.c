@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/22 11:05:07 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 17:26:37 by ffederol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	check_file(t_data *data, char *file, int check)
 {
-	if (access(file, F_OK == 1))
+	if (access(file, F_OK == -1))
 	{
 		ft_fprintf(2, "minishell: %s: No such file or directory\n", file);
 		data->my_errno = 1;
@@ -25,6 +25,12 @@ int	check_file(t_data *data, char *file, int check)
 		ft_fprintf(2, "minishell: %s: Permission denied\n", file);
 		data->my_errno = 1;
 		return (2);
+	}
+	else if(access(file, X_OK) != -1)
+	{
+		ft_fprintf(2, "minishell: %s: Is a directory\n", file);
+		data->my_errno = 1;
+		return (3);
 	}
 	return (0);
 }
@@ -91,7 +97,7 @@ int	exec_command(t_data *data, t_cmd *cmd, char **envp)
 {
 	char	*ncmd;
 
-	handle_special(cmd->args[0]);
+	handle_special(data, cmd->args[0]);
 	if (cmd->builtin == 1)
 		exec_builtin(data, cmd);
 	else if (!ft_strchr(cmd->args[0], '/'))
