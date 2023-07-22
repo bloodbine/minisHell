@@ -6,13 +6,16 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 12:27:55 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/22 11:04:17 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 17:07:33 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXEC_H
 # define EXEC_H
 
+void	init_signals_child(struct termios *termios_mirror);
+void	signal_error(t_data *data);
+void	signals_parent(void);
 int		check_file(t_data *data, char *file, int check);
 int		check_exist_access(char *cmd);
 char	*check_paths(char *cmd, char **envp);

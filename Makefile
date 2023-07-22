@@ -29,7 +29,9 @@ BUILTINS	=	builtins/builtins \
 
 ENVP		=	envp/environment
 
-SIGNALS		=	signals/signals
+SIGNALS		=	signals/signals \
+				signals/signals_child \
+				signals/signals_parent \
 
 LISTFUNC	=	listfunc/double_linked_list
 

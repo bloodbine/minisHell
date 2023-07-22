@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:21:08 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/22 11:11:20 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 17:07:00 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,13 @@ int	handle_special(char *cmd)
 		exit(2);
 	}
 	return (0);
+}
+
+void	signal_error(t_data *data)
+{
+	if (g_signal == 1)
+		data->my_errno = 130;
+	else if (g_signal == 3)
+		data->my_errno = 131;
+	g_signal = 0;
 }

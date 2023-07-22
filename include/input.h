@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:33:04 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/22 13:43:30 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 17:07:51 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ typedef struct s_expdata
 }			t_expdata;
 
 void		init_signals(struct termios *termios_mirror);
-void		handle_interrupt(int signal);
 int			get_closing_quote(char *lptr, char quote);
 int			get_len(char *lptr, int i);
 t_list		*get_substrings(char *lptr);

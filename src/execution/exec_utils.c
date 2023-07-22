@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 18:53:05 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/07/22 11:05:07 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 17:08:20 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ int	exec_command(t_data *data, t_cmd *cmd, char **envp)
 {
 	char	*ncmd;
 
+	init_signals_child(data->termios_mirror);
 	handle_special(cmd->args[0]);
 	if (cmd->builtin == 1)
 		exec_builtin(data, cmd);

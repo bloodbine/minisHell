@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/22 13:44:52 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/07/22 17:02:58 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	main(int argc, char *argv[], char *envp[])
 	init(&data, envp);
 	while (1)
 	{
+		init_signals(data.termios_mirror);
 		if (isatty(fileno(stdin)))
 			lptr = readline("$ > ");
 		else
