@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffederol <ffederol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:12:24 by ffederol          #+#    #+#             */
-/*   Updated: 2023/07/22 20:44:55 by ffederol         ###   ########.fr       */
+/*   Updated: 2023/07/23 10:39:36 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,7 @@ int	main(int argc, char *argv[], char *envp[])
 	while (1)
 	{
 		init_signals(data.termios_mirror);
-		if (isatty(fileno(stdin)))
-			lptr = readline("$ > ");
-		else
-		{
-			char	*line;
-			line = get_next_line(fileno(stdin));
-			lptr = ft_strtrim(line, "\n");
-			free(line);
-		}
+		lptr = readline("$ > ");
 		if (!lptr)
 			break ;
 		if (lptr[0] != '\0')
